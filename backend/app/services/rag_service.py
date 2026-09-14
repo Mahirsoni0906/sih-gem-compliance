@@ -230,8 +230,223 @@ GEM_KNOWLEDGE_BASE: List[Dict[str, Any]] = [
             "• Embedded PAN Link: Compares characters 3-12 of GSTIN against uploaded PAN. Any mismatch triggers an automated impersonation / forgery alert.\n"
             "• Pixel & Font Forensics: Inspects PDF text layers for font inconsistencies, cut-and-paste alterations, and validates digital SHA-256 cryptographic signatures."
         )
+    },
+    {
+        "id": "gfr_rule_149_procurement_slabs",
+        "category": "Core GeM Procurement Mandate & Financial Slabs",
+        "title": "GFR 2017 Rule 149: Mandatory Procurement on GeM, Direct Purchase & Bidding Thresholds",
+        "keywords": [
+            "gfr 149", "rule 149", "procurement slabs", "thresholds", "direct purchase", "l1 comparison",
+            "bidding limit", "25000", "50000", "500000", "5 lakhs", "mandatory procurement", "slabs"
+        ],
+        "content": (
+            "Under Rule 149 of the General Financial Rules (GFR 2017), procurement of common use goods and services "
+            "available on GeM is STRICTLY MANDATORY for all Central Ministries, Departments, and Public Sector Undertakings (CPSEs).\n\n"
+            "Official Procurement Slabs & Modalities:\n"
+            "1. Direct Purchase (Up to ₹25,000 / ₹50,000 for Automobiles):\n"
+            "• Buyer can directly purchase from any seller meeting the requisite quality, specification, and delivery period without comparative quoting.\n"
+            "2. L1 Comparison (Above ₹25,000 and up to ₹5,00,000):\n"
+            "• Buyer must compare products from at least three different manufacturers (OEMs) on GeM and select the lowest quoted price (L1).\n"
+            "3. Mandatory Bidding / Reverse Auction (Above ₹5,00,000):\n"
+            "• Purchases above ₹5 Lakhs must strictly be made through online competitive Bidding or Reverse Auction (RA) to ensure transparent price discovery."
+        )
+    },
+    {
+        "id": "gfr_rule_166_pac_buying",
+        "category": "Proprietary Article Certificate (PAC) Procurement",
+        "title": "GFR Rule 166: Proprietary Article Certificate (PAC) Buying on GeM",
+        "keywords": [
+            "pac", "proprietary", "proprietary article", "rule 166", "single source", "sole manufacturer",
+            "pac buying", "pac certificate", "brand purchase"
+        ],
+        "content": (
+            "Under GFR 2017 Rule 166, Proprietary Article Certificate (PAC) buying on GeM permits direct procurement of a specific "
+            "brand or model from a single manufacturer or its authorized seller.\n\n"
+            "Statutory Mandatory Requirements:\n"
+            "1. Competent Financial Authority (CFA) Approval: The buyer must upload a signed PAC certificate from the CFA "
+            "certifying that no alternative product from any other manufacturer is acceptable or technically suitable.\n"
+            "2. Detailed Justification: Explicit technical reasoning why interoperability or specific performance requires this sole brand.\n"
+            "3. Price Reasonableness: The procuring officer must certify price reasonableness against historical purchase orders."
+        )
+    },
+    {
+        "id": "gem_crac_payment_penal_interest",
+        "category": "Goods Acceptance & Payment Security",
+        "title": "CRAC 10-Day Mandate, Auto-Acceptance & 1% Monthly Penal Interest on Delayed Payments",
+        "keywords": [
+            "crac", "payment", "delay", "penal interest", "10 days", "consignee receipt", "delayed payment",
+            "pfms", "auto crac", "acceptance certificate", "interest on delay", "payment timeline"
+        ],
+        "content": (
+            "To eradicate vendor exploitation and ensure prompt liquidity for sellers (especially MSEs), the Ministry of Finance "
+            "has codified strict post-delivery timelines:\n\n"
+            "1. Consignee Receipt and Acceptance Certificate (CRAC):\n"
+            "• The consignee must inspect delivered goods and issue CRAC within 10 days of physical delivery.\n"
+            "• If the buyer/consignee fails to act within 10 calendar days, the GeM portal automatically AUTO-GENERATES the CRAC.\n\n"
+            "2. Mandatory Payment Period:\n"
+            "• Buyers are statutorily required to disburse 100% payment within 10 days of CRAC generation.\n\n"
+            "3. 1% Per Month Penal Interest:\n"
+            "• Any payment delayed beyond 10 days of CRAC attracts a MANDATORY PENAL INTEREST of 1% per month (calculated on a daily pro-rata basis) "
+            "deducted directly from the buyer department's budget and credited to the seller via PFMS / GeM Pool Account."
+        )
+    },
+    {
+        "id": "gem_caution_money_deposit",
+        "category": "Seller Onboarding & Caution Money Deposit",
+        "title": "GeM Caution Money Deposit (CMD) Slabs, Management & Forfeiture Rules",
+        "keywords": [
+            "caution money", "cmd", "caution deposit", "deposit", "5000", "10000", "25000",
+            "seller deposit", "forfeiture", "caution money refund"
+        ],
+        "content": (
+            "To deter frivolous bidding and ensure vendor accountability, GeM mandates a one-time, refundable Caution Money Deposit (CMD) "
+            "for all sellers before catalog creation or bid participation:\n\n"
+            "Statutory Deposit Slabs:\n"
+            "• Micro & Small Enterprises (MSEs): ₹5,000\n"
+            "• Medium Enterprises: ₹10,000\n"
+            "• Others (Large Enterprises / Non-MSME): ₹25,000\n\n"
+            "Forfeiture Conditions:\n"
+            "• Caution money is forfeited if a seller arbitrarily withdraws an active bid after technical opening, fails to execute a valid contract, "
+            "or violates GeM General Terms and Conditions (GTC). The deposit is fully refundable upon voluntary de-registration."
+        )
+    },
+    {
+        "id": "gem_emd_epbg_performance_security",
+        "category": "Bid Guarantees & Contract Security",
+        "title": "Earnest Money Deposit (EMD) and Performance Bank Guarantee (e-PBG) Rules",
+        "keywords": [
+            "emd", "pbg", "performance security", "bank guarantee", "epbg", "performance guarantee",
+            "tender guarantee", "bid security", "3%", "5%", "pbg validity"
+        ],
+        "content": (
+            "Under GFR 2017 Rules 170 and 171, public tenders on GeM enforce bid and contract security:\n\n"
+            "1. Earnest Money Deposit (EMD):\n"
+            "• Amount: Typically 0.5% to 5% of estimated tender value.\n"
+            "• 100% Exemptions: Micro & Small Enterprises (MSEs with Udyam) and DPIIT-recognized Startups are 100% EXEMPT from paying EMD.\n\n"
+            "2. Performance Security (e-PBG):\n"
+            "• Amount: 3% to 5% of the total contract value.\n"
+            "• Submission Window: The awarded vendor must furnish e-PBG within 15 days of contract generation.\n"
+            "• Validity: Must remain valid for a minimum of 60 days beyond the completion of all contractual warranty obligations."
+        )
+    },
+    {
+        "id": "gem_startup_india_exemptions",
+        "category": "Startup India Procurement Policy",
+        "title": "Startup India Public Procurement Exemptions (Prior Turnover & Prior Experience)",
+        "keywords": [
+            "startup", "startup india", "dpiit", "prior turnover", "prior experience", "relaxation",
+            "startup exemption", "startup relaxation", "rule 173"
+        ],
+        "content": (
+            "Under Ministry of Finance guidelines and GFR 2017 Rule 173(i), DPIIT-recognized Startups enjoy comprehensive public procurement relaxations on GeM:\n\n"
+            "1. Prior Turnover Exemption: Startups are fully exempt from minimum prior turnover requirements.\n"
+            "2. Prior Experience Exemption: Startups are fully exempt from prior operating experience or track-record requirements.\n"
+            "3. Mandatory Qualification Condition: The startup must satisfy the technical specifications, quality criteria, and demonstrate capability to execute the contract.\n"
+            "4. EMD Exemption: Startups are 100% exempt from paying Earnest Money Deposit."
+        )
+    },
+    {
+        "id": "gem_liquidated_damages_delay",
+        "category": "Contract Default & Liquidated Damages",
+        "title": "GeM Liquidated Damages (LD) Clause: Deductions for Delayed Goods & Services Delivery",
+        "keywords": [
+            "liquidated damages", "ld", "delay penalty", "late delivery", "penalty for delay",
+            "0.5%", "10%", "maximum penalty", "delivery extension"
+        ],
+        "content": (
+            "Under Clause 15 of the GeM General Terms and Conditions (GTC), failure to deliver goods or perform services within the stipulated contractual delivery period attracts Liquidated Damages (LD):\n\n"
+            "1. Deduction Rate: 0.5% of the value of delayed goods/services per week or part of the week of delay.\n"
+            "2. Maximum Penalty Cap: Total liquidated damages cannot exceed 10% of the total contract value.\n"
+            "3. Contract Cancellation: If delay exceeds the maximum permissible extension period, the buyer reserves the right to cancel the contract, invoke e-PBG, and initiate incident management against the seller."
+        )
+    },
+    {
+        "id": "gem_incident_management_blacklisting",
+        "category": "Vendor Governance & Debarment",
+        "title": "GeM Incident Management Framework, Show Cause Notices & Vendor Debarment",
+        "keywords": [
+            "incident", "incident management", "blacklisted", "debarred", "debarment", "show cause",
+            "suspension", "vendor suspension", "banned", "misconduct", "scn"
+        ],
+        "content": (
+            "GeM enforces a transparent Incident Management Policy to penalize misconduct, forged documents, and contractual default:\n\n"
+            "1. Incident Creation: A buyer or system automated engine logs an incident against the seller (e.g. non-delivery, fake certificate, unresponsiveness).\n"
+            "2. Show Cause Notice (SCN): The seller is granted 7 calendar days to submit a written explanation and supporting documentary evidence.\n"
+            "3. Administrative Actions:\n"
+            "• Mild / Technical Default: Warning letter or temporary 10-day account freeze.\n"
+            "• Serious Breach: Account suspension from 1 to 6 months.\n"
+            "• Severe / Forgery Default: Debarment / Blacklisting for 1 to 2 years across all GeM portals and synchronization with Central Public Procurement Portal (CPPP) blacklist."
+        )
+    },
+    {
+        "id": "gem_oem_reseller_quadrants",
+        "category": "Catalog Governance & Reseller Authorization",
+        "title": "OEM Panel, Reseller Authorization Code & GeM Catalog Quadrants (Q1 to Q4)",
+        "keywords": [
+            "oem", "reseller", "quadrant", "q1", "q2", "q3", "q4", "catalog pairing",
+            "authorization code", "reseller authorization", "brand approval"
+        ],
+        "content": (
+            "GeM catalog architecture separates manufacturers (Original Equipment Manufacturers - OEMs) from resellers:\n\n"
+            "1. Four Catalog Quadrants:\n"
+            "• Quadrant 1 (Q1): High technical standardization & heavy volume (e.g. Computers, Photocopiers) — strictly requires OEM validation.\n"
+            "• Quadrant 2 (Q2): Standardized goods with multiple variants.\n"
+            "• Quadrant 3 (Q3): Specialized non-standard items.\n"
+            "• Quadrant 4 (Q4): Low-value ad-hoc supplies.\n\n"
+            "2. Reseller Authorization:\n"
+            "• In Q1 and Q2 categories, resellers must obtain and input a verifiable Reseller Authorization Code from the verified OEM on GeM to pair and list products."
+        )
+    },
+    {
+        "id": "gem_reverse_auction_modalities",
+        "category": "E-Bidding & Price Discovery",
+        "title": "Reverse Auction (RA) Modalities, Auto-Extension & H1 Elimination Rules",
+        "keywords": [
+            "reverse auction", "ra", "h1 elimination", "auto extension", "50% rule", "price discovery",
+            "bidding auction", "ra rules"
+        ],
+        "content": (
+            "Reverse Auction (RA) on GeM enables live price discovery below initial bid prices:\n\n"
+            "1. H1 Bidder Elimination:\n"
+            "• If the number of technically qualified bidders is 4 or more, the highest-quoted bidder (H1) is automatically eliminated from participating in the RA.\n"
+            "• If qualified bidders are fewer than 4, all qualified bidders enter the RA.\n\n"
+            "2. Auto-Extension Window:\n"
+            "• If any bidder places a valid price decrease during the final 10 minutes of the scheduled RA, the auction automatically auto-extends by 15 minutes.\n"
+            "3. Minimum Decrement: Bids must be decreased by at least the pre-configured minimum percentage/amount."
+        )
+    },
+    {
+        "id": "gem_gte_restrictions_200cr",
+        "category": "National Procurement & Domestic Protection",
+        "title": "Restriction on Global Tender Enquiry (GTE) for Procurements up to ₹200 Crores",
+        "keywords": [
+            "gte", "global tender", "200 crore", "200 cr", "domestic tender", "foreign bidders",
+            "cabinet secretary", "restriction on global tenders"
+        ],
+        "content": (
+            "Under GFR 2017 Rule 161(iv) and Ministry of Finance mandates to safeguard domestic industry:\n\n"
+            "1. Strict Ban on Global Tenders Below ₹200 Crores: No Global Tender Enquiry (GTE) can be invited for tenders with an estimated value of up to ₹200 Crores.\n"
+            "2. Exceptional Approval: Procuring entities seeking foreign procurement below ₹200 Crores must obtain prior approval from the Cabinet Secretary through the Ministry of Finance Screening Committee.\n"
+            "3. Direct GeM Impact: Tenders on GeM below ₹200 Crores are reserved for domestic manufacturers and Class-I/Class-II local suppliers."
+        )
+    },
+    {
+        "id": "gem_sahay_treds_financing",
+        "category": "MSME Cash Flow & Factoring",
+        "title": "GeM Sahay 2.0 & TReDS: Instant Collateral-Free Purchase Order & Invoice Factoring",
+        "keywords": [
+            "gem sahay", "sahay", "treds", "invoice discounting", "factoring", "msme loan",
+            "po financing", "pre-shipment", "collateral free"
+        ],
+        "content": (
+            "GeM Sahay is a 100% digital, collateral-free trade financing platform integrated directly into GeM:\n\n"
+            "1. Pre-Shipment PO Financing: MSME sellers with accepted purchase orders can obtain working capital loans from public sector banks and NBFCs within 10 minutes.\n"
+            "2. TReDS Bill Factoring: After delivery and invoice generation, vendors can upload invoices onto Trade Receivables Discounting System (TReDS) platforms (RXIL, M1xchange, Invoicemart) for competitive instant discounting by financiers.\n"
+            "3. Transparent Interest: Interest rates start from 7.5% per annum with zero physical paperwork."
+        )
     }
 ]
+
 
 # ----------------------------------------------------------------------
 # 2. Domain Synonym Expansion for Procurement Queries
@@ -257,6 +472,14 @@ SYNONYM_EXPANSIONS = {
     "lms": ["training", "courses", "elearning", "learning", "portal"],
     "legit": ["legitimate", "authenticity", "fake", "forged", "forgery", "tamper", "tampered", "genuine", "real"],
     "expiry": ["expired", "validity", "lapse", "lapsed", "suspension", "suspended", "cancelled", "overdue"],
+    "startup": ["dpiit", "prior", "experience", "turnover", "relaxation", "exemption", "startups"],
+    "startups": ["startup", "dpiit", "prior", "experience", "turnover", "relaxation", "exemption"],
+    "pac": ["proprietary", "article", "certificate", "brand", "single", "source"],
+    "crac": ["consignee", "receipt", "acceptance", "payment", "delay", "penal", "interest", "10"],
+    "cmd": ["caution", "money", "deposit", "forfeiture", "5000", "10000", "25000"],
+    "ra": ["reverse", "auction", "h1", "elimination", "bidding"],
+    "ld": ["liquidated", "damages", "delay", "penalty", "late", "delivery"],
+    "gte": ["global", "tender", "enquiry", "200", "crore", "crores", "foreign"],
 }
 
 # ----------------------------------------------------------------------
@@ -453,7 +676,7 @@ class StatutoryDomainEngine:
             }
 
         # 3. Live GeM Internet Updates & Gazette Notifications
-        if any(w in q_lower for w in ["latest update", "recent update", "new om", "office memorandum", "circular", "latest news", "2026 update", "portal update", "recent circular"]):
+        if any(w in q_lower for w in ["latest update", "recent update", "new om", "office memorandum", "circular", "latest news", "2026 update", "portal update", "recent circular", "new rule", "new rules", "amendment", "amendments", "recent changes", "what is new", "what's new", "notifications", "update"]):
             reply = (
                 "🌐 **Latest Sovereign GeM Procurement Gazette Updates & Notifications (2026)**:\n\n"
                 "1. **OM No. F.1/4/2026-PPD (CRAC Auto-Release)**: Department of Expenditure has mandated strict **10-day automated CRAC generation**. If a buyer fails to accept goods within 10 days, the system auto-generates CRAC and triggers 100% PFMS payment within 72 hours.\n"

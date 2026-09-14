@@ -7,11 +7,13 @@ from app.services.rag_service import GeMRAGRetriever
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:1.5b")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", os.getenv("GOOGLE_API_KEY", ""))
 
-GEM_SYSTEM_PROMPT = """You are GeMMy, the AI Statutory Compliance Assistant for the Government e-Marketplace (GeM).
-Domain Mandate: Provide authoritative, concise advice on GeM public procurement law, GFR 2017, IT Act 2000, profile creation rejections, GSTIN/PAN validation rules, MSME exemptions, and Make-in-India compliance.
-DPDP Act Confidentiality Mandate: Under the Digital Personal Data Protection Act 2023, you must NEVER disclose, hallucinate, or inspect private organization credentials, PANs, GSTINs, or confidential bidder audits in public chat. Direct users to the authenticated DocScrutiny AI Console for organization document evaluation.
-Formatting: Use concise bullet points, bold statutory terms, and actionable guidance."""
+GEM_SYSTEM_PROMPT = """You are GeMMy, the official AI Statutory Compliance Assistant for the Government e-Marketplace (GeM).
+Domain Mandate: Provide authoritative, accurate, and concise guidance on GeM public procurement law, General Financial Rules (GFR 2017), Public Procurement Policy, Make in India (Class-I / Class-II), MSME Udyam exemptions, GFR Rule 144(xi), CRAC timelines, and seller onboarding.
+DPDP Act Confidentiality Mandate: Under the Digital Personal Data Protection Act 2023, you must NEVER disclose or hallucinate private organization credentials, PANs, GSTINs, or confidential bidder records in public chat. Direct users to the authenticated DocScrutiny AI Console for organization document evaluation.
+Formatting: Use clean bullet points, bold statutory terms, and actionable recommendations."""
+
 
 class LocalAIService:
     """Service to communicate with sovereign LLM via Ollama with RAG retrieval and strict timeouts."""
@@ -69,18 +71,58 @@ class LocalAIService:
         timeout_seconds: float = 10.0
     ) -> Optional[Dict[str, Any]]:
         """
-        Query the sovereign LLM with RAG-retrieved statutory context.
-        Enforces a strict timeout (default 10s) to prevent browser hangs.
-        Returns a dict with reply and actions, or None if unavailable or slow.
+        Query AI with RAG-retrieved statutory context.
+        Supports:
+        1. Google Gemini Flash (if GEMINI_API_KEY is configured in cloud/env)
+        2. Sovereign local LLM via Ollama
+        Returns dict with reply and actions, or None if unavailable or slow.
         """
+        # Dynamic RAG Retrieval: Extract top 2 concise domain knowledge chunks
+        rag_context = GeMRAGRetriever.format_context_for_prompt(user_message, top_k=2)
+        full_system_prompt = f"{GEM_SYSTEM_PROMPT}\n{rag_context}" if rag_context else GEM_SYSTEM_PROMPT
+
+        # 1. Option A: Google Gemini API (Global Cloud LLM with full reasoning)
+        gemini_key = os.getenv("GEMINI_API_KEY", os.getenv("GOOGLE_API_KEY", GEMINI_API_KEY))
+        if gemini_key:
+            try:
+                gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
+                payload = {
+                    "contents": [
+                        {
+                            "role": "user",
+                            "parts": [
+                                {"text": f"System Context:\n{full_system_prompt}\n\nUser Question:\n{user_message}"}
+                            ]
+                        }
+                    ],
+                    "generationConfig": {
+                        "temperature": 0.2,
+                        "maxOutputTokens": 600
+                    }
+                }
+                async with httpx.AsyncClient(timeout=timeout_seconds) as client:
+                    resp = await client.post(gemini_url, json=payload)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        candidates = data.get("candidates", [])
+                        if candidates:
+                            parts = candidates[0].get("content", {}).get("parts", [])
+                            if parts and "text" in parts[0]:
+                                reply_text = parts[0]["text"].strip()
+                                suggested_actions = cls._generate_suggested_actions(user_message, reply_text)
+                                return {
+                                    "reply": reply_text,
+                                    "suggested_actions": suggested_actions,
+                                    "model": "GeMMy AI (Gemini Cloud)",
+                                    "is_local_ai": False
+                                }
+            except Exception as e:
+                print(f"[LocalAIService] Gemini API query failed: {repr(e)}; trying Ollama fallback.")
+
+        # 2. Option B: Sovereign Local LLM via Ollama
         try:
             active_model = await cls.get_active_model()
-
-            # Dynamic RAG Retrieval: Extract top 1 concise domain knowledge chunk
-            rag_context = GeMRAGRetriever.format_context_for_prompt(user_message, top_k=1)
-            full_system_prompt = f"{GEM_SYSTEM_PROMPT}\n{rag_context}" if rag_context else GEM_SYSTEM_PROMPT
-
-            async with httpx.AsyncClient(timeout=timeout_seconds) as client:
+            async with httpx.AsyncClient(timeout=min(timeout_seconds, 4.0)) as client:
                 payload = {
                     "model": active_model,
                     "messages": [
@@ -105,15 +147,16 @@ class LocalAIService:
                         return {
                             "reply": reply_text,
                             "suggested_actions": suggested_actions,
-                            "model": "GeMMy Live Assistant",
-                            "is_local_ai": False
+                            "model": f"GeMMy Sovereign LLM ({active_model})",
+                            "is_local_ai": True
                         }
         except (httpx.TimeoutException, asyncio.TimeoutError):
-            print(f"[LocalAIService] Ollama query exceeded {timeout_seconds}s limit; gracefully falling back.")
+            print(f"[LocalAIService] Ollama query timed out; falling back to RAG.")
         except Exception as e:
             print(f"[LocalAIService] Ollama query bypassed/failed: {repr(e)}")
 
         return None
+
 
     @staticmethod
     def _generate_suggested_actions(user_msg: str, reply_text: str) -> List[Dict[str, str]]:
