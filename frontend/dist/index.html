@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Fonts: Inter, Plus Jakarta Sans & JetBrains Mono for High Legibility & Professional Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet" />
+  <!-- FontAwesome Icons for SIH Prototype -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error('Window Error:', e);
+      var banner = document.getElementById('error-banner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'error-banner';
+        banner.style = 'position:fixed;top:0;left:0;right:0;background:#dc2626;color:white;padding:16px 24px;z-index:99999;font-family:sans-serif;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,0.3);';
+        document.body.appendChild(banner);
+      }
+      banner.innerHTML = '<strong>JavaScript Error:</strong> ' + e.message + (e.filename ? ' (' + e.filename + ':' + e.lineno + ')' : '');
+    });
+  </script>
+  <script type="module" crossorigin src="/assets/index-yiG1Jd1P.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DjWSQjvo.css">
+</head>
+
+<body>
+  <div id="root">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:system-ui,-apple-system,sans-serif;background:#f4f6f9;color:#0d1d3d;">
+      <div style="font-size:24px;font-weight:900;margin-bottom:8px;">GeM Compliance System</div>
+      <div style="font-size:13px;color:#64748b;">Initializing AI Verification Platform...</div>
+    </div>
+  </div>
+</body>
+
+</html>
