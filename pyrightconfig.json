@@ -1,0 +1,12 @@
+{
+  "include": [
+    "backend",
+    "main.py"
+  ],
+  "extraPaths": [
+    "backend",
+    "backend/app"
+  ],
+  "venvPath": "backend",
+  "venv": "venv"
+}
