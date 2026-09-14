@@ -8,6 +8,8 @@ if backend_dir not in sys.path:
 from fastapi import FastAPI, UploadFile, File, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional, Dict, Any
+from pydantic import BaseModel
+
 
 from app.schemas import (
     LoginRequest, AuthResponse, UserRole,
@@ -552,10 +554,11 @@ def list_products(category: Optional[str] = None, q: Optional[str] = None):
 # ----------------------------------------------------
 # 11. SIH26100 AI Compliance Assistant (Ask GeMMy)
 # ----------------------------------------------------
-class AIChatRequest(Dict[str, Any]):
+class AIChatRequest(BaseModel):
     message: str
     role: Optional[str] = "general"
     context: Optional[Dict[str, Any]] = None
+
 
 @app.post("/api/ai/chat")
 async def ai_chat_assistant(payload: Dict[str, Any]):
