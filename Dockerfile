@@ -25,15 +25,16 @@ COPY backend/ ./backend/
 # Copy built frontend assets from stage 1
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Default port environment variable (supports Render, Koyeb, Railway, HuggingFace)
-ENV PORT=8000
+# Default port environment variable (7860 is default for Hugging Face Spaces, overridden by $PORT on other cloud hosts)
+ENV PORT=7860
 ENV PYTHONPATH=/app/backend
 
 # Grant full read/write permissions for persistent data_store.json & file uploads
 RUN chmod -R 777 /app
 
-EXPOSE 8000 7860 10000
+EXPOSE 7860 8000 10000
 
 # Start unified server with shell port expansion
-CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-7860}"]
+
 
