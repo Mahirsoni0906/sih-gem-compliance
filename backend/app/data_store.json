@@ -70,6 +70,50 @@
   ],
   "audit_logs": [
     {
+      "id": "log-41fcf27e",
+      "timestamp": "2026-09-15 02:57:55",
+      "user": "ANONYMOUS_USER",
+      "role": "general",
+      "action": "STATUTORY_AI_QUERY",
+      "tender_ref": null,
+      "bidder_name": null,
+      "details": "User queried: 'What are the new rules and latest updates?...'. Answered instantly by Statutory Domain Engine.",
+      "severity": "INFO"
+    },
+    {
+      "id": "log-91b22b7f",
+      "timestamp": "2026-09-15 02:57:47",
+      "user": "ANONYMOUS_USER",
+      "role": "general",
+      "action": "RAG_SYNTHESIZER_QUERY",
+      "tender_ref": null,
+      "bidder_name": null,
+      "details": "User queried: 'What are the thresholds under GFR Rule 149?...'. Synthesized from RAG rule gfr_rule_149_procurement_slabs.",
+      "severity": "INFO"
+    },
+    {
+      "id": "log-027963ad",
+      "timestamp": "2026-09-15 02:57:36",
+      "user": "ANONYMOUS_USER",
+      "role": "general",
+      "action": "RAG_SYNTHESIZER_QUERY",
+      "tender_ref": null,
+      "bidder_name": null,
+      "details": "User queried: 'Tell me about Caution Money Deposit on GeM...'. Synthesized from RAG rule gem_caution_money_deposit.",
+      "severity": "INFO"
+    },
+    {
+      "id": "log-5ca8710b",
+      "timestamp": "2026-09-15 02:57:25",
+      "user": "ANONYMOUS_USER",
+      "role": "general",
+      "action": "RAG_SYNTHESIZER_QUERY",
+      "tender_ref": null,
+      "bidder_name": null,
+      "details": "User queried: 'What is the penalty if a buyer delays payment after CRAC?...'. Synthesized from RAG rule gem_crac_payment_penal_interest.",
+      "severity": "INFO"
+    },
+    {
       "id": "log-f6c5259c",
       "timestamp": "2026-09-15 02:18:50",
       "user": "SELLER-GJ-8841",
