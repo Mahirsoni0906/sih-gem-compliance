@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeM Portal & AI Compliance Verification Platform | SIH26100</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .page-view { display: none; }
+    .page-view.active { display: flex; flex-direction: column; min-height: 100vh; }
+    .seller-tab-content { display: none; }
+    .seller-tab-content.active { display: block; }
+  </style>
+</head>
+<body class="bg-[#f4f6f9] font-sans antialiased text-gray-800">
+
+  <!-- ========================================================
+       TOP-STICKY MASTER SWITCHER BAR (WITH ACTIVE SYNC)
+       ======================================================== -->
+  <header aria-label="Demo Prototype Switcher" class="sticky top-0 z-50 bg-[#0d1d3d] text-white shadow-xl border-b-2 border-yellow-400 py-2 px-3 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      
+      <!-- Tag -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <span class="bg-yellow-400 text-blue-950 px-2.5 py-1 rounded font-black text-[11px] uppercase tracking-wider flex items-center space-x-1 shadow-sm">
+          <i class="fa-solid fa-code-branch"></i>
+          <span>SIH26100 Navigation</span>
+        </span>
+      </div>
+
+      <!-- Quick Switcher Buttons -->
+      <div class="flex flex-wrap items-center gap-1.5" id="master-nav-buttons">
+        <!-- General -->
+        <button onclick="navigatePage('landing-page')" id="nav-btn-landing" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition bg-orange-600 text-white shadow-xs">GeM Home</button>
+        <button onclick="navigatePage('login-page')" id="nav-btn-login" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">Login</button>
+
+        <span class="text-yellow-300/80 font-bold px-1 hidden md:inline">| SELLER:</span>
+        <button onclick="navigateSellerView('dashboard-view', 'nav-btn-s1')" id="nav-btn-s1" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">S1. Dashboard</button>
+        <button onclick="navigateSellerView('checklist-view', 'nav-btn-s2')" id="nav-btn-s2" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">S2. Checklist</button>
+        <button onclick="navigateSellerView('upload-view', 'nav-btn-s3')" id="nav-btn-s3" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">S3. Upload & AI</button>
+        <button onclick="navigateSellerView('issues-view', 'nav-btn-s4')" id="nav-btn-s4" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">S4. Readiness</button>
+
+        <span class="text-yellow-300/80 font-bold px-1 hidden md:inline">| OFFICER:</span>
+        <button onclick="navigatePage('officer-dash-page')" id="nav-btn-o1" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">O1. Dash</button>
+        <button onclick="navigatePage('officer-compare-page')" id="nav-btn-o2" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">O2. Compare</button>
+        <button onclick="navigatePage('officer-page')" id="nav-btn-o3" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">O3. Detail ⭐</button>
+        <button onclick="navigatePage('risk-page')" id="nav-btn-o4" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">O4. Findings & Risk</button>
+        <button onclick="navigatePage('audit-page')" id="nav-btn-o6" class="nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60">O5. Audit & Decision ⭐</button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================
+       PAGE 1: PUBLIC GEM LANDING PAGE
+       ======================================================== -->
+  <div id="landing-page" class="page-view active">
+    <div class="h-1.5 w-full bg-gradient-to-r from-[#ff9933] via-white to-[#138808]"></div>
+    <div class="bg-[#f0f2f5] border-b border-gray-200 text-xs py-1.5 px-4 sm:px-8 flex justify-between items-center text-gray-600">
+      <div class="flex items-center space-x-3">
+        <span class="font-medium text-gray-800">GOVERNMENT OF INDIA</span>
+        <span class="text-gray-300">|</span>
+        <span>Ministry of Commerce and Industry</span>
+      </div>
+      <div class="flex items-center space-x-3">
+        <span>National Public Procurement Portal</span>
+        <span class="text-gray-300">|</span>
+        <span class="font-semibold text-blue-900">English</span>
+      </div>
+    </div>
+
+    <div class="bg-white border-b border-gray-200 py-3 px-4 sm:px-8 shadow-sm">
+      <div class="max-w-7xl mx-auto flex flex-wrap lg:flex-nowrap items-center justify-between gap-4">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="navigatePage('landing-page')">
+          <span class="text-3xl font-black text-[#162c5b] tracking-tighter">GeM</span>
+          <div class="border-l-2 border-orange-500 pl-2 text-left leading-tight">
+            <span class="block text-sm font-extrabold text-[#162c5b]">Government e Marketplace</span>
+            <span class="block text-[10px] text-gray-500 font-medium">Efficient • Transparent • Inclusive</span>
+          </div>
+        </div>
+        <div class="flex-1 max-w-xl mx-auto w-full order-3 lg:order-2">
+          <div class="flex rounded border border-gray-300 overflow-hidden shadow-xs">
+            <select class="bg-gray-50 text-xs px-3 py-2 text-gray-700 border-r border-gray-300 focus:outline-none">
+              <option>Products</option>
+              <option>Services</option>
+              <option>Bids / RAs</option>
+            </select>
+            <input type="text" placeholder="Search tenders, RFP clauses, catalogues, or services..." class="flex-1 px-3 py-1.5 text-xs focus:outline-none">
+            <button class="bg-[#e67e22] hover:bg-orange-600 text-white px-4"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
+          </div>
+        </div>
+        <div class="flex items-center space-x-3 order-2 lg:order-3">
+          <button onclick="navigatePage('login-page')" class="text-xs font-bold text-gray-700 hover:text-orange-600 px-3 py-2 border border-gray-300 rounded">Sign Up</button>
+          <button onclick="navigatePage('login-page')" class="bg-[#162c5b] hover:bg-[#0f1f42] text-white text-xs font-bold px-4 py-2 rounded flex items-center space-x-1.5 shadow">
+            <i class="fa-solid fa-user-lock"></i><span>Login</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <nav class="bg-[#162c5b] text-white text-xs font-semibold px-4 sm:px-8 border-t border-blue-900">
+      <div class="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto py-2.5">
+        <div class="flex items-center space-x-6 whitespace-nowrap">
+          <a href="#" class="text-orange-400 font-bold">Home</a>
+          <a href="#" class="hover:text-orange-300">Categories</a>
+          <a href="#" class="hover:text-orange-300">Bids / RA</a>
+          <a href="#" class="hover:text-orange-300">Forward Auction</a>
+          <a href="#" class="hover:text-orange-300">Contact Us</a>
+        </div>
+        <div class="flex items-center space-x-2 pl-4 whitespace-nowrap text-yellow-300 font-bold">
+          <i class="fa-solid fa-microchip animate-pulse"></i>
+          <span>SIH26100: AI Integrated Bid Compliance Verification Platform Active</span>
+        </div>
+      </div>
+    </nav>
+
+    <section class="bg-gradient-to-r from-[#0d1d3d] via-[#162c5b] to-[#1f4080] text-white py-12 px-4 sm:px-8">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div>
+          <span class="inline-block bg-orange-600 text-white font-bold text-[10px] uppercase tracking-wider px-2 py-0.5 rounded mb-3">
+            National Public Procurement Portal
+          </span>
+          <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-4">
+            Transforming Indian Public Procurement with AI
+          </h1>
+          <p class="text-xs sm:text-sm text-gray-200 mb-6 leading-relaxed">
+            Eliminate manual compliance bottlenecks and tender rejections. Our AI platform automates clause verification for statutory registrations, MII declarations, and technical specifications with complete auditable traceability.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="navigateSellerView('dashboard-view', 'nav-btn-s1')" class="bg-[#e67e22] hover:bg-orange-600 text-white font-bold text-xs px-5 py-2.5 rounded shadow">
+              Open Seller Compliance Desk
+            </button>
+            <button onclick="navigatePage('officer-dash-page')" class="bg-yellow-500 hover:bg-yellow-400 text-blue-950 font-bold text-xs px-5 py-2.5 rounded shadow flex items-center space-x-1.5">
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Open Procurement Officer Portal</span>
+            </button>
+          </div>
+        </div>
+        <div class="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-6 shadow-2xl">
+          <div class="flex items-center justify-between border-b border-white/20 pb-3 mb-4">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-shield-check text-yellow-400 text-lg"></i>
+              <span class="text-xs font-bold tracking-wide uppercase text-yellow-300">SIH 2026 Prototype (SIH26100)</span>
+            </div>
+            <span class="bg-green-500 text-white font-bold text-[10px] px-2 py-0.5 rounded-full uppercase">Clean Architecture</span>
+          </div>
+          <h3 class="text-base font-bold mb-2">Integrated Bid Compliance Verification Platform</h3>
+          <p class="text-xs text-gray-200 mb-4 leading-normal">
+            Dual-sided verification engine providing vendor self-service readiness and deep automated scrutiny with officer final decision control.
+          </p>
+          <div class="bg-black/30 p-3 rounded text-xs space-y-1.5 font-mono text-gray-300">
+            <div class="flex items-center text-green-300"><i class="fa-solid fa-check mr-2"></i> Real-time GSTN, PAN, and MSME API cross-referencing</div>
+            <div class="flex items-center text-green-300"><i class="fa-solid fa-check mr-2"></i> Automated MII and OEM Authorization clause validation</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GeM Statistics Ticker -->
+    <section class="bg-white border-y border-gray-200 py-4 px-4 sm:px-8 shadow-sm">
+      <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+        <div class="py-2"><p class="text-xs text-gray-500 font-semibold uppercase">Gross Merchandise Value</p><p class="text-xl sm:text-2xl font-black text-[#162c5b] mt-1">₹ 8,45,210 Cr</p></div>
+        <div class="py-2"><p class="text-xs text-gray-500 font-semibold uppercase">Orders Processed</p><p class="text-xl sm:text-2xl font-black text-[#162c5b] mt-1">2.18 Crore</p></div>
+        <div class="py-2"><p class="text-xs text-gray-500 font-semibold uppercase">Registered Sellers</p><p class="text-xl sm:text-2xl font-black text-[#162c5b] mt-1">64.5 Lakh+</p></div>
+        <div class="py-2"><p class="text-xs text-gray-500 font-semibold uppercase">Verified Primary Buyers</p><p class="text-xl sm:text-2xl font-black text-[#162c5b] mt-1">1.25 Lakh</p></div>
+      </div>
+    </section>
+
+    <footer class="bg-[#162c5b] text-white text-xs mt-auto py-6 px-4 sm:px-8 text-center border-t border-blue-900">
+      <p class="text-gray-300">© 2026 Government e Marketplace (GeM). Prototype designed for Smart India Hackathon (Problem SIH26100).</p>
+    </footer>
+  </div>
+
+  <!-- ========================================================
+       PAGE 2: GEM AUTHENTICATION / LOGIN VIEW
+       ======================================================== -->
+  <div id="login-page" class="page-view">
+    <div class="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
+    <div class="bg-white border-b border-gray-200 py-3 px-6 shadow-sm flex justify-between items-center">
+      <div class="flex items-center space-x-2 cursor-pointer" onclick="navigatePage('landing-page')">
+        <span class="text-2xl font-black text-[#162c5b]">GeM</span>
+        <div class="border-l border-gray-300 pl-2 text-xs leading-tight text-gray-600">
+          <span class="font-bold block">Government e Marketplace</span>
+          <span>Single Sign-On Authentication</span>
+        </div>
+      </div>
+      <button onclick="navigatePage('landing-page')" class="text-xs text-blue-700 hover:underline"><i class="fa-solid fa-house mr-1"></i>Home</button>
+    </div>
+
+    <main class="flex-1 flex items-center justify-center p-4">
+      <div class="w-full max-w-md bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+        <div class="grid grid-cols-2 text-center text-xs font-bold border-b border-gray-200 bg-gray-50">
+          <button id="login-role-seller" onclick="setLoginRole('seller')" class="py-3 border-b-2 border-orange-500 text-orange-600 bg-white">Seller Desk</button>
+          <button id="login-role-officer" onclick="setLoginRole('officer')" class="py-3 text-gray-500 hover:text-[#162c5b]">Procurement Officer</button>
+        </div>
+        <div class="p-6 space-y-4">
+          <h2 class="text-lg font-bold text-[#162c5b] text-center" id="login-form-title">Sign In to Seller Desk</h2>
+          <form onsubmit="handleLoginSubmit(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">User ID / Registration No. *</label>
+              <input type="text" id="login-user-id" value="SELLER_VENDOR_2026" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-600">
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Password *</label>
+              <input type="password" value="••••••••••••" required class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-600">
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Captcha *</label>
+              <div class="flex space-x-2">
+                <input type="text" value="87B4X" required class="flex-1 p-2 border border-gray-300 rounded">
+                <div class="bg-gray-200 text-[#162c5b] font-mono font-bold tracking-widest px-3 py-2 rounded select-none line-through">87B4X</div>
+              </div>
+            </div>
+            <button type="submit" class="w-full bg-[#162c5b] hover:bg-blue-900 text-white py-2.5 rounded font-bold transition shadow">
+              Proceed to Dashboard &gt;
+            </button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================
+       SELLER PORTAL (S1, S2, S3, S4)
+       ======================================================== -->
+  <div id="seller-page" class="page-view">
+    <div class="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
+    <div class="bg-white border-b border-gray-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-14">
+          <div class="flex items-center space-x-3 cursor-pointer" onclick="navigatePage('landing-page')">
+            <span class="text-2xl font-black text-[#162c5b]">GeM</span>
+            <div class="border-l border-gray-300 pl-2 text-xs leading-tight text-gray-600">
+              <span class="font-bold text-gray-800 block">Government e Marketplace</span>
+              <span>Seller Compliance Self-Service Portal</span>
+            </div>
+          </div>
+          <div class="flex items-center space-x-3 text-xs">
+            <span class="hidden sm:inline font-bold text-gray-700">ABC Industries Pvt. Ltd. (SELLER-GJ-8841)</span>
+            <button onclick="navigatePage('login-page')" class="bg-red-600 text-white px-2.5 py-1 rounded">Logout</button>
+          </div>
+        </div>
+        <!-- 4 Seller Tabs S1-S4 -->
+        <nav class="flex space-x-2 text-xs font-semibold overflow-x-auto border-t border-gray-100 py-1">
+          <button onclick="switchSellerTab('dashboard-view')" id="seller-tab-btn-dashboard" class="seller-tab-link py-2 px-3 border-b-2 border-orange-500 text-orange-600 font-bold whitespace-nowrap">
+            S1. Compliance Dashboard
+          </button>
+          <button onclick="switchSellerTab('checklist-view')" id="seller-tab-btn-checklist" class="seller-tab-link py-2 px-3 border-b-2 border-transparent text-gray-500 hover:text-[#162c5b] whitespace-nowrap">
+            S2. Tender Compliance Checklist
+          </button>
+          <button onclick="switchSellerTab('upload-view')" id="seller-tab-btn-upload" class="seller-tab-link py-2 px-3 border-b-2 border-transparent text-gray-500 hover:text-[#162c5b] whitespace-nowrap">
+            S3. Document Upload & AI Verification
+          </button>
+          <button onclick="switchSellerTab('issues-view')" id="seller-tab-btn-issues" class="seller-tab-link py-2 px-3 border-b-2 border-transparent text-gray-500 hover:text-[#162c5b] whitespace-nowrap relative">
+            S4. Issue Resolution / Bid Readiness
+            <span id="issue-counter-badge" class="bg-red-500 text-white text-[9px] px-1.5 py-0.2 rounded-full ml-1">1</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+      <!-- S1. SELLER COMPLIANCE DASHBOARD -->
+      <section id="dashboard-view" class="seller-tab-content active space-y-6">
+        <div class="flex justify-between items-center border-b pb-3">
+          <div>
+            <h1 class="text-xl font-black text-[#162c5b]">S1. Seller Compliance Dashboard</h1>
+            <p class="text-xs text-gray-500">Overall readiness and active statutory status prior to tender submission.</p>
+          </div>
+          <span class="text-xs font-mono font-bold text-blue-900 bg-blue-50 px-2.5 py-1 rounded border border-blue-200">Tender: GEM/2026/B/9012481</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">Compliance Readiness</span>
+              <p class="text-3xl font-black text-[#162c5b] mt-1" id="dash-score-val">87%</p>
+              <span class="text-xs text-amber-600 font-semibold" id="dash-score-sub"><i class="fa-solid fa-triangle-exclamation"></i> Attention Req.</span>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-blue-50 border-4 border-blue-600 flex items-center justify-center font-black text-xs text-blue-800" id="dash-score-circle">87%</div>
+          </div>
+          <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between">
+            <div><span class="text-xs font-bold text-gray-400 uppercase tracking-wide">🟢 Verified</span><p class="text-2xl font-black text-green-600 mt-1" id="dash-verified-count">12</p></div>
+            <div class="h-10 w-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-lg"><i class="fa-solid fa-circle-check"></i></div>
+          </div>
+          <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between">
+            <div><span class="text-xs font-bold text-gray-400 uppercase tracking-wide">🟡 Pending</span><p class="text-2xl font-black text-amber-500 mt-1" id="dash-pending-count">2</p></div>
+            <div class="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-lg"><i class="fa-solid fa-clock"></i></div>
+          </div>
+          <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-red-300" onclick="navigateSellerView('issues-view', 'nav-btn-s4')">
+            <div><span class="text-xs font-bold text-gray-400 uppercase tracking-wide">🔴 Issues</span><p class="text-2xl font-black text-red-600 mt-1" id="dash-issues-count">1</p></div>
+            <div class="h-10 w-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center text-lg animate-pulse" id="dash-issues-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          </div>
+        </div>
+
+        <!-- Portal Verification Status -->
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-5 space-y-3">
+          <h2 class="text-xs font-black uppercase text-gray-700 tracking-wider">Portal Verification Status (Live Statutory API Feeds)</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 text-xs">
+            <div class="p-3 bg-gray-50 border rounded text-center"><p class="text-[10px] text-gray-400 font-bold mb-1">GSTN Gateway</p><span class="font-bold text-green-700" id="gstn-status-text">✓ Live Synced</span></div>
+            <div class="p-3 bg-gray-50 border rounded text-center"><p class="text-[10px] text-gray-400 font-bold mb-1">Income Tax ITR</p><span class="font-bold text-amber-600">⚠ Pending Re-auth</span></div>
+            <div class="p-3 bg-gray-50 border rounded text-center"><p class="text-[10px] text-gray-400 font-bold mb-1">Udyam MSME</p><span class="font-bold text-green-700">✓ Verified</span></div>
+            <div class="p-3 bg-gray-50 border rounded text-center"><p class="text-[10px] text-gray-400 font-bold mb-1">ICAI UDIN</p><span class="font-bold text-green-700">✓ CA Attested</span></div>
+            <div class="p-3 bg-gray-50 border rounded text-center"><p class="text-[10px] text-gray-400 font-bold mb-1">EPFO / ESIC</p><span class="font-bold text-amber-600">⏳ Querying</span></div>
+            <div class="p-3 bg-gray-50 border rounded text-center"><p class="text-[10px] text-gray-400 font-bold mb-1">DPIIT Startup</p><span class="font-bold text-gray-400">N/A</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S2. TENDER COMPLIANCE CHECKLIST -->
+      <section id="checklist-view" class="seller-tab-content space-y-6">
+        <div class="flex justify-between items-center border-b pb-3">
+          <div>
+            <h1 class="text-xl font-black text-[#162c5b]">S2. Tender Compliance Checklist</h1>
+            <p class="text-xs text-gray-500">Tender-specific requirements audit for Bid: GEM/2026/B/9012481</p>
+          </div>
+          <button onclick="navigateSellerView('upload-view', 'nav-btn-s3')" class="bg-[#162c5b] text-white text-xs font-bold px-3 py-1.5 rounded shadow">Upload Missing Document</button>
+        </div>
+
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden text-xs">
+          <table class="w-full text-left">
+            <thead class="bg-gray-100 text-gray-600 font-bold uppercase border-b">
+              <tr><th class="p-3">Requirement</th><th class="p-3">Status</th><th class="p-3 text-right">Action</th></tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr><td class="p-3 font-bold">Udyam / MSME</td><td class="p-3 text-green-700 font-bold">✓ Verified</td><td class="p-3 text-right"><button onclick="viewDocDetails('Udyam Certificate', 'UDYAM-GJ-01-008291', 'Valid Lifetime', 'MSME API')" class="text-blue-700 font-bold">View</button></td></tr>
+              <tr><td class="p-3 font-bold">GST Registration</td><td class="p-3 text-green-700 font-bold">✓ Verified</td><td class="p-3 text-right"><button onclick="viewDocDetails('GST Certificate', '24AAACB1234F1Z5', 'Active Regular', 'GSTN API')" class="text-blue-700 font-bold">View</button></td></tr>
+              <tr id="checklist-gstr-row" class="bg-red-50/50"><td class="p-3 font-bold text-red-900">GST Returns</td><td class="p-3 text-red-700 font-bold" id="checklist-gstr-status">⚠ Pending</td><td class="p-3 text-right" id="checklist-gstr-action"><button onclick="navigateSellerView('issues-view', 'nav-btn-s4')" class="bg-red-600 text-white px-2.5 py-1 rounded font-bold">Update</button></td></tr>
+              <tr><td class="p-3 font-bold">PAN</td><td class="p-3 text-green-700 font-bold">✓ Verified</td><td class="p-3 text-right"><button onclick="viewDocDetails('PAN Card', 'AAACB1234F', 'Valid', 'CBDT NSDL')" class="text-blue-700 font-bold">View</button></td></tr>
+              <tr class="bg-amber-50/40"><td class="p-3 font-bold">Income Tax</td><td class="p-3 text-amber-700 font-bold">⚠ Pending</td><td class="p-3 text-right"><button onclick="navigateSellerView('upload-view', 'nav-btn-s3')" class="text-blue-700 font-bold">Update</button></td></tr>
+              <tr><td class="p-3 font-bold">Make in India</td><td class="p-3 text-green-700 font-bold">✓ Verified</td><td class="p-3 text-right"><button onclick="viewDocDetails('Make in India Declaration', '58% Local Content', 'Class-I Local Supplier', 'CA Attested with UDIN')" class="text-blue-700 font-bold">View</button></td></tr>
+              <tr class="bg-amber-50/40"><td class="p-3 font-bold">EPFO / ESIC</td><td class="p-3 text-amber-700 font-bold">⚠ Pending</td><td class="p-3 text-right"><button onclick="navigateSellerView('upload-view', 'nav-btn-s3')" class="text-blue-700 font-bold">Update</button></td></tr>
+              <tr><td class="p-3 font-bold">OEM Authorization</td><td class="p-3 text-green-700 font-bold">✓ Verified</td><td class="p-3 text-right"><button onclick="viewDocDetails('OEM Authorization (MAF)', 'OEM-MAF-9012', 'Valid for Bid Duration', 'Digital Signature Validated')" class="text-blue-700 font-bold">View</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- S3. DOCUMENT UPLOAD & AI VERIFICATION -->
+      <section id="upload-view" class="seller-tab-content space-y-6">
+        <div class="border-b pb-3">
+          <h1 class="text-xl font-black text-[#162c5b]">S3. Document Upload & AI Verification</h1>
+          <p class="text-xs text-gray-500">Seller uploads documents → AI extracts details → system cross-checks them.</p>
+        </div>
+
+        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+          <p class="text-xs font-bold text-gray-600 uppercase mb-3">5-Stage Verification Flow</p>
+          <div class="grid grid-cols-5 gap-2 text-center text-xs">
+            <div class="p-2 bg-blue-50 border border-blue-200 rounded font-bold text-blue-900"><span class="block text-[10px] text-blue-500">1. UPLOAD</span>Upload Document</div>
+            <div class="p-2 bg-blue-50 border border-blue-200 rounded font-bold text-blue-900"><span class="block text-[10px] text-blue-500">2. OCR</span>OCR Extraction</div>
+            <div class="p-2 bg-blue-50 border border-blue-200 rounded font-bold text-blue-900"><span class="block text-[10px] text-blue-500">3. AI CHECK</span>AI Validation</div>
+            <div class="p-2 bg-blue-50 border border-blue-200 rounded font-bold text-blue-900"><span class="block text-[10px] text-blue-500">4. API SYNC</span>Portal Cross-check</div>
+            <div class="p-2 bg-green-50 border border-green-300 rounded font-bold text-green-800"><span class="block text-[10px] text-green-600">5. STATUS</span>✓ Verified Match</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm space-y-3 text-xs">
+            <h2 class="font-bold text-[#162c5b]">Upload Document for Scrutiny</h2>
+            <select class="w-full p-2 border border-gray-300 rounded"><option>GST Certificate</option><option>Make in India (MII) CA Certificate</option></select>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center bg-gray-50">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-gray-400 mb-1"></i>
+              <p class="font-bold">gst_certificate_24AAACB.pdf</p>
+            </div>
+            <button onclick="simulateDocumentAiCheck()" id="run-ai-check-btn" class="w-full bg-[#162c5b] hover:bg-blue-900 text-white font-bold py-2 rounded shadow">
+              Run AI Extraction & Cross-Check
+            </button>
+          </div>
+          <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm space-y-3 text-xs">
+            <div class="flex justify-between items-center">
+              <h2 class="font-bold text-[#162c5b]">Extraction Telemetry</h2>
+              <span id="ai-telemetry-badge" class="bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded text-[10px]">✓ Match</span>
+            </div>
+            <div class="p-2.5 bg-gray-50 border rounded font-mono text-[11px] space-y-1">
+              <p>• GSTIN: <strong class="text-gray-900">24AAACB1234F1Z5</strong></p>
+              <p>• Legal Name: <strong class="text-gray-900">ABC Industries Pvt. Ltd.</strong></p>
+              <p>• Cross-check: <strong class="text-green-700">GST Portal (Active Taxpayer)</strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S4. ISSUE RESOLUTION / BID READINESS -->
+      <section id="issues-view" class="seller-tab-content space-y-6">
+        <div class="border-b pb-3">
+          <h1 class="text-xl font-black text-red-600 flex items-center space-x-2">
+            <i class="fa-solid fa-triangle-exclamation"></i><span>S4. Issue Resolution / Bid Readiness</span>
+          </h1>
+          <p class="text-xs text-gray-500">Fix detected inconsistencies before bid submission to avoid automated technical rejection.</p>
+        </div>
+
+        <div class="bg-white rounded-lg border-2 border-red-300 p-5 space-y-4 shadow-sm" id="issue-card-box">
+          <div class="p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-amber-900 space-y-1">
+            <p class="font-bold">⚠ Latest filing information could not be verified.</p>
+            <p><strong>Reason:</strong> Data mismatch / missing information</p>
+            <p><strong>Action:</strong> Update information with latest GSTR-3B ARN.</p>
+          </div>
+          <div class="bg-gray-50 p-4 rounded border grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">Enter Valid GSTR-3B ARN *</label>
+              <input type="text" id="remedy-arn-input" value="AA240326009817X" class="w-full p-2 border border-gray-300 rounded font-mono">
+            </div>
+            <div class="flex items-end">
+              <button onclick="handleResolveIssue()" id="resolve-issue-btn" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2 rounded shadow">
+                Update Information & Re-verify
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="issue-resolved-banner" class="hidden bg-green-50 border-2 border-green-400 p-5 rounded-lg text-center space-y-2">
+          <i class="fa-solid fa-circle-check text-green-600 text-3xl"></i>
+          <h3 class="text-sm font-bold text-green-900">Bid Readiness: 98%</h3>
+          <p class="text-xs text-green-700">✓ All mandatory documents uploaded | ✓ Registrations verified | ✓ No detected inconsistencies</p>
+          <button onclick="alert('Bid signed and submitted successfully to GeM!')" class="bg-orange-600 text-white px-5 py-2 rounded text-xs font-bold shadow">
+            Sign & Submit Bid on GeM
+          </button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ========================================================
+       PAGE 4: O1. OFFICER DASHBOARD
+       ======================================================== -->
+  <div id="officer-dash-page" class="page-view">
+    <div class="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
+    <div class="bg-[#162c5b] text-white shadow-md py-3 px-6 flex justify-between items-center text-xs">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigatePage('landing-page')">
+        <span class="text-xl font-black">GeM</span>
+        <span class="bg-blue-900 text-yellow-300 px-2 py-0.5 rounded font-bold">O1. Officer Dashboard</span>
+      </div>
+      <span>ONGC Technical Scrutiny Division</span>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h1 class="text-xl font-black text-[#162c5b]">Active Procurement Tenders</h1>
+          <p class="text-xs text-gray-500">Live monitoring of tender bids and automated compliance ingestion.</p>
+        </div>
+        <button onclick="navigatePage('officer-compare-page')" class="bg-blue-900 text-white text-xs font-bold px-3 py-2 rounded shadow">
+          Go to O2. Bidder Comparison &gt;
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-lg border shadow-sm"><p class="text-xs text-gray-500 uppercase font-bold">Active Tenders</p><p class="text-2xl font-black text-[#162c5b] mt-1">8</p></div>
+        <div class="bg-white p-4 rounded-lg border shadow-sm"><p class="text-xs text-gray-500 uppercase font-bold">Bids Under Scrutiny</p><p class="text-2xl font-black text-orange-600 mt-1">24</p></div>
+        <div class="bg-white p-4 rounded-lg border shadow-sm"><p class="text-xs text-gray-500 uppercase font-bold">AI Scanned Bids</p><p class="text-2xl font-black text-green-600 mt-1">100%</p></div>
+        <div class="bg-white p-4 rounded-lg border shadow-sm"><p class="text-xs text-gray-500 uppercase font-bold">Discrepancies Flagged</p><p class="text-2xl font-black text-amber-500 mt-1">3</p></div>
+      </div>
+
+      <div class="bg-white rounded-lg border shadow-sm overflow-hidden text-xs">
+        <table class="w-full text-left">
+          <thead class="bg-gray-100 border-b font-bold text-gray-600 uppercase">
+            <tr><th class="p-3">Tender Ref No.</th><th class="p-3">Description</th><th class="p-3">Bidders</th><th class="p-3">AI Scrutiny Status</th><th class="p-3 text-right">Action</th></tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr class="bg-blue-50/40">
+              <td class="p-3 font-mono font-bold text-blue-900">GEM/2026/B/9012481</td>
+              <td class="p-3">High Pressure Industrial Flow Control Valves</td>
+              <td class="p-3 font-bold">3 Bidders</td>
+              <td class="p-3"><span class="bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded text-[10px]">Scrutiny Complete</span></td>
+              <td class="p-3 text-right"><button onclick="navigatePage('officer-compare-page')" class="text-blue-700 font-bold hover:underline">Compare Bidders &gt;</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================
+       PAGE 5: O2. BIDDER COMPARISON
+       ======================================================== -->
+  <div id="officer-compare-page" class="page-view">
+    <div class="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
+    <div class="bg-[#162c5b] text-white shadow-md py-3 px-6 flex justify-between items-center text-xs">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigatePage('landing-page')">
+        <span class="text-xl font-black">GeM</span>
+        <span class="bg-blue-900 text-yellow-300 px-2 py-0.5 rounded font-bold">O2. Bidder Comparison</span>
+      </div>
+      <button onclick="navigatePage('officer-dash-page')" class="text-xs bg-white/10 px-2 py-1 rounded">&lt; Back to Tenders</button>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h1 class="text-xl font-black text-[#162c5b]">Comparative Bidder Scrutiny</h1>
+          <p class="text-xs text-gray-500">Tender: GEM/2026/B/9012481 (Compare bidders by compliance and risk score)</p>
+        </div>
+        <button onclick="navigatePage('officer-page')" class="bg-green-700 text-white text-xs font-bold px-3 py-2 rounded shadow">
+          Inspect ABC Industries (O3 Detail) ⭐ &gt;
+        </button>
+      </div>
+
+      <div class="bg-white rounded-lg border shadow-sm overflow-hidden text-xs">
+        <table class="w-full text-left">
+          <thead class="bg-gray-100 border-b font-bold text-gray-600 uppercase">
+            <tr><th class="p-3">Rank / Bidder Name</th><th class="p-3">Compliance Score</th><th class="p-3">Risk Level</th><th class="p-3">Statutory Parity</th><th class="p-3">MII Local Content</th><th class="p-3 text-right">Detail Audit</th></tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr class="bg-emerald-50/40">
+              <td class="p-3 font-bold text-gray-900">#1 ABC Industries Pvt. Ltd.</td>
+              <td class="p-3 font-bold text-green-700">94 / 100</td>
+              <td class="p-3"><span class="bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded text-[10px]">🟢 LOW</span></td>
+              <td class="p-3 font-bold text-green-700">6 / 6 Passed</td>
+              <td class="p-3 font-mono">58.4% (Class-I)</td>
+              <td class="p-3 text-right"><button onclick="navigatePage('officer-page')" class="bg-[#162c5b] text-white px-2.5 py-1 rounded font-bold">O3. Deep Audit ⭐</button></td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-gray-900">#2 Global Industrial Valves Ltd.</td>
+              <td class="p-3 font-bold text-amber-700">72 / 100</td>
+              <td class="p-3"><span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">🟡 MEDIUM</span></td>
+              <td class="p-3 font-bold text-amber-700">5 / 6 Passed</td>
+              <td class="p-3 font-mono">51.2% (Class-I)</td>
+              <td class="p-3 text-right"><button class="border border-gray-300 px-2.5 py-1 rounded text-gray-600">View Audit</button></td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-gray-900">#3 Vertex Fluid Systems</td>
+              <td class="p-3 font-bold text-red-700">46 / 100</td>
+              <td class="p-3"><span class="bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[10px]">🔴 HIGH</span></td>
+              <td class="p-3 font-bold text-red-700">3 / 6 Passed</td>
+              <td class="p-3 font-mono">34.0% (Failed)</td>
+              <td class="p-3 text-right"><button class="border border-gray-300 px-2.5 py-1 rounded text-gray-600">View Audit</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================
+       PAGE 6: O3. BIDDER VERIFICATION DETAIL ⭐ (HERO SCREEN)
+       ======================================================== -->
+  <div id="officer-page" class="page-view">
+    <div class="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
+    <div class="bg-[#162c5b] text-white shadow-md py-3 px-6 flex justify-between items-center text-xs">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigatePage('landing-page')">
+        <span class="text-xl font-black">GeM</span>
+        <span class="bg-yellow-400 text-blue-950 px-2 py-0.5 rounded font-black text-[10px]">O3. Bidder Verification Detail ⭐</span>
+      </div>
+      <button onclick="navigatePage('officer-compare-page')" class="text-xs bg-white/10 px-2 py-1 rounded">&lt; Back to Comparison</button>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h1 class="text-xl font-extrabold text-[#162c5b]">Bidder: ABC Industries Pvt. Ltd.</h1>
+          <p class="text-xs text-gray-500">Tender: GEM/2026/B/9012481 • Full statutory + tender compliance scrutiny</p>
+        </div>
+        <div class="flex space-x-2">
+          <button onclick="navigatePage('risk-page')" class="bg-purple-700 text-white text-xs font-bold px-3 py-1.5 rounded shadow">
+            O4. Findings & Risk &gt;
+          </button>
+        </div>
+      </div>
+
+      <!-- HERO BANNER -->
+      <div class="bg-gradient-to-r from-[#162c5b] via-[#1c3977] to-[#12244d] rounded-xl shadow-lg text-white p-6 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div>
+          <span class="bg-yellow-400 text-blue-950 font-black text-[10px] uppercase px-2 py-0.5 rounded">AI Compliance Summary</span>
+          <h2 class="text-2xl sm:text-3xl font-black mt-2">94% Compliance | <span class="text-emerald-400">LOW RISK</span></h2>
+          <p class="text-xs text-blue-200 mt-1">Cross-check against 10 statutory sources and tender clauses completed.</p>
+        </div>
+        <div class="flex space-x-4 bg-black/25 p-3 rounded-lg border border-white/10 text-center text-xs">
+          <div><p class="text-gray-300 font-bold">Statutory</p><p class="text-lg font-black text-green-400">6 / 6</p></div>
+          <div class="border-l border-white/20 pl-4"><p class="text-gray-300 font-bold">Tender-Specific</p><p class="text-lg font-black text-green-400">4 / 4</p></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
+        <!-- Statutory Verification -->
+        <div class="bg-white p-5 rounded-lg border shadow-sm space-y-2">
+          <h3 class="font-bold uppercase text-gray-700 border-b pb-2">Statutory Verification</h3>
+          <div class="flex justify-between py-1.5 border-b"><span>Udyam Registration</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5 border-b"><span>GST Registration</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5 border-b"><span>PAN Verification</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5 border-b"><span>Income Tax Returns (Past 3 FY)</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5 border-b"><span>EPFO Compliance</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5"><span>ESIC Registration</span><span class="font-bold text-green-700">✓ Verified</span></div>
+        </div>
+
+        <!-- Tender-Specific Verification -->
+        <div class="bg-white p-5 rounded-lg border shadow-sm space-y-2">
+          <h3 class="font-bold uppercase text-gray-700 border-b pb-2">Tender-Specific Verification</h3>
+          <div class="flex justify-between py-1.5 border-b"><span>OEM Authorization (MAF)</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5 border-b"><span>Make in India (MII) Preference</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5 border-b"><span>Local Content Percentage (58.4%)</span><span class="font-bold text-green-700">✓ Verified</span></div>
+          <div class="flex justify-between py-1.5"><span>Required Past Experience</span><span class="font-bold text-green-700">✓ Verified</span></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================
+       PAGE 7: O4. AI FINDINGS & RISK ANALYSIS
+       ======================================================== -->
+  <div id="risk-page" class="page-view">
+    <div class="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
+    <div class="bg-[#162c5b] text-white shadow-md py-3 px-6 flex justify-between items-center text-xs">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigatePage('landing-page')">
+        <span class="text-xl font-black">GeM</span>
+        <span class="bg-emerald-500 text-white px-2 py-0.5 rounded font-bold">O4. Findings & Risk Analysis</span>
+      </div>
+      <button onclick="navigatePage('officer-page')" class="text-xs bg-white/10 px-2 py-1 rounded">&lt; Back to Detail</button>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <h1 class="text-xl font-extrabold text-[#162c5b]">Explainable Risk & Compliance Score</h1>
+          <p class="text-xs text-gray-500">Mathematical attribution of score factors and risk classification.</p>
+        </div>
+        <button onclick="navigatePage('audit-page')" class="bg-blue-900 text-white text-xs font-bold px-3 py-1.5 rounded shadow">
+          O5. Audit Trail & Decision ⭐ &gt;
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="bg-white p-5 rounded-lg border shadow-sm">
+          <p class="font-bold text-gray-400 uppercase">Compliance Score</p>
+          <p class="text-4xl font-black text-[#162c5b] mt-1">94 / 100</p>
+        </div>
+        <div class="bg-white p-5 rounded-lg border shadow-sm">
+          <p class="font-bold text-gray-400 uppercase">Risk Level</p>
+          <p class="text-4xl font-black text-green-600 mt-1">🟢 LOW</p>
+        </div>
+        <div class="bg-white p-5 rounded-lg border shadow-sm">
+          <p class="font-bold text-gray-400 uppercase">Traffic Light Tier</p>
+          <div class="flex space-x-2 mt-2 font-bold text-center">
+            <span class="flex-1 bg-green-600 text-white py-1 rounded">🟢 Low</span>
+            <span class="flex-1 bg-gray-100 text-gray-400 py-1 rounded">🟡 Medium</span>
+            <span class="flex-1 bg-gray-100 text-gray-400 py-1 rounded">🔴 High</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg border shadow-sm overflow-hidden text-xs">
+        <table class="w-full text-left">
+          <thead class="bg-gray-100 border-b font-bold text-gray-600 uppercase">
+            <tr><th class="p-3">Factor</th><th class="p-3">Assigned Weight</th><th class="p-3">Result</th><th class="p-3 text-right">Verdict</th></tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr><td class="p-3 font-bold">Document Validity</td><td class="p-3 font-mono">20%</td><td class="p-3 font-bold">100%</td><td class="p-3 text-right text-green-700 font-bold">✓ Full Score</td></tr>
+            <tr><td class="p-3 font-bold">Government Verification</td><td class="p-3 font-mono">30%</td><td class="p-3 font-bold">98%</td><td class="p-3 text-right text-green-700 font-bold">✓ API Synced</td></tr>
+            <tr><td class="p-3 font-bold">Tender Compliance</td><td class="p-3 font-mono">25%</td><td class="p-3 font-bold">95%</td><td class="p-3 text-right text-green-700 font-bold">✓ Criteria Met</td></tr>
+            <tr><td class="p-3 font-bold">Data Consistency</td><td class="p-3 font-mono">15%</td><td class="p-3 font-bold">92%</td><td class="p-3 text-right text-green-700 font-bold">✓ High Parity</td></tr>
+            <tr><td class="p-3 font-bold">Risk Indicators</td><td class="p-3 font-mono">10%</td><td class="p-3 font-bold text-green-700">Low (Zero Negative Flags)</td><td class="p-3 text-right text-green-700 font-bold">✓ Clean Record</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================================
+       PAGE 8: O5. AUDIT TRAIL + FINAL DECISION ⭐
+       ======================================================== -->
+  <div id="audit-page" class="page-view">
+    <div class="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
+    <div class="bg-[#162c5b] text-white shadow-md py-3 px-6 flex justify-between items-center text-xs">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigatePage('landing-page')">
+        <span class="text-xl font-black">GeM</span>
+        <span class="bg-yellow-400 text-blue-950 px-2 py-0.5 rounded font-black text-[10px]">O5. Audit Trail + Final Decision ⭐</span>
+      </div>
+      <button onclick="navigatePage('officer-page')" class="text-xs bg-white/10 px-2 py-1 rounded">&lt; Back to Scrutiny</button>
+    </div>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+      <div class="border-b pb-3">
+        <h1 class="text-xl font-extrabold text-[#162c5b]">Complete Verification Audit Trail & Official Sign-Off Gate</h1>
+        <p class="text-xs text-gray-500">Chronological verification history + procurement officer decision console.</p>
+      </div>
+
+      <!-- Verification Timeline -->
+      <div class="bg-white p-5 rounded-lg border shadow-sm space-y-3 text-xs">
+        <h2 class="font-bold uppercase text-gray-700 border-b pb-2">Verification Timeline</h2>
+        <div class="space-y-2 font-mono">
+          <div class="flex items-center space-x-2"><span class="font-bold text-blue-900">10:42 AM</span><span>—</span><span>Bidder document uploaded</span></div>
+          <div class="flex items-center space-x-2 text-gray-400 pl-4">↓</div>
+          <div class="flex items-center space-x-2"><span class="font-bold text-blue-900">10:43 AM</span><span>—</span><span>OCR extraction completed</span></div>
+          <div class="flex items-center space-x-2 text-gray-400 pl-4">↓</div>
+          <div class="flex items-center space-x-2"><span class="font-bold text-blue-900">10:43 AM</span><span>—</span><span>GST verification performed</span></div>
+          <div class="flex items-center space-x-2 text-gray-400 pl-4">↓</div>
+          <div class="flex items-center space-x-2"><span class="font-bold text-blue-900">10:44 AM</span><span>—</span><span>PAN verification performed</span></div>
+          <div class="flex items-center space-x-2 text-gray-400 pl-4">↓</div>
+          <div class="flex items-center space-x-2"><span class="font-bold text-blue-900">10:45 AM</span><span>—</span><span>AI cross-verification completed</span></div>
+          <div class="flex items-center space-x-2 text-gray-400 pl-4">↓</div>
+          <div class="flex items-center space-x-2 text-amber-700 font-bold"><span class="font-bold text-amber-800">10:45 AM</span><span>—</span><span>Discrepancy flagged</span></div>
+          <div class="flex items-center space-x-2 text-gray-400 pl-4">↓</div>
+          <div class="flex items-center space-x-2"><span class="font-bold text-blue-900">11:02 AM</span><span>—</span><span>Officer reviewed discrepancy</span></div>
+          <div class="flex items-center space-x-2 text-gray-400 pl-4">↓</div>
+          <div class="flex items-center space-x-2 text-green-700 font-bold"><span class="font-bold text-green-800">11:05 AM</span><span>—</span><span>Final decision recorded</span></div>
+        </div>
+      </div>
+
+      <!-- Immutable Audit Ledger Table -->
+      <div class="bg-white rounded-lg border shadow-sm overflow-hidden text-xs">
+        <div class="px-5 py-3 bg-gray-50 border-b font-bold uppercase text-gray-700">Audit Trail Table</div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-gray-100 border-b font-bold text-gray-600">
+              <tr><th class="p-3">Timestamp</th><th class="p-3">Check</th><th class="p-3">Source</th><th class="p-3">Result</th><th class="p-3">Evidence</th><th class="p-3 text-right">Performed By</th></tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              <tr><td class="p-3 font-mono">10:42 AM</td><td>Upload Scan</td><td>GeM Gateway</td><td>✓ Clean</td><td class="p-3 text-blue-700 font-mono">SHA-256: 8f4a29...</td><td class="p-3 text-right">ABC Industries</td></tr>
+              <tr><td class="p-3 font-mono">10:43 AM</td><td>OCR Extraction</td><td>Vision Engine</td><td>✓ 99.4% Clarity</td><td class="p-3 text-blue-700 font-mono">Token-Map #901</td><td class="p-3 text-right">AI Microservice</td></tr>
+              <tr><td class="p-3 font-mono">10:43 AM</td><td>GST Status</td><td>GSTN API</td><td>✓ Active</td><td class="p-3 text-blue-700 font-mono">Receipt #88192</td><td class="p-3 text-right">Automated Sync</td></tr>
+              <tr><td class="p-3 font-mono">10:44 AM</td><td>PAN Verification</td><td>CBDT / NSDL</td><td>✓ Matched</td><td class="p-3 text-blue-700 font-mono">CBDT-TX #40192</td><td class="p-3 text-right">Automated Sync</td></tr>
+              <tr><td class="p-3 font-mono">10:45 AM</td><td>Cross-Verification</td><td>ProcureAI Core</td><td>✓ 11/12 Parity</td><td class="p-3 text-blue-700 font-mono">Matrix #9012481</td><td class="p-3 text-right">AI Evaluator</td></tr>
+              <tr class="bg-amber-50/50"><td class="p-3 font-mono text-amber-900 font-bold">10:45 AM</td><td>Discrepancy Flag</td><td>NLP Matcher</td><td>⚠ Name Var</td><td class="p-3 text-amber-800 font-mono">Flag #DISC-1</td><td class="p-3 text-right">AI Evaluator</td></tr>
+              <tr><td class="p-3 font-mono">11:02 AM</td><td>Officer Review</td><td>Evaluation Desk</td><td>✓ Accepted</td><td class="p-3 text-blue-700 font-mono">Review #OFF-092</td><td class="p-3 text-right font-bold">Er. Rajesh Varma</td></tr>
+              <tr class="bg-green-50/40"><td class="p-3 font-mono text-green-900 font-bold">11:05 AM</td><td>Final Adjudication</td><td>DSC Token Gate</td><td>✓ Qualified</td><td class="p-3 text-blue-700 font-mono">DSC-Sign #2026</td><td class="p-3 text-right font-bold">Er. Rajesh Varma</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Officer Final Decision Console -->
+      <div class="bg-white p-6 rounded-lg border-2 border-gray-300 shadow-sm space-y-4 text-xs">
+        <div class="flex justify-between items-center border-b pb-3">
+          <div>
+            <h2 class="font-bold text-sm text-gray-900 uppercase">Final Decision — Procurement Officer</h2>
+            <p class="text-gray-500">Er. Rajesh Varma, Executive Engineer (Procurement & Contracts), ONGC</p>
+          </div>
+          <span class="bg-blue-900 text-white font-bold px-2 py-0.5 rounded text-[10px]">Human-in-Control Architecture</span>
+        </div>
+
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Official Committee Scrutiny Remarks *</label>
+          <textarea id="officer-notes-input" rows="2" class="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-600" placeholder="State formal committee remarks..."></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+          <button onclick="executeFinalDecision('Approve / Qualify', 'Approved')" class="p-3 bg-green-700 hover:bg-green-800 text-white rounded font-bold shadow text-center">
+            Approve / Qualify
+          </button>
+          <button onclick="executeFinalDecision('Send for Clarification', 'Clarification Sent')" class="p-3 bg-amber-500 hover:bg-amber-600 text-white rounded font-bold shadow text-center">
+            Send for Clarification
+          </button>
+          <button onclick="executeFinalDecision('Reject / Disqualify', 'Disqualified')" class="p-3 bg-red-700 hover:bg-red-800 text-white rounded font-bold shadow text-center">
+            Reject / Disqualify
+          </button>
+        </div>
+
+        <div id="decision-receipt-card" class="hidden p-4 bg-green-50 border border-green-300 rounded text-green-900 space-y-1">
+          <p class="font-bold" id="decision-receipt-text"></p>
+          <p class="font-mono text-[11px] text-green-700" id="decision-receipt-hash"></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Document Details Modal -->
+  <div id="seller-doc-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg max-w-md w-full p-5 space-y-3 shadow-xl">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="font-bold text-sm text-[#162c5b]" id="modal-doc-title">Document Details</h3>
+        <button onclick="closeDocDetailsModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-2 text-xs" id="modal-doc-body"></div>
+      <div class="text-right pt-2 border-t">
+        <button onclick="closeDocDetailsModal()" class="px-3 py-1 bg-[#162c5b] text-white text-xs rounded font-bold">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SPA CONTROLLER JAVASCRIPT
+       ======================================================== -->
+  <script>
+    let activeRole = 'seller';
+
+    // Highlight helper for Top Switcher
+    function updateTopNavHighlight(buttonId) {
+      document.querySelectorAll('.nav-switch-btn').forEach(btn => {
+        btn.className = "nav-switch-btn px-2.5 py-1 rounded font-semibold transition text-gray-300 hover:text-white bg-blue-900/60";
+      });
+
+      const targetBtn = document.getElementById(buttonId);
+      if (targetBtn) {
+        if (buttonId === 'nav-btn-landing') {
+          targetBtn.className = "nav-switch-btn px-2.5 py-1 rounded font-semibold transition bg-orange-600 text-white shadow-xs";
+        } else {
+          targetBtn.className = "nav-switch-btn px-2.5 py-1 rounded font-black transition bg-yellow-400 text-blue-950 shadow";
+        }
+      }
+    }
+
+    function navigatePage(pageId) {
+      document.querySelectorAll('.page-view').forEach(view => view.classList.remove('active'));
+      const target = document.getElementById(pageId);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo(0, 0);
+      }
+
+      const btnMap = {
+        'landing-page': 'nav-btn-landing',
+        'login-page': 'nav-btn-login',
+        'officer-dash-page': 'nav-btn-o1',
+        'officer-compare-page': 'nav-btn-o2',
+        'officer-page': 'nav-btn-o3',
+        'risk-page': 'nav-btn-o4',
+        'audit-page': 'nav-btn-o6'
+      };
+
+      if (btnMap[pageId]) {
+        updateTopNavHighlight(btnMap[pageId]);
+      }
+    }
+
+    // Direct Navigation for S1, S2, S3, S4
+    function navigateSellerView(tabId, topButtonId) {
+      navigatePage('seller-page');
+      switchSellerTab(tabId);
+      updateTopNavHighlight(topButtonId);
+    }
+
+    function setLoginRole(role) {
+      activeRole = role;
+      const sellerBtn = document.getElementById('login-role-seller');
+      const officerBtn = document.getElementById('login-role-officer');
+      const title = document.getElementById('login-form-title');
+      const userInput = document.getElementById('login-user-id');
+
+      if (role === 'seller') {
+        sellerBtn.className = "py-3 border-b-2 border-orange-500 text-orange-600 bg-white";
+        officerBtn.className = "py-3 text-gray-500 hover:text-[#162c5b]";
+        title.innerText = "Sign In to Seller Desk";
+        userInput.value = "SELLER_VENDOR_2026";
+      } else {
+        officerBtn.className = "py-3 border-b-2 border-orange-500 text-orange-600 bg-white";
+        sellerBtn.className = "py-3 text-gray-500 hover:text-[#162c5b]";
+        title.innerText = "Sign In as Procurement Officer";
+        userInput.value = "OFFICER_ONGC_9012";
+      }
+    }
+
+    function handleLoginSubmit(event) {
+      event.preventDefault();
+      if (activeRole === 'seller') {
+        navigateSellerView('dashboard-view', 'nav-btn-s1');
+      } else {
+        navigatePage('officer-dash-page');
+      }
+    }
+
+    // Switch tabs within Seller Desk and sync with top navigation
+    function switchSellerTab(tabId) {
+      document.querySelectorAll('.seller-tab-content').forEach(view => view.classList.remove('active'));
+      document.querySelectorAll('.seller-tab-link').forEach(btn => {
+        btn.classList.remove('border-orange-500', 'text-orange-600', 'font-bold');
+        btn.classList.add('border-transparent', 'text-gray-500');
+      });
+
+      document.getElementById(tabId).classList.add('active');
+
+      const btnMap = {
+        'dashboard-view': 'seller-tab-btn-dashboard',
+        'checklist-view': 'seller-tab-btn-checklist',
+        'upload-view': 'seller-tab-btn-upload',
+        'issues-view': 'seller-tab-btn-issues'
+      };
+
+      const topBtnMap = {
+        'dashboard-view': 'nav-btn-s1',
+        'checklist-view': 'nav-btn-s2',
+        'upload-view': 'nav-btn-s3',
+        'issues-view': 'nav-btn-s4'
+      };
+
+      const activeBtn = document.getElementById(btnMap[tabId]);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-transparent', 'text-gray-500');
+        activeBtn.classList.add('border-orange-500', 'text-orange-600', 'font-bold');
+      }
+
+      if (topBtnMap[tabId]) {
+        updateTopNavHighlight(topBtnMap[tabId]);
+      }
+    }
+
+    function viewDocDetails(title, identifier, validity, verifySource) {
+      document.getElementById('modal-doc-title').innerText = title;
+      document.getElementById('modal-doc-body').innerHTML = `
+        <div class="p-3 bg-gray-50 rounded border space-y-1.5 font-mono text-xs">
+          <p><strong>ID:</strong> ${identifier}</p>
+          <p><strong>Validity:</strong> ${validity}</p>
+          <p><strong>Channel:</strong> <span class="text-green-700 font-bold">${verifySource}</span></p>
+        </div>
+      `;
+      document.getElementById('seller-doc-modal').classList.remove('hidden');
+      document.getElementById('seller-doc-modal').classList.add('flex');
+    }
+
+    function closeDocDetailsModal() {
+      document.getElementById('seller-doc-modal').classList.add('hidden');
+      document.getElementById('seller-doc-modal').classList.remove('flex');
+    }
+
+    function simulateDocumentAiCheck() {
+      const btn = document.getElementById('run-ai-check-btn');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Running OCR & Portal Query...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = 'Run AI Extraction & Cross-Check';
+        btn.disabled = false;
+        alert('OCR Extraction & GST Portal Cross-Check complete! 100% match.');
+      }, 1200);
+    }
+
+    function handleResolveIssue() {
+      document.getElementById('issue-card-box').classList.add('hidden');
+      document.getElementById('issue-resolved-banner').classList.remove('hidden');
+
+      document.getElementById('dash-score-val').innerText = '98%';
+      document.getElementById('dash-score-circle').innerText = '98%';
+      document.getElementById('dash-score-sub').innerHTML = '<span class="text-green-600 font-bold"><i class="fa-solid fa-circle-check"></i> Ready</span>';
+      document.getElementById('dash-issues-count').innerText = '0';
+      document.getElementById('dash-verified-count').innerText = '13';
+      document.getElementById('dash-issues-icon').classList.remove('animate-pulse');
+      document.getElementById('issue-counter-badge').innerText = '0';
+      document.getElementById('issue-counter-badge').classList.replace('bg-red-500', 'bg-green-500');
+
+      const gstrRow = document.getElementById('checklist-gstr-row');
+      gstrRow.className = 'bg-white';
+      document.getElementById('checklist-gstr-status').innerHTML = '<span class="text-green-700 font-bold">✓ Verified</span>';
+
+      alert('GSTR-3B ARN validated successfully! Compliance Readiness increased from 87% to 98%.');
+    }
+
+    function executeFinalDecision(actionName, statusTag) {
+      const notes = document.getElementById('officer-notes-input').value.trim() || "Concurred with algorithmic recommendation.";
+      const receiptCard = document.getElementById('decision-receipt-card');
+      const receiptText = document.getElementById('decision-receipt-text');
+      const receiptHash = document.getElementById('decision-receipt-hash');
+
+      receiptText.innerHTML = `Official Action Recorded: <strong>${actionName}</strong> | Evaluator: <strong>Er. Rajesh Varma</strong><br>Remarks: "${notes}"`;
+      receiptHash.innerText = `Audit Ledger Hash: SHA256-` + Math.random().toString(16).substr(2, 12).toUpperCase();
+      receiptCard.classList.remove('hidden');
+      alert(`Decision [${actionName.toUpperCase()}] signed and recorded into the GeM tender ledger!`);
+    }
+  </script>
+</body>
+</html>
