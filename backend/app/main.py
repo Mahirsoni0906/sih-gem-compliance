@@ -267,6 +267,19 @@ def verify_mca(cin: str = Query(..., description="Corporate Identification Numbe
     res = StatutoryVerificationEngine.verify_mca(cin)
     return res
 
+@app.get("/api/verify/gateway-status")
+def get_gateway_status():
+    """Get active connection status for GSTN, MCA-21, CBDT, and Udyam gateways."""
+    return StatutoryVerificationEngine.get_gateway_status()
+
+@app.post("/api/verify/configure-gateway")
+def configure_gateway(payload: Dict[str, Any] = Body(...)):
+    """Configure API credentials and mode (SANDBOX vs LIVE_API) for statutory gateways."""
+    mode = payload.get("mode", "SANDBOX")
+    api_key = payload.get("api_key")
+    provider = payload.get("provider")
+    return StatutoryVerificationEngine.configure_gateway(mode, api_key, provider)
+
 # ----------------------------------------------------
 # 6. Layers 4, 5, 6: Compliance Evaluation Pipeline
 # ----------------------------------------------------
