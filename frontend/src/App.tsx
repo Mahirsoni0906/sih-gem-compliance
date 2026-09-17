@@ -215,6 +215,10 @@ export default function App() {
               <ProductCatalog
                 initialCategory={selectedCategory}
                 initialQuery={searchQuery}
+                onClose={() => {
+                  setActivePage('landing-page');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 onOpenTenderScrutiny={() => {
                   setUserRole('officer');
                   setActivePage('officer-compare-page');

@@ -29,6 +29,375 @@ const client = axios.create({
   timeout: 8000,
 });
 
+const FALLBACK_CATALOG_PRODUCTS: Product[] = [
+  {
+    id: "prod-001",
+    title: "High-Pressure Forged Steel Industrial Gate Valve 4-Inch (Class 300)",
+    category: "Industrial & Mechanical",
+    sub_category: "Valves & Piping",
+    price: 28500.0,
+    seller_name: "ABC Industries Pvt. Ltd.",
+    seller_id: "bid-001",
+    mii_percentage: 78.5,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.9,
+    reviews_count: 142,
+    image_icon: "⚙️",
+    specs: {
+      "Material": "Forged Carbon Steel ASTM A105",
+      "Pressure Rating": "Class 300",
+      "End Connection": "Flanged ANSI B16.5",
+      "Warranty": "24 Months"
+    },
+    tender_eligible: true,
+    available_qty: 450
+  },
+  {
+    id: "prod-002",
+    title: "Medical Grade Compressed Oxygen Cylinder Type D (46.7L Water Capacity)",
+    category: "Medical & Healthcare",
+    sub_category: "Oxygen Gas & Accessories",
+    price: 14200.0,
+    seller_name: "ABC Industries Pvt. Ltd.",
+    seller_id: "bid-001",
+    mii_percentage: 85.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.95,
+    reviews_count: 310,
+    image_icon: "🧪",
+    specs: {
+      "Standard": "IS:7285 Part 2 Certified",
+      "Working Pressure": "150 bar",
+      "Valve Type": "Pin Index Bullnose",
+      "Tare Weight": "52 kg approx"
+    },
+    tender_eligible: true,
+    available_qty: 1200
+  },
+  {
+    id: "prod-003",
+    title: "Commercial Desktop Workstation Intel Core i7 16GB 512GB SSD Windows 11 Pro",
+    category: "IT & Electronics",
+    sub_category: "Computers & Peripherals",
+    price: 68900.0,
+    seller_name: "Zenith Global Tech Infra Ltd.",
+    seller_id: "bid-002",
+    mii_percentage: 42.0,
+    mii_class: "Class-II Local Supplier",
+    msme_verified: false,
+    gst_status: "Active Regular",
+    rating: 4.4,
+    reviews_count: 89,
+    image_icon: "🖥️",
+    specs: {
+      "Processor": "Intel Core i7-13700 13th Gen",
+      "Memory": "16GB DDR5 4800MHz",
+      "Storage": "512GB NVMe PCIe Gen 4 SSD",
+      "Display": "23.8-inch FHD IPS Included"
+    },
+    tender_eligible: false,
+    available_qty: 200
+  },
+  {
+    id: "prod-004",
+    title: "ABC Stored Pressure Dry Chemical Powder Fire Extinguisher 6kg (IS:15683)",
+    category: "Safety & Security",
+    sub_category: "Fire Safety",
+    price: 3150.0,
+    seller_name: "Bharat Precision Instruments",
+    seller_id: "bid-003",
+    mii_percentage: 92.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Flagged / Non-Compliant",
+    rating: 4.6,
+    reviews_count: 64,
+    image_icon: "🧯",
+    specs: {
+      "Extinguishing Agent": "Mono Ammonium Phosphate 50%",
+      "Capacity": "6 Kg",
+      "Discharge Range": "> 4 Meters",
+      "Certifications": "BIS / ISI Marked"
+    },
+    tender_eligible: false,
+    available_qty: 800
+  },
+  {
+    id: "prod-005",
+    title: "Ergonomic High-Back Executive Mesh Revolving Office Chair with Lumbar Support",
+    category: "Furniture & Office",
+    sub_category: "Office Seating",
+    price: 8950.0,
+    seller_name: "ABC Industries Pvt. Ltd.",
+    seller_id: "bid-001",
+    mii_percentage: 82.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.8,
+    reviews_count: 178,
+    image_icon: "🪑",
+    specs: {
+      "Frame": "Reinforced Nylon & Breathable Mesh",
+      "Mechanism": "Synchro-Tilt Multi-Lock",
+      "Gas Lift": "Class 4 BIFMA Certified",
+      "Base": "Heavy-duty Die-cast Aluminum"
+    },
+    tender_eligible: true,
+    available_qty: 350
+  },
+  {
+    id: "prod-006",
+    title: "Fully Automatic Digital Upper Arm Blood Pressure Monitor with Arrhythmia Detection",
+    category: "Medical & Healthcare",
+    sub_category: "Medical Devices",
+    price: 2490.0,
+    seller_name: "ABC Industries Pvt. Ltd.",
+    seller_id: "bid-001",
+    mii_percentage: 68.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.85,
+    reviews_count: 420,
+    image_icon: "🩺",
+    specs: {
+      "Measurement Method": "Oscillometric",
+      "Memory Capacity": "2 x 90 Sets with Date & Time",
+      "Cuff Circumference": "22-42 cm Universal Fit",
+      "Power Source": "Dual Battery & USB Type-C"
+    },
+    tender_eligible: true,
+    available_qty: 950
+  },
+  // ----------------------------------------------------
+  // GeM Outlet Store Curated Products
+  // ----------------------------------------------------
+  {
+    id: "prod-007",
+    title: "Handcrafted Dhokra Bell Metal Rural Tribal Art & Decorative Figurine Set",
+    category: "The Saras Collection",
+    sub_category: "Handicrafts & Rural Artisans",
+    price: 1850.0,
+    seller_name: "Maa Durga Rural SHG Cooperative",
+    seller_id: "bid-shg-01",
+    mii_percentage: 100.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.9,
+    reviews_count: 84,
+    image_icon: "🧺",
+    specs: {
+      "Origin": "Bankura Rural Self Help Group",
+      "Artisan Type": "Women Artisan Cooperative",
+      "Material": "Natural Brass & Lost-Wax Bell Metal",
+      "Certification": "GeM Saras Rural SHG Certified"
+    },
+    tender_eligible: true,
+    available_qty: 600
+  },
+  {
+    id: "prod-008",
+    title: "Varanasi Pure Katan Silk Handloom Brocade Fabric & Saree (ODOP Certified)",
+    category: "ODOP GeM BAZAAR",
+    sub_category: "One District One Product",
+    price: 8400.0,
+    seller_name: "Banaras Weavers Producer Co-Op",
+    seller_id: "bid-odop-01",
+    mii_percentage: 100.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.95,
+    reviews_count: 156,
+    image_icon: "🏺",
+    specs: {
+      "District": "Varanasi, Uttar Pradesh",
+      "GI Tag": "GI-148 Certified",
+      "Material": "100% Pure Mulberry Silk",
+      "Weaving": "Handloom Kadwa Technique"
+    },
+    tender_eligible: true,
+    available_qty: 350
+  },
+  {
+    id: "prod-009",
+    title: "Autonomous AI Edge Drone Flight Controller with Dual GNSS & Real-Time Telemetry",
+    category: "Startup Runway",
+    sub_category: "Finest Indian Startups",
+    price: 34500.0,
+    seller_name: "Garuda Aeronautics DPIIT Startup Ltd.",
+    seller_id: "bid-dpiit-01",
+    mii_percentage: 88.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.8,
+    reviews_count: 62,
+    image_icon: "🚀",
+    specs: {
+      "DPIIT Recognition": "DIPP89104",
+      "Processor": "Quad-Core Edge AI NPU",
+      "Interface": "CAN Bus & Dual GNSS M8N",
+      "Firmware": "ArduPilot / PX4 Compliant"
+    },
+    tender_eligible: true,
+    available_qty: 180
+  },
+  {
+    id: "prod-010",
+    title: "Swadeshi Premium Spun Khadi Fabric & Natural Cotton Loomcraft (Bale of 30m)",
+    category: "The Aabhaar Collection",
+    sub_category: "Aatmanirbhar Bharat Showcase",
+    price: 6200.0,
+    seller_name: "Khadi & Village Industries Bhavan",
+    seller_id: "bid-khadi-01",
+    mii_percentage: 100.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.9,
+    reviews_count: 110,
+    image_icon: "🇮🇳",
+    specs: {
+      "Standard": "KVIC Swadeshi Certified",
+      "Spinning": "Solar Ambar Charkha Hand-Spun",
+      "Length": "30 Meters per Bale",
+      "Thread Count": "60s Organic Cotton"
+    },
+    tender_eligible: true,
+    available_qty: 450
+  },
+  {
+    id: "prod-011",
+    title: "Authentic Hand-Woven Mulberry Silk Brocade & Loomcraft Shawl Collection",
+    category: "Handloom & Textiles",
+    sub_category: "Rich Indigenous Weaves",
+    price: 3800.0,
+    seller_name: "Chanderi Handloom Heritage Guild",
+    seller_id: "bid-text-01",
+    mii_percentage: 95.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.85,
+    reviews_count: 78,
+    image_icon: "🧵",
+    specs: {
+      "Weave Type": "Zari Interlock Traditional Weave",
+      "GI Certification": "Chanderi GI Certified",
+      "Loom Type": "Pit Loom Traditional",
+      "Dye": "Azo-Free Eco-Friendly Colors"
+    },
+    tender_eligible: true,
+    available_qty: 500
+  },
+  {
+    id: "prod-012",
+    title: "TRIFED Certified Wild Forest Raw Organic Honey & Natural Shilajit Pack",
+    category: "Tribal & Khadi India",
+    sub_category: "Forest Produce & Crafts",
+    price: 1250.0,
+    seller_name: "Tribal Cooperative Marketing Dev Fed (TRIFED)",
+    seller_id: "bid-trifed-01",
+    mii_percentage: 100.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.9,
+    reviews_count: 230,
+    image_icon: "🏹",
+    specs: {
+      "Certification": "TRIFED Forest Certified",
+      "Harvesting": "Wild Forest Tribal Gathering",
+      "Purity": "100% Raw Unpasteurized Organic",
+      "FSSAI License": "10018022007812"
+    },
+    tender_eligible: true,
+    available_qty: 1500
+  },
+  {
+    id: "prod-013",
+    title: "Natural Herbal Cosmetic & Wellness Care Hamper by Women Entrepreneurs",
+    category: "WOMANIYA ON GEM",
+    sub_category: "Women Entrepreneurs",
+    price: 2100.0,
+    seller_name: "Shakti Nari Self-Help Enterprise",
+    seller_id: "bid-women-01",
+    mii_percentage: 100.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.92,
+    reviews_count: 145,
+    image_icon: "💃",
+    specs: {
+      "Enterprise": "100% Women-Owned MSME Enterprise",
+      "Ingredients": "Ayush Certified Pure Herbal Actives",
+      "Packaging": "Biodegradable Jute Hand-crafted Box",
+      "Contents": "Set of 5 Essential Ayurvedic Formulations"
+    },
+    tender_eligible: true,
+    available_qty: 800
+  },
+  {
+    id: "prod-014",
+    title: "Certified Organic Shree Anna Millet Combo (Ragi, Kodo, Barnyard Millets 5kg)",
+    category: "Millet (Shree Anna)",
+    sub_category: "Superfoods & Agri Produce",
+    price: 950.0,
+    seller_name: "Deccan Millets Farmer Producer Co. (FPO)",
+    seller_id: "bid-millet-01",
+    mii_percentage: 100.0,
+    mii_class: "Class-I Local Supplier",
+    msme_verified: true,
+    gst_status: "Active Regular",
+    rating: 4.96,
+    reviews_count: 380,
+    image_icon: "🌾",
+    specs: {
+      "Varieties": "Finger (Ragi), Kodo, Barnyard Millets",
+      "FPO Registration": "NABARD Supported Farmer Producer Org",
+      "Cultivation": "Chemical-Free Rainfed Indigenous Crop",
+      "Nutritional Value": "High Dietary Fiber & Natural Calcium"
+    },
+    tender_eligible: true,
+    available_qty: 3200
+  }
+];
+
+function filterFallbackProducts(category?: string, query?: string): Product[] {
+  let list = FALLBACK_CATALOG_PRODUCTS;
+  if (category && category.toLowerCase() !== 'all') {
+    const cLow = category.toLowerCase().trim();
+    const matched = list.filter(p =>
+      p.category.toLowerCase().includes(cLow) ||
+      p.sub_category.toLowerCase().includes(cLow) ||
+      cLow.includes(p.category.toLowerCase()) ||
+      cLow.includes(p.sub_category.toLowerCase()) ||
+      p.title.toLowerCase().includes(cLow)
+    );
+    if (matched.length > 0) {
+      list = matched;
+    }
+  }
+  if (query) {
+    const qLow = query.toLowerCase().trim();
+    list = list.filter(p =>
+      p.title.toLowerCase().includes(qLow) ||
+      p.seller_name.toLowerCase().includes(qLow) ||
+      p.category.toLowerCase().includes(qLow) ||
+      p.sub_category.toLowerCase().includes(qLow)
+    );
+  }
+  return list;
+}
+
 export const api = {
   async login(username: string, password: string, role: UserRole): Promise<User> {
     try {
@@ -480,10 +849,16 @@ export const api = {
       if (category && category !== 'All') params.append('category', category);
       if (query) params.append('q', query);
       const res = await client.get<Product[]>(`/api/products?${params.toString()}`);
-      return res.data;
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        return res.data;
+      }
+      if (Array.isArray(res.data) && res.data.length === 0) {
+        return filterFallbackProducts(category, query);
+      }
+      throw new Error("Invalid API response format: expected array");
     } catch (err) {
-      console.warn("Fallback to client products:", err);
-      return [];
+      console.warn("Fallback to client products catalog:", err);
+      return filterFallbackProducts(category, query);
     }
   },
 

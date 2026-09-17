@@ -564,6 +564,198 @@ CATALOG_PRODUCTS = [
         },
         "tender_eligible": True,
         "available_qty": 950
+    },
+    {
+        "id": "prod-007",
+        "title": "Handcrafted Dhokra Bell Metal Rural Tribal Art & Decorative Figurine Set",
+        "category": "The Saras Collection",
+        "sub_category": "Handicrafts & Rural Artisans",
+        "price": 1850.0,
+        "seller_name": "Maa Durga Rural SHG Cooperative",
+        "seller_id": "bid-shg-01",
+        "mii_percentage": 100.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.9,
+        "reviews_count": 84,
+        "image_icon": "🧺",
+        "specs": {
+            "Origin": "Bankura Rural Self Help Group",
+            "Artisan Type": "Women Artisan Cooperative",
+            "Material": "Natural Brass & Lost-Wax Bell Metal",
+            "Certification": "GeM Saras Rural SHG Certified"
+        },
+        "tender_eligible": True,
+        "available_qty": 600
+    },
+    {
+        "id": "prod-008",
+        "title": "Varanasi Pure Katan Silk Handloom Brocade Fabric & Saree (ODOP Certified)",
+        "category": "ODOP GeM BAZAAR",
+        "sub_category": "One District One Product",
+        "price": 8400.0,
+        "seller_name": "Banaras Weavers Producer Co-Op",
+        "seller_id": "bid-odop-01",
+        "mii_percentage": 100.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.95,
+        "reviews_count": 156,
+        "image_icon": "🏺",
+        "specs": {
+            "District": "Varanasi, Uttar Pradesh",
+            "GI Tag": "GI-148 Certified",
+            "Material": "100% Pure Mulberry Silk",
+            "Weaving": "Handloom Kadwa Technique"
+        },
+        "tender_eligible": True,
+        "available_qty": 350
+    },
+    {
+        "id": "prod-009",
+        "title": "Autonomous AI Edge Drone Flight Controller with Dual GNSS & Real-Time Telemetry",
+        "category": "Startup Runway",
+        "sub_category": "Finest Indian Startups",
+        "price": 34500.0,
+        "seller_name": "Garuda Aeronautics DPIIT Startup Ltd.",
+        "seller_id": "bid-dpiit-01",
+        "mii_percentage": 88.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.8,
+        "reviews_count": 62,
+        "image_icon": "🚀",
+        "specs": {
+            "DPIIT Recognition": "DIPP89104",
+            "Processor": "Quad-Core Edge AI NPU",
+            "Interface": "CAN Bus & Dual GNSS M8N",
+            "Firmware": "ArduPilot / PX4 Compliant"
+        },
+        "tender_eligible": True,
+        "available_qty": 180
+    },
+    {
+        "id": "prod-010",
+        "title": "Swadeshi Premium Spun Khadi Fabric & Natural Cotton Loomcraft (Bale of 30m)",
+        "category": "The Aabhaar Collection",
+        "sub_category": "Aatmanirbhar Bharat Showcase",
+        "price": 6200.0,
+        "seller_name": "Khadi & Village Industries Bhavan",
+        "seller_id": "bid-khadi-01",
+        "mii_percentage": 100.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.9,
+        "reviews_count": 110,
+        "image_icon": "🇮🇳",
+        "specs": {
+            "Standard": "KVIC Swadeshi Certified",
+            "Spinning": "Solar Ambar Charkha Hand-Spun",
+            "Length": "30 Meters per Bale",
+            "Thread Count": "60s Organic Cotton"
+        },
+        "tender_eligible": True,
+        "available_qty": 450
+    },
+    {
+        "id": "prod-011",
+        "title": "Authentic Hand-Woven Mulberry Silk Brocade & Loomcraft Shawl Collection",
+        "category": "Handloom & Textiles",
+        "sub_category": "Rich Indigenous Weaves",
+        "price": 3800.0,
+        "seller_name": "Chanderi Handloom Heritage Guild",
+        "seller_id": "bid-text-01",
+        "mii_percentage": 95.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.85,
+        "reviews_count": 78,
+        "image_icon": "🧵",
+        "specs": {
+            "Weave Type": "Zari Interlock Traditional Weave",
+            "GI Certification": "Chanderi GI Certified",
+            "Loom Type": "Pit Loom Traditional",
+            "Dye": "Azo-Free Eco-Friendly Colors"
+        },
+        "tender_eligible": True,
+        "available_qty": 500
+    },
+    {
+        "id": "prod-012",
+        "title": "TRIFED Certified Wild Forest Raw Organic Honey & Natural Shilajit Pack",
+        "category": "Tribal & Khadi India",
+        "sub_category": "Forest Produce & Crafts",
+        "price": 1250.0,
+        "seller_name": "Tribal Cooperative Marketing Dev Fed (TRIFED)",
+        "seller_id": "bid-trifed-01",
+        "mii_percentage": 100.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.9,
+        "reviews_count": 230,
+        "image_icon": "🏹",
+        "specs": {
+            "Certification": "TRIFED Forest Certified",
+            "Harvesting": "Wild Forest Tribal Gathering",
+            "Purity": "100% Raw Unpasteurized Organic",
+            "FSSAI License": "10018022007812"
+        },
+        "tender_eligible": True,
+        "available_qty": 1500
+    },
+    {
+        "id": "prod-013",
+        "title": "Natural Herbal Cosmetic & Wellness Care Hamper by Women Entrepreneurs",
+        "category": "WOMANIYA ON GEM",
+        "sub_category": "Women Entrepreneurs",
+        "price": 2100.0,
+        "seller_name": "Shakti Nari Self-Help Enterprise",
+        "seller_id": "bid-women-01",
+        "mii_percentage": 100.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.92,
+        "reviews_count": 145,
+        "image_icon": "💃",
+        "specs": {
+            "Enterprise": "100% Women-Owned MSME Enterprise",
+            "Ingredients": "Ayush Certified Pure Herbal Actives",
+            "Packaging": "Biodegradable Jute Hand-crafted Box",
+            "Contents": "Set of 5 Essential Ayurvedic Formulations"
+        },
+        "tender_eligible": True,
+        "available_qty": 800
+    },
+    {
+        "id": "prod-014",
+        "title": "Certified Organic Shree Anna Millet Combo (Ragi, Kodo, Barnyard Millets 5kg)",
+        "category": "Millet (Shree Anna)",
+        "sub_category": "Superfoods & Agri Produce",
+        "price": 950.0,
+        "seller_name": "Deccan Millets Farmer Producer Co. (FPO)",
+        "seller_id": "bid-millet-01",
+        "mii_percentage": 100.0,
+        "mii_class": "Class-I Local Supplier",
+        "msme_verified": True,
+        "gst_status": "Active Regular",
+        "rating": 4.96,
+        "reviews_count": 380,
+        "image_icon": "🌾",
+        "specs": {
+            "Varieties": "Finger (Ragi), Kodo, Barnyard Millets",
+            "FPO Registration": "NABARD Supported Farmer Producer Org",
+            "Cultivation": "Chemical-Free Rainfed Indigenous Crop",
+            "Nutritional Value": "High Dietary Fiber & Natural Calcium"
+        },
+        "tender_eligible": True,
+        "available_qty": 3200
     }
 ]
 
@@ -571,10 +763,26 @@ CATALOG_PRODUCTS = [
 def list_products(category: Optional[str] = None, q: Optional[str] = None):
     results = CATALOG_PRODUCTS
     if category and category.lower() != "all":
-        results = [p for p in results if category.lower() in p["category"].lower() or category.lower() in p["sub_category"].lower()]
+        c_low = category.lower().strip()
+        matched = [
+            p for p in results
+            if c_low in p["category"].lower()
+            or c_low in p["sub_category"].lower()
+            or p["category"].lower() in c_low
+            or p["sub_category"].lower() in c_low
+            or c_low in p["title"].lower()
+        ]
+        if matched:
+            results = matched
     if q:
-        query_str = q.lower()
-        results = [p for p in results if query_str in p["title"].lower() or query_str in p["seller_name"].lower() or query_str in p["category"].lower()]
+        query_str = q.lower().strip()
+        results = [
+            p for p in results
+            if query_str in p["title"].lower()
+            or query_str in p["seller_name"].lower()
+            or query_str in p["category"].lower()
+            or query_str in p["sub_category"].lower()
+        ]
     return results
 
 # ----------------------------------------------------
