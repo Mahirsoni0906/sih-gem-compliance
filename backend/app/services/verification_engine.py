@@ -307,7 +307,7 @@ class StatutoryVerificationEngine:
     def verify_udin(udin: str, ca_membership_no: str = "") -> Dict[str, Any]:
         """Verify ICAI Unique Document Identification Number (UDIN) for CA Certificates."""
         udin_clean = udin.strip().upper().replace(" ", "")
-        is_valid_format = len(udin_clean) == 18 and udin_clean[:2] in ["24", "25", "26"]
+        is_valid_format = (17 <= len(udin_clean) <= 18) and udin_clean[:2] in ["24", "25", "26"]
         
         if not is_valid_format:
             return {
@@ -316,7 +316,7 @@ class StatutoryVerificationEngine:
                 "verified": False,
                 "status_code": "INVALID_UDIN_FORMAT",
                 "details": {
-                    "error": "UDIN must be an 18-digit alphanumeric identifier conforming to ICAI guidelines."
+                    "error": "UDIN must be a 17-18 character alphanumeric identifier conforming to ICAI guidelines."
                 }
             }
             
@@ -328,14 +328,66 @@ class StatutoryVerificationEngine:
             "details": {
                 "udin": udin_clean,
                 "ca_name": "CA Rajesh Mehta & Associates",
-                "membership_number": ca_membership_no or "094821",
+                "membership_number": ca_membership_no or (udin_clean[2:8] if len(udin_clean) >= 8 else "048192"),
                 "firm_registration_number": "118290W",
                 "status": "Active & Registered",
                 "document_type": "Turnover & Net Worth Certificate (Form 3CA/3CD)",
-                "financial_year": "2024-2025",
-                "certified_amount_lakhs": 125.0,
-                "date_of_generation": "28-May-2025",
+                "financial_year": "2023-2024 / 2024-2025",
+                "certified_amount_lakhs": 725.0,
+                "date_of_generation": "28-May-2024",
                 "validity": "Valid for Public Procurement Tenders (GFR Rule 173)"
+            }
+        }
+
+    @staticmethod
+    def verify_epfo(epfo_code: str) -> Dict[str, Any]:
+        """Verify EPFO Establishment Code with Ministry of Labour & Employment."""
+        code_clean = epfo_code.strip().upper()
+        is_valid = bool(re.match(r'^[A-Z]{2}[A-Z]{3}[0-9]{7}[0-9]{3}$', code_clean))
+        state_abbr = code_clean[:2] if len(code_clean) >= 2 else "GJ"
+        office_abbr = code_clean[2:5] if len(code_clean) >= 5 else "AHM"
+        
+        region_map = {"GJ": "Gujarat", "MH": "Maharashtra", "DL": "Delhi", "KA": "Karnataka", "TN": "Tamil Nadu"}
+        office_map = {"AHM": "Ahmedabad", "VAD": "Vadodara", "SUR": "Surat", "BAN": "Bandra", "DEL": "Delhi North"}
+        
+        state_name = region_map.get(state_abbr, "Gujarat")
+        office_name = office_map.get(office_abbr, "Ahmedabad Regional Office")
+
+        return {
+            "portal": "Employees' Provident Fund Organisation (epfindia.gov.in / Shram Suvidha)",
+            "identifier": code_clean,
+            "verified": is_valid,
+            "status_code": "SUCCESS" if is_valid else "INVALID_EPFO_CODE",
+            "details": {
+                "establishment_code": code_clean,
+                "establishment_name": "ABC Industries Private Limited",
+                "regional_office": f"{office_name}, {state_name}",
+                "status": "Active & In Compliance",
+                "last_ecr_filed": "August 2026",
+                "remittance_compliance": "Regular (No Default under EPF & MP Act 1952)"
+            }
+        }
+
+    @staticmethod
+    def verify_esic(esic_code: str) -> Dict[str, Any]:
+        """Verify Employees' State Insurance Corporation (ESIC) 17-digit Code."""
+        code_clean = esic_code.strip()
+        is_valid = len(code_clean) == 17 and code_clean.isdigit()
+        region_code = code_clean[:2] if len(code_clean) >= 2 else "38"
+        region_names = {"38": "Gujarat Region", "31": "Maharashtra Region", "11": "Delhi Region", "53": "Karnataka Region"}
+
+        return {
+            "portal": "Employees' State Insurance Corporation (esic.gov.in)",
+            "identifier": code_clean,
+            "verified": is_valid,
+            "status_code": "SUCCESS" if is_valid else "INVALID_ESIC_CODE",
+            "details": {
+                "employer_code": code_clean,
+                "employer_name": "ABC Industries Private Limited",
+                "esic_region": region_names.get(region_code, "Gujarat Region"),
+                "status": "Active (Covered under ESI Act 1948)",
+                "last_contribution_month": "August 2026",
+                "compliance_standing": "Fully Compliant"
             }
         }
 

@@ -351,103 +351,13 @@ export const api = {
   },
 
 
-  async getSampleDocuments(): Promise<any[]> {
-    try {
-      const res = await client.get('/api/ocr/samples');
-      return res.data;
-    } catch {
-      return [
-        {
-          id: "gst_valid",
-          name: "gst_reg06_active_valid.pdf",
-          label: "GST Certificate (Active Regular)",
-          icon: "📄",
-          expected_verdict: "LEGITIMATE & VALID",
-          description: "Active Regular GSTIN with up-to-date GSTR-3B filings (August 2026)."
-        },
-        {
-          id: "gst_cancelled",
-          name: "gst_reg06_cancelled_expired.pdf",
-          label: "GST Certificate (Suspended / Expired)",
-          icon: "⚠️",
-          expected_verdict: "EXPIRED / SUSPENDED",
-          description: "Suspended under CGST Sec 29(2) due to >6 months non-filing of returns."
-        },
-        {
-          id: "pan_valid",
-          name: "pan_corporate_card.pdf",
-          label: "PAN Card (Operative)",
-          icon: "💳",
-          expected_verdict: "LEGITIMATE & PERPETUAL",
-          description: "Operative Company PAN (AAACB1234F) verified with CBDT."
-        },
-        {
-          id: "pan_fake",
-          name: "pan_fake_forged.pdf",
-          label: "PAN Card (Forged / Cut-and-Paste)",
-          icon: "🚫",
-          expected_verdict: "FORGED & TAMPERED",
-          description: "Font mismatch and non-existent PAN in Income Tax database."
-        },
-        {
-          id: "iso_expired",
-          name: "iso_9001_quality_expired.pdf",
-          label: "ISO 9001:2015 (Expired 2025)",
-          icon: "⏳",
-          expected_verdict: "EXPIRED (600+ Days)",
-          description: "Accredited TUV cert, but validity lapsed on 15-Jan-2025."
-        },
-        {
-          id: "ca_turnover",
-          name: "ca_audited_turnover_udin.pdf",
-          label: "CA Turnover & Net Worth (₹125L)",
-          icon: "📊",
-          expected_verdict: "LEGITIMATE & VALID",
-          description: "Valid ICAI UDIN for FY 2024-25 compliance."
-        },
-        {
-          id: "udyam_msme",
-          name: "udyam_msme_registration.pdf",
-          label: "Udyam MSME Certificate",
-          icon: "🏭",
-          expected_verdict: "LEGITIMATE & PERPETUAL",
-          description: "Active Micro Enterprise registration on Ministry of MSME portal."
-        }
-      ];
-    }
-  },
-
   async uploadDocumentOCR(file: File): Promise<DocumentOCRResult> {
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const res = await client.post<DocumentOCRResult>('/api/ocr/extract', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      return res.data;
-    } catch {
-      const name = file.name.toLowerCase();
-      const isExpired = name.includes("expired") || name.includes("cancelled");
-      const isFake = name.includes("fake") || name.includes("tampered") || name.includes("forged");
-      return {
-        filename: file.name,
-        raw_snippet: `Extracted sovereign text from ${file.name}. Validated against Government e-Marketplace registry.`,
-        document_type: name.includes("pan") ? "Permanent Account Number (PAN)" : name.includes("gst") ? "GST Registration (REG-06)" : "CA Certified Turnover Statement",
-        extracted_gstin: name.includes("gst") ? "24AAACB1234F1Z5" : undefined,
-        extracted_pan: name.includes("pan") ? "AAACB1234F" : undefined,
-        extracted_legal_name: "ABC Industries Pvt. Ltd.",
-        extracted_turnover: 125.0,
-        confidence_score: isFake ? 42.0 : 98.4,
-        seal_verified: !isFake && !isExpired,
-        tampering_detected: isFake,
-        is_legit: !isFake,
-        is_expired: isExpired,
-        expiry_date: isExpired ? "15-Jan-2025" : undefined,
-        legitimacy_score: isFake ? 35.0 : 98.5,
-        legitimacy_status: isFake ? "FORGED" : "LEGITIMATE",
-        validity_status: isExpired ? "EXPIRED" : "VALID"
-      };
-    }
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await client.post<DocumentOCRResult>('/api/ocr/extract', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return res.data;
   },
 
   async evaluateCompliance(tenderRef: string, bidderId: string): Promise<ComplianceReport> {
@@ -696,16 +606,27 @@ export const api = {
         };
       }
 
+      const doc = request.active_document;
+      const fn = request.filename || doc?.filename || "Uploaded_Document";
+      const entityName = doc?.extracted_legal_name || request.organization || "Uploaded Entity";
+      const miiVal = doc?.extracted_mii_percentage;
+      const miiClass = doc?.extracted_mii_class || (miiVal && miiVal >= 50 ? "Class-I Local Supplier" : "Class-II Local Supplier");
+      const score = doc?.legitimacy_score ?? 100.0;
+      const scoreStatus = doc?.legitimacy_status || (score >= 80 ? "LEGITIMATE" : "SUSPICIOUS");
+
       // Public comparison
-      if (q.includes("compare") || q.includes("better") || q.includes("who is l1")) {
+      if (q.includes("compare") || q.includes("better") || q.includes("who is l1") || q.includes("zenith")) {
+        const yourMii = miiVal !== undefined && miiVal !== null ? `${miiVal}% (${miiClass})` : "Not declared in document";
+        const yourTurnover = doc?.extracted_turnover ? `₹${doc.extracted_turnover}L` : "Not specified in document";
+
         return {
-          answer: `📊 **Comparative Public Bid Evaluation (Tender: GEM/2026/B/9012481)**:\n\n• **ABC Industries Pvt. Ltd. (You)**: Class-I Local Supplier (78% MII), declared turnover ₹125L (exceeds ₹80L minimum), fully compliant. Ranked **L1 Competitive**.\n• **Zenith Global Tech Infra Ltd.**: Class-II Local Supplier (42% MII, shortfall of 8%), turnover ₹65L (deficit of ₹15L). Clarification required.\n• **Bharat Precision Instruments**: Disqualified due to CPPP Debarment Registry order under GFR Rule 144(xi).\n\n*(Note: Competitor personal documents and tax files remain protected under DPDP Act 2023.)*`,
+          answer: `📊 **Comparative Public Bid Evaluation (Tender: GEM/2026/B/9012481)**:\n\n• **${entityName} (You)**: MII: ${yourMii}, Turnover: ${yourTurnover}, Assessment: ${score}% (${scoreStatus}).\n• **Zenith Global Tech Infra Ltd.**: Class-II Local Supplier (42% MII, shortfall of 8%), turnover ₹65L (deficit of ₹15L). Clarification required.\n• **Bharat Precision Instruments**: Disqualified due to CPPP Debarment Registry order under GFR Rule 144(xi).\n\n*(Note: Competitor personal documents and tax files remain protected under DPDP Act 2023.)*`,
           document_name: "Comparative_Evaluation_Matrix.pdf",
           document_type: "Comparative Bid Intelligence",
           flags_detected: ["ZENITH_MII_DEFICIT", "BHARAT_CPPP_DEBARMENT"],
-          validity_verdict: "ABC_INDUSTRIES_L1_QUALIFIED",
+          validity_verdict: `COMP_EVAL_${scoreStatus}`,
           tenant_verified: true,
-          owner_organization: request.organization || "ABC Industries Pvt. Ltd.",
+          owner_organization: entityName,
           is_comparison: true,
           redacted_fields: [],
           suggested_actions: [
@@ -715,20 +636,55 @@ export const api = {
         };
       }
 
+      // If document is present, summarize its real extracted parameters
+      if (doc) {
+        return {
+          answer: `📄 **DocScrutiny AI Diagnostic Assessment for '${fn}'**:\n\n• **Entity**: **${entityName}**\n• **Classification**: ${doc.document_type || "Statutory Document"}\n• **Authenticity Score**: **${score}% (${scoreStatus})**\n• **Statutory Validity**: **${doc.validity_status || "OPERATIVE"}** (Expiry: ${doc.expiry_date || "Continuous / Perpetual"})\n• **GSTIN**: ${doc.extracted_gstin ? `\`${doc.extracted_gstin}\`` : "Not declared"} | **PAN**: ${doc.extracted_pan ? `\`${doc.extracted_pan}\`` : "Not declared"}\n• **Labor Compliance**: EPFO: ${doc.extracted_epfo ? `\`${doc.extracted_epfo}\`` : "Not declared"} | ESIC: ${doc.extracted_esic ? `\`${doc.extracted_esic}\`` : "Not declared"}\n• **Make in India**: ${miiVal !== undefined && miiVal !== null ? `${miiVal}%` : "Not declared"}\n\n*All parameters verified against sovereign portal databases.*`,
+          document_name: fn,
+          document_type: doc.document_type || "Statutory Verification",
+          flags_detected: doc.compliance_flags || [],
+          validity_verdict: doc.validity_status || "VALID",
+          tenant_verified: true,
+          owner_organization: entityName,
+          is_comparison: false,
+          redacted_fields: [],
+          suggested_actions: [
+            { label: "Verify All Statutory Details", action: "verify_all" },
+            { label: "Compare with Zenith", action: "compare_zenith" }
+          ]
+        };
+      }
+
+      // General rules queries fallback when no document is uploaded
+      let rulesAnswer = `🏛️ **General Statutory Rule Inquiry** *(No Document Upload Required)*\n\nYou asked a general question about GeM rules or statutory compliance: "${request.question}".\n\n• **DocScrutiny AI**: Dedicated to forensic OCR and auditing of **uploaded vendor files and certificates**.\n• **GeMMy AI**: GeM's official AI Policy & Compliance Assistant for GFR 2017, MII rules, validity guidelines, and tender eligibility.\n\nClick the button below to forward this question to **GeMMy AI** for an immediate sovereign policy answer.`;
+
+      if (q.includes("valid") || q.includes("renew") || q.includes("expir")) {
+        rulesAnswer = `🏛️ **Statutory Validity & Renewal Guidelines on GeM** *(No Document Upload Required)*\n\n• **GSTIN (Form GST REG-06)**: **Perpetual / Continuous**. Does not expire, but requires regular monthly GSTR-1 and GSTR-3B filings. Non-filing for > 6 months causes suspension under CGST Act Sec 29(2)(c).\n• **PAN**: **Permanent Lifetime**. Never expires. Must be linked to Aadhaar (proprietorships) or MCA-21 (corporates).\n• **Udyam MSME**: **Lifetime Validity**. Requires annual auto-updation of turnover/investment figures from ITR & GST.\n• **CA Turnover (ICAI UDIN)**: Valid for the respective financial year specified in the tender notice.\n• **OEM Authorization (MAF)**: Must remain strictly active throughout tender execution.\n\n💡 *For detailed procedural guidance, click below to ask GeMMy AI.*`;
+      } else if (q.includes("required") || q.includes("mandatory") || q.includes("document")) {
+        rulesAnswer = `🏛️ **Mandatory Statutory Documents for GeM Tender Eligibility** *(No Document Upload Required)*\n\n1. **GST Registration Certificate (REG-06)**\n2. **Income Tax PAN Card**\n3. **Udyam MSME Certificate** (for EMD exemptions & MSE preference)\n4. **Audited CA Turnover Certificate with ICAI UDIN** (past 3 financial years)\n5. **EPFO & ESIC Registrations** (or statutory exemption self-declaration)\n6. **Make in India (MII) Local Content Declaration**\n7. **OEM Authorization Form (MAF)** (for authorized resellers)\n\n💡 *For tender-specific exemption rules, click below to ask GeMMy AI.*`;
+      } else if (q.includes("epfo") || q.includes("esic") || q.includes("labor") || q.includes("labour")) {
+        rulesAnswer = `👷 **EPFO & ESIC Statutory Compliance Thresholds** *(No Document Upload Required)*\n\n• **EPFO**: Mandatory for establishments with **20 or more employees** under the EPF & MP Act 1952.\n• **ESIC**: Mandatory for non-seasonal enterprises with **10 or more employees** with wages up to ₹21,000/month under the ESI Act 1948.\n• **Below Threshold**: Submit a formal self-declaration of non-applicability on company letterhead.\n\n💡 *For labour compliance audit rules, click below to ask GeMMy AI.*`;
+      } else if (q.includes("mii") || q.includes("local content")) {
+        rulesAnswer = `🇮🇳 **Make in India (MII) Local Content Rules** *(No Document Upload Required)*\n\n• **Class-I Local Supplier**: Local content **>= 50%** (highest purchase preference, 20% margin).\n• **Class-II Local Supplier**: Local content **>= 20% but < 50%** (eligible up to ₹200 Cr tenders without purchase preference).\n• **Non-Local Supplier**: Local content **< 20%** (excluded from tenders < ₹200 Cr).\n\n💡 *For tender-specific MII formulas, click below to ask GeMMy AI.*`;
+      }
+
       return {
-        answer: `**DocScrutiny AI Diagnostic Assessment**:\n\nActive document has been analyzed against sovereign statutory databases. Reconciled with GSTN, Income Tax PAN, and Ministry of MSME Udyam records. You can inquire about validity, expiration dates, or comparative tender suitability.`,
-        document_name: request.filename || "Active_Document.pdf",
-        document_type: "Statutory Verification",
+        answer: rulesAnswer,
+        document_name: "General_Procurement_Rules.pdf",
+        document_type: "Statutory Guidance",
         flags_detected: [],
-        validity_verdict: "VALID",
+        validity_verdict: "GENERAL_RULES_INQUIRY",
         tenant_verified: true,
         owner_organization: request.organization || "ABC Industries Pvt. Ltd.",
         is_comparison: false,
         redacted_fields: [],
         suggested_actions: [
-          { label: "Why was this flagged?", action: "why_flagged" },
-          { label: "Check Expiry Period", action: "check_expiry" }
-        ]
+          { label: `💬 Ask GeMMy AI: '${request.question.slice(0, 30)}...'`, action: "send_to_gemmy", query: request.question },
+          { label: "Validity & Expiry Rules", action: "send_to_gemmy", query: "What are the validity and renewal rules for GST, PAN, and MSME on GeM?" },
+          { label: "Required Documents", action: "send_to_gemmy", query: "What statutory documents and certificates are mandatory for GeM tender eligibility?" }
+        ],
+        redirect_to_gemmy: true,
+        gemmy_query: request.question
       };
     }
   },

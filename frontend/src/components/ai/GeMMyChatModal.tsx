@@ -17,6 +17,9 @@ interface GeMMyChatModalProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigate: (page: string, contextId?: string) => void;
+  initialQuestion?: string;
+  autoSendInitial?: boolean;
+  onClearInitial?: () => void;
 }
 
 const renderInlineTokens = (text: string) => {
@@ -67,18 +70,21 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
   isOpen,
   onClose,
   onNavigate,
+  initialQuestion,
+  autoSendInitial = true,
+  onClearInitial,
 }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
       sender: 'gemmy',
-      text: "Namaste! 🙏 I am **GeMMy**, your official AI Compliance & Procurement Assistant for the Government e-Marketplace.\n\nI can assist you with public procurement policies, GFR 2017 compliance, Make-in-India (MII) criteria, profile creation guidelines, and latest gazette notifications.",
+      text: "Namaste! 🙏 I am **GeMMy**, your official AI Compliance & Procurement Assistant for the Government e-Marketplace.\n\nI provide authoritative guidance on public procurement policies, GFR 2017 compliance, Make-in-India (MII) criteria, seller profile creation, and latest gazette notifications.\n\n*(🛡️ **Data Privacy**: Under DPDP Act 2023, GeMMy is strictly air-gapped from uploaded vendor files. For document verification, please use the DocScrutiny AI Desk.)*",
       actions: [
         { label: "🌐 Latest GeM Updates & OMs", action: "query_latest_updates" },
         { label: "❌ Profile Rejection Causes", action: "query_profile_rejection" },
         { label: "🏛️ Explain GFR Rule 144(xi)", action: "query_rule144" },
         { label: "🇮🇳 Make in India (MII) Rules", action: "query_mii" },
-        { label: "📄 DocScrutiny AI Desk", action: "open_ocr_desk" },
+        { label: "📄 Open DocScrutiny AI Desk", action: "open_ocr_desk" },
       ],
       model: "GeMMy Live Assistant",
       is_local_ai: false,
@@ -89,32 +95,6 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // Handle ESC key to close
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
 
   const sendMessage = async (textToSend: string) => {
     if (!textToSend.trim()) return;
@@ -155,6 +135,44 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Handle automatic question forwarding from DocScrutiny AI
+  useEffect(() => {
+    if (isOpen && initialQuestion && initialQuestion.trim()) {
+      const q = initialQuestion.trim();
+      setInputText(q);
+      if (onClearInitial) onClearInitial();
+      if (autoSendInitial) {
+        sendMessage(q);
+      }
+    }
+  }, [isOpen, initialQuestion, autoSendInitial]);
+
+  // Handle ESC key to close
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   const handleActionClick = (actionItem: AIChatAction) => {
     if (actionItem.action === 'query_profile_rejection') {
@@ -225,9 +243,14 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
                   Live & Online
                 </span>
               </div>
-              <p className="text-[10px] text-gray-300">
-                Official GeM Public Advisory Assistant
-              </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <p className="text-[10px] text-gray-300">
+                  Official GeM Advisory Assistant
+                </p>
+                <span className="text-[9px] text-cyan-300 bg-cyan-950/70 border border-cyan-500/30 px-1.5 py-0.2 rounded font-semibold tracking-wide" title="Under DPDP Act 2023, GeMMy is air-gapped from vendor uploaded files. Use DocScrutiny AI for document analysis.">
+                  🛡️ Air-Gapped
+                </span>
+              </div>
             </div>
           </div>
 
@@ -275,7 +298,14 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
                   </div>
                 )}
               </div>
-              <span className="text-[9px] text-gray-400 dark:text-slate-400 mt-1 px-1 font-mono">{m.timestamp}</span>
+              <div className="flex items-center gap-1.5 mt-1 px-1">
+                <span className="text-[9px] text-gray-400 dark:text-slate-400 font-mono">{m.timestamp}</span>
+                {m.sender === 'gemmy' && m.model && (
+                  <span className="text-[9px] text-gray-400 dark:text-slate-500 font-medium">
+                    • {m.model.includes('Air-Gap') ? '🛡️ Air-Gap Guard' : m.model.includes('Gemini') ? '✨ Connected Statutory AI' : '🏛️ Statutory Rules Engine'}
+                  </span>
+                )}
+              </div>
             </div>
           ))}
 

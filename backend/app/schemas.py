@@ -69,6 +69,17 @@ class DocumentOCRResult(BaseModel):
     extracted_pan: Optional[str] = None
     extracted_udyam: Optional[str] = None
     extracted_legal_name: Optional[str] = None
+    extracted_address: Optional[str] = None
+    extracted_constitution: Optional[str] = None
+    extracted_incorporation_date: Optional[str] = None
+    extracted_epfo: Optional[str] = None
+    extracted_esic: Optional[str] = None
+    extracted_mii_percentage: Optional[float] = None
+    extracted_mii_class: Optional[str] = None
+    extracted_udin: Optional[str] = None
+    extracted_oem_auth: Optional[str] = None
+    tender_ref: Optional[str] = None
+    turnover_breakdown: Optional[Dict[str, Any]] = None
     extracted_turnover: Optional[float] = None
     document_date: Optional[str] = None
     confidence_score: float
@@ -178,7 +189,9 @@ class DocumentChatResponse(BaseModel):
     owner_organization: str = "ABC Industries Pvt. Ltd."
     is_comparison: bool = False
     redacted_fields: List[str] = Field(default_factory=list)
-    suggested_actions: List[Dict[str, str]] = Field(default_factory=list)
+    suggested_actions: List[Dict[str, Any]] = Field(default_factory=list)
+    redirect_to_gemmy: Optional[bool] = False
+    gemmy_query: Optional[str] = None
 
 # Live Internet Updates Schema
 class LiveWebUpdateResponse(BaseModel):

@@ -1,83 +1,96 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { api } from '../../services/api';
 import type { DocumentOCRResult, DocumentChatResponse } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 
-interface SampleDocScenario {
-  id: string;
-  name: string;
-  label: string;
-  icon: string;
-  expected_verdict: string;
-  description: string;
-}
+/**
+ * High-Legibility Formatted AI Message Renderer
+ * Formats Markdown tables, headings, lists, codes, and bold text with
+ * maximum legibility in both Light Mode and Dark Mode.
+ */
+const FormattedAiMessage: React.FC<{ content: string }> = ({ content }) => {
+  return (
+    <div className="text-slate-900 dark:text-slate-100 text-xs sm:text-[13px] leading-relaxed">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          table: ({ node, ...props }) => (
+            <div className="overflow-x-auto my-3 rounded-xl border border-slate-300 dark:border-slate-700 shadow-xs bg-white dark:bg-slate-900/90">
+              <table className="w-full text-left border-collapse text-xs" {...props} />
+            </div>
+          ),
+          thead: ({ node, ...props }) => (
+            <thead className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-cyan-300 font-extrabold border-b-2 border-slate-300 dark:border-slate-700" {...props} />
+          ),
+          tbody: ({ node, ...props }) => (
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-slate-900 dark:text-slate-100" {...props} />
+          ),
+          tr: ({ node, ...props }) => (
+            <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors" {...props} />
+          ),
+          th: ({ node, ...props }) => (
+            <th className="p-2.5 font-black uppercase tracking-wider text-[11px] text-slate-800 dark:text-cyan-200 border-r last:border-r-0 border-slate-200 dark:border-slate-700" {...props} />
+          ),
+          td: ({ node, ...props }) => (
+            <td className="p-2.5 font-medium border-r last:border-r-0 border-slate-200 dark:border-slate-800" {...props} />
+          ),
+          h1: ({ node, ...props }) => (
+            <h1 className="text-sm font-black text-slate-900 dark:text-cyan-300 mt-3 mb-1.5 border-b border-slate-300 dark:border-slate-700 pb-1" {...props} />
+          ),
+          h2: ({ node, ...props }) => (
+            <h2 className="text-xs sm:text-sm font-black text-slate-900 dark:text-cyan-300 mt-2.5 mb-1" {...props} />
+          ),
+          h3: ({ node, ...props }) => (
+            <h3 className="text-xs font-black text-slate-900 dark:text-cyan-200 mt-2 mb-1" {...props} />
+          ),
+          h4: ({ node, ...props }) => (
+            <h4 className="text-xs font-bold text-slate-800 dark:text-cyan-200 mt-1.5 mb-0.5" {...props} />
+          ),
+          p: ({ node, ...props }) => (
+            <p className="my-1.5 leading-relaxed text-slate-800 dark:text-slate-200" {...props} />
+          ),
+          ul: ({ node, ...props }) => (
+            <ul className="list-disc list-inside space-y-1 my-1.5 pl-1 text-slate-800 dark:text-slate-200" {...props} />
+          ),
+          ol: ({ node, ...props }) => (
+            <ol className="list-decimal list-inside space-y-1 my-1.5 pl-1 text-slate-800 dark:text-slate-200" {...props} />
+          ),
+          li: ({ node, ...props }) => (
+            <li className="leading-relaxed font-medium" {...props} />
+          ),
+          strong: ({ node, ...props }) => (
+            <strong className="font-extrabold text-slate-950 dark:text-amber-300" {...props} />
+          ),
+          code: ({ node, inline, ...props }: any) => (
+            <code className="font-mono text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-blue-900 dark:text-cyan-300 px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700" {...props} />
+          ),
+          blockquote: ({ node, ...props }) => (
+            <blockquote className="border-l-4 border-cyan-500 bg-cyan-50 dark:bg-cyan-950/40 p-2.5 my-2 rounded-r-xl text-xs italic text-cyan-950 dark:text-cyan-200" {...props} />
+          )
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+};
 
 export const DocumentIntakeOCR: React.FC = () => {
-  const [sampleFiles, setSampleFiles] = useState<SampleDocScenario[]>([
-    {
-      id: 'gst_valid',
-      name: 'gst_reg06_active_valid.pdf',
-      label: 'GST Certificate (Active Regular)',
-      icon: '📄',
-      expected_verdict: 'LEGITIMATE & VALID',
-      description: 'Active Regular GSTIN with up-to-date monthly GSTR-3B returns.'
-    },
-    {
-      id: 'gst_cancelled',
-      name: 'gst_reg06_cancelled_expired.pdf',
-      label: 'GST Certificate (Suspended / Non-filing)',
-      icon: '⚠️',
-      expected_verdict: 'EXPIRED / SUSPENDED',
-      description: 'Suspended by Tax Authority under CGST Sec 29(2) due to >6 months non-filing.'
-    },
-    {
-      id: 'pan_valid',
-      name: 'pan_corporate_card.pdf',
-      label: 'Corporate PAN Card (Operative)',
-      icon: '💳',
-      expected_verdict: 'LEGITIMATE & PERPETUAL',
-      description: 'Operative Company PAN (AAACB1234F) verified with CBDT sovereign records.'
-    },
-    {
-      id: 'pan_fake',
-      name: 'pan_fake_forged.pdf',
-      label: 'PAN Card (Tampered / Non-Existent)',
-      icon: '🚫',
-      expected_verdict: 'FORGED & TAMPERED',
-      description: 'Font mismatch & cut-and-paste alteration detected; record absent in Income Tax DB.'
-    },
-    {
-      id: 'iso_expired',
-      name: 'iso_9001_quality_expired.pdf',
-      label: 'ISO 9001:2015 (Expired 2025)',
-      icon: '⏳',
-      expected_verdict: 'EXPIRED (600+ Days)',
-      description: 'Accredited TUV cert, but validity period lapsed on 15-Jan-2025.'
-    },
-    {
-      id: 'ca_turnover',
-      name: 'ca_audited_turnover_udin.pdf',
-      label: 'CA Certified Turnover & UDIN (₹125L)',
-      icon: '📊',
-      expected_verdict: 'LEGITIMATE & VALID',
-      description: 'Valid ICAI UDIN for FY 2024-25 statutory compliance.'
-    },
-    {
-      id: 'udyam_msme',
-      name: 'udyam_msme_registration.pdf',
-      label: 'Udyam MSME Registration',
-      icon: '🏭',
-      expected_verdict: 'LEGITIMATE & PERPETUAL',
-      description: 'Active Micro Enterprise certificate on Ministry of MSME portal.'
-    }
-  ]);
-
-  const [selectedSample, setSelectedSample] = useState<string>('gst_reg06_active_valid.pdf');
   const [customFile, setCustomFile] = useState<File | null>(null);
+  const [pasteMode, setPasteMode] = useState<boolean>(false);
+  const [pastedText, setPastedText] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [ocrResult, setOcrResult] = useState<DocumentOCRResult | null>(null);
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Floating DocScrutiny AI State (Specific to this S3 Section)
+  const [isFloatingAiOpen, setIsFloatingAiOpen] = useState<boolean>(false);
+  const [isAiMinimized, setIsAiMinimized] = useState<boolean>(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   const { user, switchMasterRole } = useAuth();
 
@@ -93,18 +106,26 @@ export const DocumentIntakeOCR: React.FC = () => {
   const [docAiHistory, setDocAiHistory] = useState<Array<{ role: 'user' | 'ai'; text: string; response?: DocumentChatResponse }>>([
     {
       role: 'ai',
-      text: "Namaste! I am **DocScrutiny AI**, your dedicated document verification and comparative bid intelligence engine.\n\n• **For Sellers**: You can analyze your own document flags, calculate expiry timelines, guide statutory rectification, and compare public bid parameters across competitors while competitor personal documents are strictly protected under DPDP Act 2023.\n• **For Legal Officers**: Switch to Officer Mode (ID: `GOV-OFF-9012`) to exercise statutory scrutiny over any bidder's uploaded documents, certificates, and compliance dossiers under GFR 2017 Rule 144."
+      text: "Namaste! I am **DocScrutiny AI**, your dedicated document verification and comparative bid intelligence engine.\n\n• **For Sellers**: You can analyze your own document flags, calculate expiry timelines, guide statutory rectification, and compare public bid parameters across competitors while competitor personal documents are strictly protected under DPDP Act 2023.\n• **For Legal Officers**: Switch to Officer Mode to exercise statutory scrutiny over uploaded documents, certificates, and compliance dossiers under GFR 2017 Rule 144."
     }
   ]);
+
+  useEffect(() => {
+    if (isFloatingAiOpen && !isAiMinimized) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [docAiHistory, isFloatingAiOpen, isAiMinimized]);
 
   const handleAskDocAI = async (questionText: string) => {
     const q = questionText.trim();
     if (!q) return;
     setDocAiLoading(true);
+    setIsFloatingAiOpen(true);
+    setIsAiMinimized(false);
     try {
       const res = await api.askDocumentScrutinyAI({
         question: q,
-        filename: ocrResult?.filename || selectedSample,
+        filename: ocrResult?.filename || customFile?.name || '',
         active_document: ocrResult,
         organization: effectiveOrg,
         role: effectiveRole,
@@ -123,74 +144,27 @@ export const DocumentIntakeOCR: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // Load sample scenarios from API if available
-    api.getSampleDocuments().then((samples) => {
-      if (samples && samples.length > 0) {
-        setSampleFiles(samples);
-      }
-    }).catch((e) => console.warn("Using default sample scenarios:", e));
+  const handleSendToGeMMy = (questionText: string) => {
+    const q = questionText.trim();
+    if (!q) return;
+    setIsAiMinimized(true);
+    window.dispatchEvent(new CustomEvent('open-gemmy-ai', {
+      detail: { question: q, autoSend: true }
+    }));
+  };
 
-    // Run initial inspection for the default valid GST certificate
-    handleRunOCR('gst_reg06_active_valid.pdf');
-  }, []);
-
-  const handleRunOCR = async (fileNameToProcess: string, uploadedFile?: File) => {
+  const handleRunOCRWithFile = async (fileToUpload: File) => {
     setLoading(true);
+    setErrorMessage(null);
     try {
-      let fileToUpload: File;
-      if (uploadedFile) {
-        fileToUpload = uploadedFile;
-      } else {
-        // Create mock file representing the selected test certificate
-        const fileContent = `Statutory Certificate Scrutiny Document: ${fileNameToProcess}. GSTIN: 24AAACB1234F1Z5 PAN: AAACB1234F UDYAM: UDYAM-GJ-01-008291. Digital Signature: SHA-256 Valid. Date: 14-Aug-2022.`;
-        const blob = new Blob([fileContent], { type: 'application/pdf' });
-        fileToUpload = new File([blob], fileNameToProcess, { type: 'application/pdf' });
-      }
-
       const res = await api.uploadDocumentOCR(fileToUpload);
       setOcrResult(res);
-    } catch (err) {
+      // Auto-open floating AI assistant on successful extraction
+      setIsFloatingAiOpen(true);
+      setIsAiMinimized(false);
+    } catch (err: any) {
       console.error('OCR Extraction error:', err);
-      // Fallback
-      setOcrResult({
-        filename: fileNameToProcess,
-        document_type: "GST Registration Certificate (REG-06)",
-        extracted_gstin: "24AAACB1234F1Z5",
-        extracted_pan: "AAACB1234F",
-        extracted_udyam: "UDYAM-GJ-01-008291",
-        extracted_legal_name: "ABC Industries Pvt. Ltd.",
-        extracted_turnover: 125.0,
-        document_date: "14-Aug-2022",
-        confidence_score: 98.4,
-        seal_verified: true,
-        tampering_detected: false,
-        raw_snippet: `[AI OCR Fallback Stream]\nDocument: ${fileNameToProcess}\nEntity: ABC Industries Pvt. Ltd.\nStatus: Verified`,
-        is_legit: true,
-        legitimacy_status: 'LEGITIMATE',
-        legitimacy_score: 98.4,
-        legitimacy_checks: [
-          {
-            name: "GSTN Common Portal Cross-Check",
-            passed: true,
-            score: 100,
-            details: "Status: Active Regular • Last GSTR-3B: August 2026",
-            source: "api.gst.gov.in"
-          }
-        ],
-        has_expiry: true,
-        is_expired: false,
-        validity_status: 'VALID',
-        validity_details: "Active Regular GSTIN with up-to-date monthly returns.",
-        cross_check_summary: {
-          pan_gstin_match: true,
-          embedded_pan: "AAACB1234F",
-          submitted_pan: "AAACB1234F",
-          legal_name_match: true,
-          sovereign_db_match: true,
-          audit_verdict: "PASSED: Reconciled with sovereign portals."
-        }
-      });
+      setErrorMessage(err.message || 'Failed to extract text from the uploaded document. Please check the file and try again.');
     } finally {
       setLoading(false);
     }
@@ -198,8 +172,20 @@ export const DocumentIntakeOCR: React.FC = () => {
 
   const handleCustomFileUpload = (file: File) => {
     setCustomFile(file);
-    setSelectedSample(file.name);
-    handleRunOCR(file.name, file);
+    setPasteMode(false);
+    handleRunOCRWithFile(file);
+  };
+
+  const handleProcessPastedText = () => {
+    const trimmed = pastedText.trim();
+    if (!trimmed) {
+      setErrorMessage('Please paste or enter document text before processing.');
+      return;
+    }
+    const blob = new Blob([trimmed], { type: 'text/plain' });
+    const textFile = new File([blob], 'pasted_document.txt', { type: 'text/plain' });
+    setCustomFile(textFile);
+    handleRunOCRWithFile(textFile);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -210,8 +196,15 @@ export const DocumentIntakeOCR: React.FC = () => {
     }
   };
 
+  const handleResetDocument = () => {
+    setCustomFile(null);
+    setOcrResult(null);
+    setPastedText('');
+    setErrorMessage(null);
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       {/* Title & Statutory Overview Banner */}
       <div className="bg-gradient-to-r from-[#062134] to-[#0c3952] text-white p-5 rounded-2xl shadow-md border border-[#1b4360] flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -220,17 +213,17 @@ export const DocumentIntakeOCR: React.FC = () => {
               Layer 2 Engine
             </span>
             <span className="bg-blue-500/30 text-blue-200 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-400/30">
-              Sovereign Database Cross-Check
+              Live OCR & Sovereign Gateway
             </span>
             <span className="bg-emerald-500/30 text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-400/30">
-              Statutory Expiry Scrutiny
+              Floating AI Assistant Active
             </span>
           </div>
           <h2 className="text-base sm:text-lg font-black tracking-tight">
-            AI Document Intake, Legitimacy Verification & Expiry Scrutiny
+            AI Document Intake, OCR Extraction & Sovereign Verification
           </h2>
           <p className="text-xs text-gray-300 mt-0.5 max-w-2xl">
-            Automatically extracts statutory credentials (GSTIN, PAN, Udyam, UDIN, ISO), validates authenticity against sovereign government portals (CBDT, GSTN, MSME, ICAI), detects pixel/font cut-and-paste tampering, and verifies statutory validity periods and return filing deadlines.
+            Upload any bidder document (PDF, PNG, JPG, or TXT) to perform optical character recognition, extract statutory IDs (GSTIN, PAN, Udyam, UDIN, EPFO, ESIC), and verify legitimacy directly against sovereign registries (CBDT, GSTN, MSME, ICAI, EPFO, ESIC).
           </p>
         </div>
         <div className="flex items-center gap-2 text-right">
@@ -242,145 +235,178 @@ export const DocumentIntakeOCR: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left: Document Intake & Pre-loaded Scenarios (5 Cols) */}
+        {/* Left: Document Intake Station (5 Cols) */}
         <div className="lg:col-span-5 space-y-4">
-          {/* Custom File Upload Dropzone */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
-            <div className="flex items-center justify-between">
+          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b pb-3">
               <h3 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center gap-1.5">
                 <span>📤</span>
-                <span>Upload Bidder Document</span>
+                <span>Document Intake Station</span>
               </h3>
-              <span className="text-[10px] text-gray-400 font-semibold">PDF, PNG, JPG (up to 15MB)</span>
+              <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg text-[10px] font-bold">
+                <button
+                  type="button"
+                  onClick={() => setPasteMode(false)}
+                  className={`px-2 py-1 rounded-md transition cursor-pointer ${!pasteMode ? 'bg-white text-orange-600 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}
+                >
+                  File Upload
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPasteMode(true)}
+                  className={`px-2 py-1 rounded-md transition cursor-pointer ${pasteMode ? 'bg-white text-orange-600 shadow-xs' : 'text-gray-500 hover:text-gray-900'}`}
+                >
+                  Paste Text
+                </button>
+              </div>
             </div>
 
-            <div
-              onDragOver={(e) => {
-                e.preventDefault();
-                setIsDragOver(true);
-              }}
-              onDragLeave={() => setIsDragOver(false)}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2 ${
-                isDragOver
-                  ? 'border-orange-500 bg-orange-50/70'
-                  : 'border-gray-300 hover:border-[#f37021] bg-gray-50/60 hover:bg-orange-50/30'
-              }`}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.png,.jpg,.jpeg,.tif"
-                className="hidden"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files.length > 0) {
-                    handleCustomFileUpload(e.target.files[0]);
-                  }
+            {errorMessage && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-800 flex items-start gap-2">
+                <span className="text-sm">⚠️</span>
+                <div>
+                  <p className="font-bold">Extraction Error</p>
+                  <p className="text-[11px] mt-0.5">{errorMessage}</p>
+                </div>
+              </div>
+            )}
+
+            {!pasteMode ? (
+              /* Custom File Upload Dropzone */
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragOver(true);
                 }}
-              />
-              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-xl text-orange-600 shadow-xs">
-                📁
+                onDragLeave={() => setIsDragOver(false)}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center gap-2.5 ${
+                  isDragOver
+                    ? 'border-orange-500 bg-orange-50/70'
+                    : 'border-gray-300 hover:border-[#f37021] bg-gray-50/60 hover:bg-orange-50/30'
+                }`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg,.txt"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handleCustomFileUpload(e.target.files[0]);
+                    }
+                  }}
+                />
+                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-2xl text-orange-600 shadow-xs">
+                  {customFile ? '📄' : '📁'}
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-800">
+                    {customFile ? customFile.name : 'Click to Browse or Drag & Drop File'}
+                  </p>
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    {customFile
+                      ? `${(customFile.size / 1024).toFixed(1)} KB • Click to choose another file`
+                      : 'Accepts PDF, PNG, JPG, JPEG, and TXT files (up to 15MB)'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-bold text-gray-800">
-                  {customFile ? customFile.name : 'Click to Browse or Drag & Drop File'}
-                </p>
-                <p className="text-[10px] text-gray-500 mt-0.5">
-                  {customFile
-                    ? `${(customFile.size / 1024).toFixed(1)} KB • Click to choose another file`
-                    : 'Upload PAN, GSTIN REG-06, CA Certificate, ISO 9001, or Udyam'}
-                </p>
+            ) : (
+              /* Direct Text / Dossier Paste Area */
+              <div className="space-y-2">
+                <label className="text-[11px] font-bold text-gray-700 block">
+                  Paste Document Text / Dossier Content:
+                </label>
+                <textarea
+                  value={pastedText}
+                  onChange={(e) => setPastedText(e.target.value)}
+                  placeholder="Paste raw vendor verification dossier text, GSTIN certificate copy, PAN data, or statutory declaration here..."
+                  rows={8}
+                  className="w-full bg-gray-50 border border-gray-300 rounded-xl p-3 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500"
+                />
+                <button
+                  type="button"
+                  onClick={handleProcessPastedText}
+                  disabled={loading || !pastedText.trim()}
+                  className="w-full bg-[#f37021] hover:bg-[#e05e10] disabled:opacity-50 text-white font-extrabold text-xs py-2.5 rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Extracting & Verifying Text...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>⚡</span>
+                      <span>Process Pasted Document Text</span>
+                    </>
+                  )}
+                </button>
               </div>
-            </div>
-          </div>
+            )}
 
-          {/* Pre-Configured Test Scenarios */}
-          <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
-            <div className="flex items-center justify-between border-b pb-2">
-              <h3 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center gap-1.5">
-                <span>🧪</span>
-                <span>Select Statutory Test Scenario</span>
-              </h3>
-              <span className="text-[10px] text-orange-600 font-bold bg-orange-50 px-2 py-0.5 rounded">
-                7 Mock Scenarios
-              </span>
-            </div>
+            {/* Active Document Status & Reset */}
+            {customFile && (
+              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-gray-700 flex items-center gap-1.5 truncate">
+                    <span>📑</span>
+                    <span className="truncate">{customFile.name}</span>
+                  </span>
+                  <span className="text-[10px] font-mono text-gray-500 shrink-0">
+                    {(customFile.size / 1024).toFixed(1)} KB
+                  </span>
+                </div>
 
-            <div className="space-y-2 max-h-[460px] overflow-y-auto pr-1">
-              {sampleFiles.map((s) => {
-                const isSelected = selectedSample === s.name && !customFile;
-                const isExpiredOrSuspended = s.expected_verdict.includes('EXPIRED') || s.expected_verdict.includes('SUSPENDED');
-                const isForged = s.expected_verdict.includes('FORGED');
-                const isValid = s.expected_verdict.includes('VALID') || s.expected_verdict.includes('PERPETUAL');
-
-                return (
+                <div className="flex items-center gap-2 pt-1">
                   <button
-                    key={s.id}
-                    onClick={() => {
-                      setCustomFile(null);
-                      setSelectedSample(s.name);
-                      handleRunOCR(s.name);
-                    }}
-                    className={`w-full p-3 rounded-xl border text-left transition flex items-start gap-3 cursor-pointer ${
-                      isSelected
-                        ? 'border-orange-500 bg-orange-50/70 shadow-xs ring-1 ring-orange-400'
-                        : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50/80'
-                    }`}
+                    type="button"
+                    onClick={() => handleRunOCRWithFile(customFile)}
+                    disabled={loading}
+                    className="flex-1 bg-[#062134] hover:bg-[#0c3952] disabled:opacity-50 text-white text-xs font-bold py-2 rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5"
                   >
-                    <span className="text-2xl mt-0.5">{s.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <p className="text-xs font-bold text-gray-900 truncate">{s.label}</p>
-                        <span
-                          className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0 ${
-                            isForged
-                              ? 'bg-red-100 text-red-800 border border-red-200'
-                              : isExpiredOrSuspended
-                              ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                              : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                          }`}
-                        >
-                          {s.expected_verdict}
-                        </span>
-                      </div>
-                      <p className="text-[10px] text-gray-500 mt-1 leading-snug">{s.description}</p>
-                      <p className="text-[9px] font-mono text-gray-400 mt-0.5">{s.name}</p>
-                    </div>
+                    <span>🔄</span>
+                    <span>Re-Run OCR</span>
                   </button>
-                );
-              })}
-            </div>
+                  <button
+                    type="button"
+                    onClick={handleResetDocument}
+                    disabled={loading}
+                    className="px-3 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold py-2 rounded-lg transition cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            )}
 
-            <button
-              onClick={() => handleRunOCR(selectedSample, customFile || undefined)}
-              disabled={loading}
-              className="w-full bg-[#f37021] hover:bg-[#e05e10] text-white font-extrabold text-xs py-2.5 rounded-xl shadow-md hover:shadow transition cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 mt-3"
-            >
-              {loading ? (
-                <>
-                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Running AI Legitimacy & Expiry Scrutiny...</span>
-                </>
-              ) : (
-                <>
-                  <span>⚡</span>
-                  <span>Re-Evaluate Active Document</span>
-                </>
-              )}
-            </button>
+            {/* Instruction Checklist */}
+            <div className="p-3.5 bg-blue-50/50 border border-blue-100 rounded-xl space-y-1.5 text-xs text-blue-950">
+              <p className="font-extrabold text-[11px] text-blue-900 flex items-center gap-1">
+                <span>ℹ️</span>
+                <span>Statutory Parameters Evaluated by AI Engine:</span>
+              </p>
+              <ul className="text-[10px] text-blue-800 space-y-1 list-disc list-inside">
+                <li>Tax Registry: GSTIN status, last GSTR-3B return period, and CBDT PAN</li>
+                <li>MSME Classification: Udyam registration, category, and EMD eligibility</li>
+                <li>Labor Mandates: EPFO Establishment code and ESIC employer registration</li>
+                <li>Public Procurement: Make in India (MII) % & Class-I rule, ICAI UDIN, OEM MAF</li>
+                <li>Financials: Multi-year audited turnover and 3-year average computation</li>
+              </ul>
+            </div>
           </div>
         </div>
 
         {/* Right: AI Scrutiny Results Dashboard (7 Cols) */}
         <div className="lg:col-span-7 space-y-4">
           {loading ? (
-            <div className="bg-white p-12 rounded-2xl border border-gray-200 shadow-sm text-center space-y-4">
+            <div className="bg-white p-14 rounded-2xl border border-gray-200 shadow-sm text-center space-y-4">
               <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
               <div>
-                <p className="text-sm font-extrabold text-[#062134]">AI Sovereign Engine in Progress...</p>
+                <p className="text-sm font-extrabold text-[#062134]">Performing Live OCR & Sovereign Verification...</p>
                 <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-                  Cross-referencing submitted IDs against CBDT, GSTN, Udyam, and ICAI UDIN registers; evaluating monthly return filing status and pixel forensics.
+                  Extracting native text layers, calculating cryptographic hash digests, and querying sovereign government APIs (CBDT, GSTN, MSME, EPFO, ESIC, ICAI).
                 </p>
               </div>
             </div>
@@ -433,7 +459,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                           ? '100% LEGITIMATE (VERIFIED)'
                           : ocrResult.legitimacy_status === 'SUSPICIOUS'
                           ? 'SUSPICIOUS / DEFAULTED'
-                          : 'FORGED / TAMPERED (REJECTED)'}
+                          : 'FORGED / NON-COMPLIANT'}
                       </span>
                     </p>
                     <p className="text-[11px] text-gray-600 mt-1 leading-relaxed">
@@ -441,7 +467,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                         ? 'Digital signature SHA-256 validated. Sovereign authority records match letter-for-letter with sovereign gateways.'
                         : ocrResult.legitimacy_status === 'SUSPICIOUS'
                         ? 'Issuer authentic but operational default or statutory suspension active under sovereign rules.'
-                        : 'Tampered instrument. Font layer mismatch or non-existent record in CBDT/GSTN sovereign registry.'}
+                        : 'Tampered instrument or statutory discrepancies detected across sovereign registries.'}
                     </p>
                   </div>
 
@@ -529,10 +555,25 @@ export const DocumentIntakeOCR: React.FC = () => {
 
               {/* Extracted Statutory Entities Table */}
               <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
-                <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center justify-between">
-                  <span>📋 Extracted Document Parameters</span>
-                  <span className="text-[10px] text-gray-400 font-mono">{ocrResult.filename}</span>
-                </h4>
+                <div className="flex items-center justify-between border-b pb-2">
+                  <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center gap-1.5">
+                    <span>📋 Extracted Document Parameters</span>
+                    <span className="text-[10px] text-gray-400 font-mono font-normal">({ocrResult.filename})</span>
+                  </h4>
+                  {/* Quick Floating DocScrutiny AI Launcher */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsFloatingAiOpen(true);
+                      setIsAiMinimized(false);
+                    }}
+                    className="flex items-center gap-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold text-[11px] px-3 py-1 rounded-xl shadow-xs transition transform hover:scale-105 cursor-pointer"
+                  >
+                    <span>🤖</span>
+                    <span>Ask DocScrutiny AI</span>
+                    <span className="bg-white/20 text-[9px] px-1 py-0.2 rounded font-mono">Floating</span>
+                  </button>
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
@@ -541,45 +582,132 @@ export const DocumentIntakeOCR: React.FC = () => {
                   </div>
                   <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                     <span className="text-[10px] font-bold text-gray-400 uppercase">Recognized Legal Entity</span>
-                    <p className="font-extrabold text-gray-800 mt-0.5">{ocrResult.extracted_legal_name || 'ABC Industries Pvt. Ltd.'}</p>
+                    <p className="font-extrabold text-gray-800 mt-0.5">
+                      {ocrResult.extracted_legal_name || <span className="text-gray-400 font-normal italic">Not specified in document</span>}
+                    </p>
                   </div>
                 </div>
 
                 <div className="border border-gray-100 rounded-xl divide-y divide-gray-100 text-xs bg-gray-50/40">
-                  <div className="p-2.5 px-3 flex justify-between items-center">
-                    <span className="text-gray-500">Extracted GSTIN:</span>
-                    <span className={`font-mono font-black ${ocrResult.extracted_gstin?.endsWith('9Z9') ? 'text-red-600 bg-red-50 px-2 py-0.5 rounded' : 'text-blue-900'}`}>
-                      {ocrResult.extracted_gstin || 'N/A'}
-                    </span>
-                  </div>
-                  <div className="p-2.5 px-3 flex justify-between items-center">
-                    <span className="text-gray-500">Extracted PAN:</span>
-                    <span className={`font-mono font-black ${ocrResult.tampering_detected ? 'text-red-600 bg-red-50 px-2 py-0.5 rounded' : 'text-blue-900'}`}>
-                      {ocrResult.extracted_pan || 'N/A'}
-                    </span>
-                  </div>
+                  {ocrResult.extracted_gstin && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">Extracted GSTIN:</span>
+                      <span className={`font-mono font-black ${ocrResult.extracted_gstin?.endsWith('9Z9') ? 'text-red-600 bg-red-50 px-2 py-0.5 rounded' : 'text-blue-900'}`}>
+                        {ocrResult.extracted_gstin}
+                      </span>
+                    </div>
+                  )}
+                  {ocrResult.extracted_pan && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">Extracted PAN:</span>
+                      <span className={`font-mono font-black ${ocrResult.tampering_detected ? 'text-red-600 bg-red-50 px-2 py-0.5 rounded' : 'text-blue-900'}`}>
+                        {ocrResult.extracted_pan}
+                      </span>
+                    </div>
+                  )}
                   {ocrResult.extracted_udyam && (
                     <div className="p-2.5 px-3 flex justify-between items-center">
                       <span className="text-gray-500">Udyam Registration:</span>
                       <span className="font-mono font-black text-blue-900">{ocrResult.extracted_udyam}</span>
                     </div>
                   )}
+                  {ocrResult.extracted_address && (
+                    <div className="p-2.5 px-3 flex justify-between items-start">
+                      <span className="text-gray-500 shrink-0">Registered Address:</span>
+                      <span className="font-medium text-gray-800 text-right max-w-xs">{ocrResult.extracted_address}</span>
+                    </div>
+                  )}
+                  {ocrResult.extracted_constitution && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">Constitution of Business:</span>
+                      <span className="font-bold text-gray-800">{ocrResult.extracted_constitution}</span>
+                    </div>
+                  )}
+                  {ocrResult.extracted_epfo && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">EPFO Establishment Code:</span>
+                      <span className="font-mono font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        {ocrResult.extracted_epfo}
+                      </span>
+                    </div>
+                  )}
+                  {ocrResult.extracted_esic && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">ESIC Employer Code:</span>
+                      <span className="font-mono font-black text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        {ocrResult.extracted_esic}
+                      </span>
+                    </div>
+                  )}
+                  {ocrResult.extracted_mii_percentage !== undefined && ocrResult.extracted_mii_percentage !== null && (
+                    <div className="p-2.5 px-3 flex justify-between items-center bg-orange-50/40">
+                      <span className="text-gray-700 font-semibold">Make in India (MII) Local Content:</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-black text-orange-700 font-mono">{ocrResult.extracted_mii_percentage}%</span>
+                        <span className="text-[9px] bg-emerald-600 text-white font-black px-1.5 py-0.5 rounded">
+                          {ocrResult.extracted_mii_class || 'Class-I Local Supplier'}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {ocrResult.extracted_udin && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">ICAI UDIN for CA Certificate:</span>
+                      <span className="font-mono font-black text-blue-900 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                        {ocrResult.extracted_udin}
+                      </span>
+                    </div>
+                  )}
+                  {ocrResult.extracted_oem_auth && (
+                    <div className="p-2.5 px-3 flex justify-between items-start">
+                      <span className="text-gray-500 shrink-0">OEM Authorization Reference:</span>
+                      <span className="font-bold text-gray-800 text-right max-w-xs">{ocrResult.extracted_oem_auth}</span>
+                    </div>
+                  )}
+                  {ocrResult.tender_ref && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">Tender / Bid Reference:</span>
+                      <span className="font-mono font-black text-purple-900">{ocrResult.tender_ref}</span>
+                    </div>
+                  )}
                   {ocrResult.extracted_turnover && (
                     <div className="p-2.5 px-3 flex justify-between items-center">
-                      <span className="text-gray-500">CA Certified Turnover:</span>
+                      <span className="text-gray-500">Annual Turnover (Avg):</span>
                       <span className="font-mono font-black text-emerald-700">₹{ocrResult.extracted_turnover} Lakhs</span>
                     </div>
                   )}
-                  <div className="p-2.5 px-3 flex justify-between items-center">
-                    <span className="text-gray-500">Certificate Issue Date:</span>
-                    <span className="font-medium text-gray-700">{ocrResult.document_date || '14-Aug-2022'}</span>
-                  </div>
+                  {ocrResult.turnover_breakdown && Object.keys(ocrResult.turnover_breakdown).length > 0 && (
+                    <div className="p-3 bg-amber-50/50 space-y-1.5">
+                      <span className="text-[10px] font-black uppercase text-amber-900 tracking-wider">
+                        Past Financial Years Audited Turnover Breakdown
+                      </span>
+                      <div className="grid grid-cols-3 gap-1.5 text-center">
+                        {Object.entries(ocrResult.turnover_breakdown).map(([fy, item]) => (
+                          <div key={fy} className="bg-white p-1.5 rounded-lg border border-amber-200 shadow-2xs">
+                            <span className="text-[9px] font-bold text-gray-500 block">{fy}</span>
+                            <span className="text-xs font-black text-emerald-800 font-mono block">{item.declared_display}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {ocrResult.document_date && (
+                    <div className="p-2.5 px-3 flex justify-between items-center">
+                      <span className="text-gray-500">Certificate / Issue Date:</span>
+                      <span className="font-medium text-gray-700">{ocrResult.document_date}</span>
+                    </div>
+                  )}
                   {ocrResult.expiry_date && (
                     <div className="p-2.5 px-3 flex justify-between items-center bg-orange-50/50">
                       <span className="text-orange-950 font-bold">Document Expiry Date:</span>
                       <span className={`font-mono font-black ${ocrResult.is_expired ? 'text-red-600' : 'text-blue-900'}`}>
                         {ocrResult.expiry_date}
                       </span>
+                    </div>
+                  )}
+                  {!ocrResult.extracted_gstin && !ocrResult.extracted_pan && !ocrResult.extracted_udyam && !ocrResult.extracted_epfo && !ocrResult.extracted_esic && (
+                    <div className="p-3 text-center text-gray-500 italic text-xs">
+                      No statutory tax or enterprise registration numbers detected in this document.
                     </div>
                   )}
                 </div>
@@ -589,7 +717,7 @@ export const DocumentIntakeOCR: React.FC = () => {
               <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
                 <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center justify-between">
                   <span>🏛️ Sovereign Database Cross-Verification Checks</span>
-                  <span className="text-[10px] text-gray-400">Real-Time Registry Query</span>
+                  <span className="text-[10px] text-gray-400">Live Registry Handshake</span>
                 </h4>
 
                 <div className="space-y-2 text-xs">
@@ -624,19 +752,19 @@ export const DocumentIntakeOCR: React.FC = () => {
                     ))
                   ) : (
                     <div className="p-3 bg-gray-50 rounded-xl text-center text-gray-500">
-                      Standard sovereign API checks passed.
+                      No sovereign IDs identified for registry cross-check.
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Cross-Document Consistency Matrix */}
-              {ocrResult.cross_check_summary && (
+              {ocrResult.cross_check_summary && ocrResult.extracted_gstin && ocrResult.extracted_pan && (
                 <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
                   <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center justify-between">
                     <span>🔗 Cross-Document Consistency & Reconciliation</span>
                     <span className="text-[10px] text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded">
-                      Multi-Instrument Match
+                      Tax Instrument Match
                     </span>
                   </h4>
 
@@ -656,10 +784,10 @@ export const DocumentIntakeOCR: React.FC = () => {
                     <div className="p-3 bg-gray-50 rounded-xl border flex items-center justify-between">
                       <div>
                         <p className="font-bold text-gray-800 text-[11px]">Entity Legal Name Consistency</p>
-                        <p className="text-[10px] text-gray-500">CBDT, GSTN, MCA-21 Master Records</p>
+                        <p className="text-[10px] text-gray-500">CBDT & GSTN Master Records</p>
                       </div>
-                      <span className="text-[10px] font-black px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                        EXACT MATCH
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded ${ocrResult.cross_check_summary.legal_name_match ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                        {ocrResult.cross_check_summary.legal_name_match ? 'EXACT MATCH' : 'UNVERIFIED'}
                       </span>
                     </div>
                   </div>
@@ -667,7 +795,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                   <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs text-blue-950">
                     <p className="font-bold text-[11px]">AI Auditor Verdict:</p>
                     <p className="text-[11px] text-blue-900 mt-0.5">
-                      {ocrResult.cross_check_summary.audit_verdict || 'All sovereign tax IDs and entity declarations reconcile with sovereign portals.'}
+                      {ocrResult.cross_check_summary.audit_verdict}
                     </p>
                   </div>
                 </div>
@@ -677,367 +805,450 @@ export const DocumentIntakeOCR: React.FC = () => {
               <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
                 <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center justify-between">
                   <span>🔍 Pixel Forensics & Anti-Tamper Inspection</span>
-                  <span className="text-[10px] text-gray-400">Zero-Trust Security</span>
+                  <span className="text-[10px] text-gray-400">Cryptographic Verification</span>
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                   <div className="p-3 bg-gray-50 rounded-xl border">
                     <span className="text-[10px] font-bold text-gray-400 uppercase">Font Consistency & Text Layer</span>
                     <p className={`font-bold mt-1 ${ocrResult.tamper_analysis?.font_consistency?.includes('MISMATCH') ? 'text-red-700' : 'text-emerald-800'}`}>
-                      {ocrResult.tamper_analysis?.font_consistency || 'UNIFORM (Native sovereign vector fonts verified)'}
+                      {ocrResult.tamper_analysis?.font_consistency || 'UNIFORM (Native document text verified)'}
                     </p>
                   </div>
                   <div className="p-3 bg-gray-50 rounded-xl border">
                     <span className="text-[10px] font-bold text-gray-400 uppercase">Pixel Tamper Manipulation Risk</span>
                     <p className={`font-bold mt-1 ${ocrResult.tamper_analysis?.pixel_tamper_risk?.includes('HIGH') ? 'text-red-700' : 'text-emerald-800'}`}>
-                      {ocrResult.tamper_analysis?.pixel_tamper_risk || 'LOW (0.02% variance, no digital alterations detected)'}
+                      {ocrResult.tamper_analysis?.pixel_tamper_risk || 'LOW (Zero alteration artifacts)'}
                     </p>
                   </div>
                 </div>
 
                 <div className="p-2.5 bg-gray-50 rounded-xl border text-[10px] font-mono text-gray-600 flex items-center justify-between">
                   <span>Cryptographic Digest:</span>
-                  <span className="font-bold text-gray-800">{ocrResult.tamper_analysis?.hash_checksum || 'SHA-256 Validated'}</span>
+                  <span className="font-bold text-gray-800">{ocrResult.tamper_analysis?.hash_checksum}</span>
                 </div>
               </div>
 
-              {/* Dedicated Multi-Tenant DocScrutiny AI & Comparative Bid Intelligence Console */}
-              <div className="bg-gradient-to-br from-slate-900 via-[#0a192f] to-slate-950 text-white p-5 rounded-2xl border border-cyan-500/40 shadow-xl space-y-4">
-                {/* Console Header */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-400/30 flex items-center justify-center text-base">
-                      🤖
-                    </span>
-                    <div>
-                      <h4 className="font-extrabold text-sm text-cyan-300 flex items-center gap-2">
-                        DocScrutiny AI
-                        <span className="bg-cyan-500/20 text-cyan-200 border border-cyan-400/40 text-[9px] font-bold px-1.5 py-0.5 rounded">
-                          Multi-Tenant Scoped
-                        </span>
-                      </h4>
-                      <p className="text-[10px] text-gray-400">
-                        Document-Level Diagnostics & DPDP-Protected Comparative Bid Evaluation
-                      </p>
-                    </div>
+              {/* Floating Dock Status Banner */}
+              <div className="bg-gradient-to-r from-cyan-900/10 via-blue-900/10 to-slate-900/10 dark:bg-slate-900/60 p-4 rounded-2xl border border-cyan-500/30 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-xl shrink-0">
+                    🤖
                   </div>
-
-                  {/* Access Mode Switcher & Master ID Controls */}
-                  <div className="flex items-center gap-2">
-                    {user?.isMaster ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-amber-300 font-bold bg-amber-400/15 px-2 py-0.5 rounded border border-amber-400/30 flex items-center gap-1">
-                          <span>👑</span> Master Switcher
-                        </span>
-                        <div className="flex rounded-lg bg-white/5 p-0.5 border border-white/10 text-xs">
-                          <button
-                            type="button"
-                            onClick={() => switchMasterRole('seller')}
-                            className={`px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-medium cursor-pointer ${
-                              !isOfficer
-                                ? 'bg-cyan-500 text-slate-950 font-bold shadow'
-                                : 'text-gray-300 hover:text-white'
-                            }`}
-                          >
-                            <span>🏢</span>
-                            <span>Seller Mode</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => switchMasterRole('officer')}
-                            className={`px-2.5 py-1 rounded-md flex items-center gap-1.5 transition font-medium cursor-pointer ${
-                              isOfficer
-                                ? 'bg-purple-500 text-white font-bold shadow'
-                                : 'text-gray-300 hover:text-white'
-                            }`}
-                          >
-                            <span>⚖️</span>
-                            <span>Legal Officer Mode</span>
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs">
-                        <span className="text-gray-300 font-medium">Session:</span>
-                        <span className={`font-bold ${isOfficer ? 'text-purple-300' : 'text-cyan-300'}`}>
-                          {isOfficer ? '⚖️ Legal Officer' : '🏢 Seller Desk'}
-                        </span>
-                      </div>
-                    )}
+                  <div>
+                    <h4 className="font-extrabold text-xs text-cyan-950 dark:text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+                      <span>DocScrutiny AI Floating Console</span>
+                      <span className="text-[9px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold px-1.5 py-0.5 rounded">
+                        Window Active
+                      </span>
+                    </h4>
+                    <p className="text-[11px] text-gray-600 dark:text-gray-400">
+                      Chat with DocScrutiny AI in the floating assistant window on the bottom right.
+                    </p>
                   </div>
                 </div>
-
-                {/* Role Status Banner */}
-                {!isOfficer ? (
-                  <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-xs">
-                    <div className="flex items-center gap-2 text-emerald-300">
-                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                      <span className="font-mono text-[11px]">
-                        {user?.isMaster && <span className="text-amber-400 font-bold mr-1.5">👑 [Master Session]</span>}
-                        Tenant Scope: <strong>{effectiveOrg} ({effectiveUserId})</strong>
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-gray-400">Own Docs Only • Cross-Bidder Private Docs Prohibited (DPDP Act 2023)</span>
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-purple-950/50 border border-purple-500/40 text-xs">
-                    <div className="flex items-center gap-2 text-purple-200">
-                      <span className="w-2.5 h-2.5 rounded-full bg-purple-400 animate-pulse"></span>
-                      <span className="font-mono text-[11px]">
-                        {user?.isMaster && <span className="text-amber-400 font-bold mr-1.5">👑 [Master Session]</span>}
-                        Officer ID: <strong>{effectiveUserId}</strong> ({user?.designation || 'Dr. S. K. Ramanathan, Chief Procurement Officer'})
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-purple-200 bg-purple-900/70 px-2 py-0.5 rounded border border-purple-500/40 font-bold">
-                      🏛️ Statutory Jurisdiction: GFR 2017 Rule 144
-                    </span>
-                  </div>
-                )}
-
-                {/* Officer Scrutiny Console vs Seller Tabs */}
-                {isOfficer ? (
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-[10px] text-purple-300 font-bold uppercase tracking-wider">
-                      <span>🏛️ Officer Bidder Scrutiny Actions (GFR 2017 Rule 144):</span>
-                      <span className="text-gray-400 font-normal lowercase">click to inspect any bidder</span>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => handleAskDocAI("Scrutinize Zenith Global Tech (bid-002) uploaded documents and deficit flags")}
-                        className="bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/40 text-amber-200 text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>🔍</span> Scrutinize Zenith (bid-002) Docs & Deficits
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleAskDocAI("Scrutinize Bharat Precision (bid-003) for forged PAN, suspended GST, and CPPP debarment order")}
-                        className="bg-red-500/15 hover:bg-red-500/25 border border-red-400/40 text-red-200 text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>🚫</span> Scrutinize Bharat Precision (bid-003) Debarment
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleAskDocAI("Scrutinize ABC Industries (bid-001) complete statutory document audit")}
-                        className="bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-400/40 text-emerald-200 text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>✅</span> Scrutinize ABC Industries (bid-001) Audit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleAskDocAI("Generate comprehensive technical evaluation scrutiny report for all 3 bidders")}
-                        className="bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/40 text-purple-200 text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>📊</span> Full Tender Scrutiny Matrix (All Bidders)
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    {/* Sub-Tabs: Own Document Scrutiny vs Comparative Bid Intelligence */}
-                    <div className="grid grid-cols-2 gap-2 bg-white/5 p-1 rounded-xl border border-white/10 text-xs font-bold">
-                      <button
-                        type="button"
-                        onClick={() => setDocAiTab('document')}
-                        className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                          docAiTab === 'document'
-                            ? 'bg-cyan-500 text-slate-950 shadow-md font-black'
-                            : 'text-gray-300 hover:text-white hover:bg-white/5'
-                        }`}
-                      >
-                        <span>📄</span>
-                        <span>My Document Scrutiny & Flags</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDocAiTab('comparison')}
-                        className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition cursor-pointer ${
-                          docAiTab === 'comparison'
-                            ? 'bg-amber-400 text-slate-950 shadow-md font-black'
-                            : 'text-gray-300 hover:text-white hover:bg-white/5'
-                        }`}
-                      >
-                        <span>⚖️</span>
-                        <span>Comparative Bid Intelligence</span>
-                      </button>
-                    </div>
-
-                    {/* Quick Context Prompt Chips */}
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                        <span>Quick Diagnostics:</span>
-                        <span className="text-cyan-400 font-normal lowercase">click to ask</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {docAiTab === 'document' ? (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("Why was this document flagged?")}
-                              className="bg-white/10 hover:bg-white/20 border border-white/15 text-gray-200 hover:text-white text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                            >
-                              <span>⚠️</span> Why was this document flagged?
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("When does this certificate expire and how many days are left?")}
-                              className="bg-white/10 hover:bg-white/20 border border-white/15 text-gray-200 hover:text-white text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                            >
-                              <span>⏳</span> Expiry timeline & validity?
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("How do I rectify the suspension or discrepancy on this document?")}
-                              className="bg-white/10 hover:bg-white/20 border border-white/15 text-gray-200 hover:text-white text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                            >
-                              <span>🛠️</span> How to rectify compliance flag?
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("Verify sovereign database match for this certificate")}
-                              className="bg-white/10 hover:bg-white/20 border border-white/15 text-gray-200 hover:text-white text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                            >
-                              <span>🏛️</span> Sovereign registry cross-check?
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("Compare my bid with Zenith Global Tech on public technical criteria")}
-                              className="bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-200 hover:text-white text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                            >
-                              <span>📊</span> Compare bid with Zenith Global Tech
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("Which bid is better suited for this tender and why?")}
-                              className="bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-200 hover:text-white text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                            >
-                              <span>🏆</span> Which bid is better and why?
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("What is Zenith's Make-in-India percentage compared to mine?")}
-                              className="bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-200 hover:text-white text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                            >
-                              <span>📈</span> Make-in-India % comparison
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleAskDocAI("What documents did Zenith upload? Show me their files and PAN")}
-                              className="bg-red-500/15 hover:bg-red-500/25 border border-red-400/40 text-red-300 hover:text-red-200 text-[11px] px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-                              title="Test DPDP Act multi-tenant isolation block"
-                            >
-                              <span>🔒</span> What documents did Zenith upload? (Test DPDP Block)
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {/* Conversation & Results Thread */}
-                {docAiHistory.length > 0 && (
-                  <div className="space-y-3 max-h-72 overflow-y-auto pr-1 bg-black/30 p-3.5 rounded-xl border border-white/10 text-xs">
-                    {docAiHistory.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className={`p-3 rounded-xl ${
-                          item.role === 'user'
-                            ? 'bg-cyan-950/60 border border-cyan-500/30 text-cyan-100 ml-4'
-                            : 'bg-slate-900/90 border border-white/10 text-gray-200 mr-2 space-y-2'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between text-[10px] text-gray-400 font-bold mb-1">
-                          <span>{item.role === 'user' ? '👤 Your Question' : '🤖 DocScrutiny AI Verdict'}</span>
-                          {item.response?.tenant_verified && (
-                            <span className="text-emerald-400 font-mono text-[9px]">Verified Tenant Scope</span>
-                          )}
-                        </div>
-
-                        {/* Redaction Notice Banner if triggered */}
-                        {item.response?.redacted_fields && item.response.redacted_fields.length > 0 && (
-                          <div className="p-2 bg-red-950/80 border border-red-500/50 rounded-lg text-red-200 text-[11px] flex items-center gap-2">
-                            <span className="text-base">🛡️</span>
-                            <div>
-                              <span className="font-bold block">DPDP Act 2023 Redaction Applied</span>
-                              <span>Sensitive fields protected: {item.response.redacted_fields.join(', ')}</span>
-                            </div>
-                          </div>
-                        )}
-
-                        <div className="whitespace-pre-wrap leading-relaxed">
-                          {item.text}
-                        </div>
-
-                        {/* Follow-up action buttons if present */}
-                        {item.response?.suggested_actions && item.response.suggested_actions.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 pt-1.5 border-t border-white/10">
-                            {item.response.suggested_actions.map((act, actIdx) => (
-                              <button
-                                key={actIdx}
-                                type="button"
-                                onClick={() => handleAskDocAI(act.label)}
-                                className="text-[10px] bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-200 border border-cyan-400/30 px-2 py-0.5 rounded cursor-pointer transition"
-                              >
-                                ↳ {act.label}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Input Bar */}
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleAskDocAI(docAiQuestion);
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsFloatingAiOpen(true);
+                    setIsAiMinimized(false);
                   }}
-                  className="flex items-center gap-2"
+                  className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition cursor-pointer flex items-center gap-1.5 shrink-0"
                 >
-                  <input
-                    type="text"
-                    value={docAiQuestion}
-                    onChange={(e) => setDocAiQuestion(e.target.value)}
-                    placeholder={
-                      isOfficer
-                        ? "Officer Scrutiny: Inquire about any bidder's uploaded documents, deficit flags, or debarment..."
-                        : docAiTab === 'document'
-                        ? "Ask DocScrutiny AI about this certificate's flags or expiry..."
-                        : "Ask DocScrutiny AI to compare your bid with other competitors on public parameters..."
-                    }
-                    className="flex-1 bg-white/10 border border-white/20 focus:border-cyan-400 rounded-xl px-3.5 py-2 text-xs text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-cyan-400 transition"
-                  />
-                  <button
-                    type="submit"
-                    disabled={docAiLoading || !docAiQuestion.trim()}
-                    className="bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 text-slate-950 font-black text-xs px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-md"
-                  >
-                    {docAiLoading ? (
-                      <span className="animate-spin text-sm">⏳</span>
-                    ) : (
-                      <>
-                        <span>Ask AI</span>
-                        <span>→</span>
-                      </>
-                    )}
-                  </button>
-                </form>
+                  <span>💬</span>
+                  <span>{isFloatingAiOpen && !isAiMinimized ? 'Bring AI to Front' : 'Open Floating AI'}</span>
+                </button>
               </div>
             </div>
           ) : (
-            <div className="bg-white p-16 rounded-2xl border border-gray-200 shadow-sm text-center text-gray-400 space-y-2">
-              <span className="text-4xl">📄</span>
-              <p className="text-xs font-bold text-gray-700">No Document Evaluated Yet</p>
-              <p className="text-[11px] text-gray-400">Select a statutory test scenario or upload a document to run AI scrutiny.</p>
+            /* Clean Initial Empty State */
+            <div className="bg-white p-12 rounded-2xl border border-gray-200 shadow-sm text-center space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-3xl mx-auto shadow-xs">
+                📄
+              </div>
+              <div className="max-w-md mx-auto space-y-1">
+                <h4 className="text-sm font-extrabold text-[#062134]">No Document Evaluated Yet</h4>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Upload a vendor verification dossier, GST certificate (REG-06), PAN card, Udyam MSME certificate, or CA turnover statement in the intake station on the left to extract credentials and execute live sovereign checks.
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-left max-w-lg mx-auto">
+                <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase block">Supported Format</span>
+                  <span className="text-xs font-black text-[#062134] mt-0.5 block">PDF, TXT, PNG, JPG</span>
+                </div>
+                <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase block">Registries Checked</span>
+                  <span className="text-xs font-black text-emerald-800 mt-0.5 block">GSTN, CBDT, MSME, EPFO</span>
+                </div>
+                <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100 col-span-2 sm:col-span-1">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase block">Zero-Trust Security</span>
+                  <span className="text-xs font-black text-blue-900 mt-0.5 block">SHA-256 Digest</span>
+                </div>
+              </div>
             </div>
           )}
         </div>
+      </div>
+
+      {/* =========================================================================
+          FLOATING DOCSCRUTINY AI ASSISTANT (Exclusive to this S3 / Document Scrutiny Window)
+          ========================================================================= */}
+      <div className="fixed bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end gap-2">
+        {/* Closed or Minimized Floating Button */}
+        {(!isFloatingAiOpen || isAiMinimized) && (
+          <button
+            type="button"
+            onClick={() => {
+              setIsFloatingAiOpen(true);
+              setIsAiMinimized(false);
+            }}
+            className="group relative flex items-center gap-2.5 bg-gradient-to-r from-[#062134] to-[#0c3952] hover:from-[#092e47] hover:to-[#12496b] text-white font-extrabold text-xs py-2.5 px-4 rounded-full shadow-2xl border-2 border-cyan-400/80 hover:border-cyan-300 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+            title="Open DocScrutiny AI Floating Console"
+          >
+            {/* Animated Radar Pulse Ring */}
+            <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-cyan-500 border-2 border-white"></span>
+            </span>
+
+            <span className="text-base group-hover:rotate-6 transition-transform">🤖</span>
+            <div className="text-left">
+              <p className="text-xs font-black text-cyan-300 flex items-center gap-1">
+                DocScrutiny AI
+              </p>
+              <p className="text-[10px] text-gray-300 font-medium hidden sm:block">
+                {ocrResult ? `Auditing ${ocrResult.filename}` : 'Document Scrutiny Window'}
+              </p>
+            </div>
+            <span className="bg-cyan-500/30 text-cyan-200 text-[9px] font-bold px-2 py-0.5 rounded-full border border-cyan-400/40 ml-1">
+              Active
+            </span>
+          </button>
+        )}
+
+        {/* Expanded Floating DocScrutiny AI Modal / Window */}
+        {isFloatingAiOpen && !isAiMinimized && (
+          <div className="w-[94vw] sm:w-[560px] md:w-[620px] h-[600px] max-h-[82vh] flex flex-col rounded-2xl shadow-2xl border-2 border-cyan-500/60 bg-white dark:bg-[#0c1e33] text-slate-900 dark:text-slate-100 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-5 duration-300 ring-4 ring-black/10">
+            {/* Top Window Header Bar */}
+            <div className="bg-gradient-to-r from-[#062134] via-[#092b45] to-[#0d3b5c] text-white p-3.5 px-4 flex items-center justify-between gap-2 border-b border-cyan-500/30 shrink-0">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-lg shrink-0">
+                  🤖
+                </span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-black text-sm text-cyan-300 tracking-tight truncate">
+                      DocScrutiny AI
+                    </h4>
+                    <span className="bg-cyan-500/20 text-cyan-200 border border-cyan-400/40 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0">
+                      S3 Assistant
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-gray-300 truncate">
+                    {ocrResult ? `Active File: ${ocrResult.filename}` : 'Waiting for document intake'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Master Switcher & Window Action Controls */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                {user?.isMaster && (
+                  <div className="flex items-center gap-1 bg-white/10 p-0.5 rounded-lg text-[10px]">
+                    <button
+                      type="button"
+                      onClick={() => switchMasterRole('seller')}
+                      className={`px-2 py-0.5 rounded font-bold transition cursor-pointer ${!isOfficer ? 'bg-cyan-500 text-slate-950 shadow-xs' : 'text-gray-300 hover:text-white'}`}
+                      title="Seller Mode"
+                    >
+                      🏢 Seller
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => switchMasterRole('officer')}
+                      className={`px-2 py-0.5 rounded font-bold transition cursor-pointer ${isOfficer ? 'bg-purple-500 text-white shadow-xs' : 'text-gray-300 hover:text-white'}`}
+                      title="Legal Officer Mode"
+                    >
+                      ⚖️ Officer
+                    </button>
+                  </div>
+                )}
+
+                {/* Minimize Window */}
+                <button
+                  type="button"
+                  onClick={() => setIsAiMinimized(true)}
+                  className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center text-xs font-bold transition cursor-pointer"
+                  title="Minimize AI Console"
+                >
+                  —
+                </button>
+
+                {/* Close Window */}
+                <button
+                  type="button"
+                  onClick={() => setIsFloatingAiOpen(false)}
+                  className="w-7 h-7 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-200 hover:text-white flex items-center justify-center text-xs font-bold transition cursor-pointer"
+                  title="Close AI Console"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Diagnostics Chips Bar (Sticky Top Inside Window) */}
+            <div className="bg-slate-100 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 p-2.5 shrink-0 space-y-1.5">
+              <div className="flex items-center justify-between text-[10px] font-bold text-slate-600 dark:text-gray-400 uppercase tracking-wider">
+                <span className="flex items-center gap-1.5">
+                  <span>Quick Legal Diagnostics:</span>
+                  {!ocrResult && (
+                    <span className="bg-sky-500/20 text-sky-700 dark:text-sky-300 font-semibold text-[9px] px-1.5 py-0.5 rounded border border-sky-400/30 normal-case">
+                      General Rules → GeMMy AI
+                    </span>
+                  )}
+                </span>
+                <span className="text-cyan-600 dark:text-cyan-400 font-normal lowercase">click to ask</span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {ocrResult ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI(`Verify all statutory details and tender eligibility for ${ocrResult.filename || 'this uploaded document'}`)}
+                      className="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-900 dark:text-cyan-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                    >
+                      <span>🏛️</span> Verify all statutory details
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI(`Verify EPFO and ESIC statutory labor compliance in ${ocrResult.filename || 'this document'}`)}
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                    >
+                      <span>👷</span> Check EPFO & ESIC
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI(`Audit Make in India (MII) local content and OEM authorization in ${ocrResult.filename || 'this document'}`)}
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                    >
+                      <span>🇮🇳</span> Audit MII & OEM
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI(`When does ${ocrResult.filename || 'this certificate'} expire and how many days are left?`)}
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                    >
+                      <span>⏳</span> Expiry timeline
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI("Compare my bid with Zenith Global Tech on public technical criteria")}
+                      className="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                    >
+                      <span>⚖️</span> Compare with Zenith
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI("What statutory documents and certificates are mandatory for GeM tender eligibility?")}
+                      className="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-900 dark:text-cyan-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                    >
+                      <span>🏛️</span> Required Documents
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI("What are the EPFO and ESIC compliance thresholds for public procurement bids?")}
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                    >
+                      <span>👷</span> EPFO & ESIC Thresholds
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI("What are Class-I and Class-II Make in India (MII) local content requirements under DPIIT?")}
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                    >
+                      <span>🇮🇳</span> MII Local Content Rules
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI("What are the validity and renewal rules for GST, PAN, and MSME on GeM?")}
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                    >
+                      <span>⏳</span> Validity & Expiry Rules
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleAskDocAI("Compare my bid with Zenith Global Tech on public technical criteria")}
+                      className="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                    >
+                      <span>⚖️</span> Compare with Zenith
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Conversation & Results Thread (Scrollable) */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-slate-50/70 dark:bg-slate-950/60">
+              {docAiHistory.map((item, idx) => (
+                <div
+                  key={idx}
+                  className={`p-3.5 rounded-2xl shadow-xs ${
+                    item.role === 'user'
+                      ? 'bg-cyan-50 dark:bg-cyan-950/70 border border-cyan-200 dark:border-cyan-500/40 text-cyan-950 dark:text-cyan-100 ml-8'
+                      : 'bg-white dark:bg-[#0f243a] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 mr-2 space-y-2'
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-gray-400 font-bold mb-1 border-b pb-1 border-slate-100 dark:border-slate-800">
+                    <span className="flex items-center gap-1">
+                      <span>{item.role === 'user' ? '👤' : '🤖'}</span>
+                      <span>{item.role === 'user' ? 'Your Question' : 'DocScrutiny AI Legal Scrutiny'}</span>
+                    </span>
+                    {item.response?.tenant_verified && (
+                      <span className="text-emerald-700 dark:text-emerald-400 font-mono text-[9px] bg-emerald-50 dark:bg-emerald-950/50 px-1.5 py-0.2 rounded border border-emerald-300 dark:border-emerald-600/40">
+                        Verified DPDP Tenant Scope
+                      </span>
+                    )}
+                  </div>
+
+                  {/* DPDP Redaction Notice Banner */}
+                  {item.response?.redacted_fields && item.response.redacted_fields.length > 0 && (
+                    <div className="p-2 bg-red-50 dark:bg-red-950/80 border border-red-200 dark:border-red-500/50 rounded-lg text-red-900 dark:text-red-200 text-[11px] flex items-center gap-2">
+                      <span className="text-base">🛡️</span>
+                      <div>
+                        <span className="font-bold block">DPDP Act 2023 Redaction Applied</span>
+                        <span>Sensitive competitor fields protected: {item.response.redacted_fields.join(', ')}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Render High-Legibility Markdown Content */}
+                  {item.role === 'user' ? (
+                    <p className="text-xs sm:text-[13px] font-semibold text-cyan-950 dark:text-cyan-100 whitespace-pre-wrap leading-relaxed">
+                      {item.text}
+                    </p>
+                  ) : (
+                    <>
+                      <FormattedAiMessage content={item.text} />
+
+                      {/* Direct to GeMMy AI Card for General Rules / Non-Doc Questions */}
+                      {item.response?.redirect_to_gemmy && (
+                        <div className="mt-3 p-3 bg-gradient-to-r from-sky-50 via-blue-50 to-indigo-50 dark:from-sky-950/70 dark:via-blue-950/70 dark:to-indigo-950/70 border-2 border-sky-400 dark:border-sky-500/60 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-sm animate-in fade-in duration-300">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="text-2xl shrink-0">🤖</span>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="font-extrabold text-xs text-sky-950 dark:text-cyan-200">
+                                  Ask GeMMy AI
+                                </span>
+                                <span className="bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                                  Official Rules Advisor
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-sky-900/80 dark:text-slate-300 mt-0.5 leading-snug">
+                                General procurement rules don't require an uploaded document. Send this inquiry to GeMMy AI for interactive policy guidance.
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleSendToGeMMy(item.response?.gemmy_query || item.text)}
+                            className="w-full sm:w-auto bg-gradient-to-r from-[#008cd3] to-[#0070a8] hover:from-[#007bbd] hover:to-[#005f8f] text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-md hover:shadow-cyan-500/40 transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0 transform active:scale-95"
+                            title="Open GeMMy AI and automatically ask this question"
+                          >
+                            <span>💬 Send to GeMMy AI</span>
+                            <span>→</span>
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Follow-up action buttons if present */}
+                  {item.response?.suggested_actions && item.response.suggested_actions.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+                      {item.response.suggested_actions.map((act, actIdx) => {
+                        const isGeMMyAction = act.action === 'send_to_gemmy';
+                        return (
+                          <button
+                            key={actIdx}
+                            type="button"
+                            onClick={() => {
+                              if (isGeMMyAction) {
+                                handleSendToGeMMy(act.query || act.label);
+                              } else {
+                                handleAskDocAI(act.label);
+                              }
+                            }}
+                            className={`text-[10px] px-2.5 py-1 rounded-lg cursor-pointer transition font-bold flex items-center gap-1 ${
+                              isGeMMyAction
+                                ? 'bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/50 text-sky-900 dark:text-sky-200'
+                                : 'bg-cyan-50 dark:bg-cyan-500/20 hover:bg-cyan-100 dark:hover:bg-cyan-500/30 text-cyan-800 dark:text-cyan-200 border border-cyan-200 dark:border-cyan-400/30'
+                            }`}
+                          >
+                            {isGeMMyAction ? '🤖' : '↳'} {act.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {docAiLoading && (
+                <div className="p-4 rounded-2xl bg-white dark:bg-[#0f243a] border border-cyan-400/40 shadow-sm flex items-center gap-3">
+                  <div className="w-5 h-5 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-xs font-bold text-cyan-900 dark:text-cyan-200">
+                    DocScrutiny AI is evaluating statutory rules and cross-referencing sovereign portals...
+                  </span>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+
+            {/* Input Bar (Sticky Bottom) */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleAskDocAI(docAiQuestion);
+              }}
+              className="p-3 bg-white dark:bg-[#091a2c] border-t border-slate-200 dark:border-slate-800 flex items-center gap-2 shrink-0"
+            >
+              <input
+                type="text"
+                value={docAiQuestion}
+                onChange={(e) => setDocAiQuestion(e.target.value)}
+                placeholder={
+                  ocrResult
+                    ? (isOfficer
+                        ? (ocrResult.filename ? `Inquire about ${ocrResult.filename}'s credentials, flags, or Rule 144...` : "Inquire about this document's credentials, flags, or GFR 2017 Rule 144...")
+                        : (ocrResult.filename ? `Ask about ${ocrResult.filename}'s verified parameters, flags, or eligibility...` : "Ask about this document's verified parameters, flags, or tender eligibility..."))
+                    : (isOfficer
+                        ? "Upload a vendor dossier to audit, or ask about GFR 2017 Rule 144 compliance..."
+                        : "Upload a document to audit, or ask general statutory compliance & GeM guidelines...")
+                }
+                className="flex-1 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:border-cyan-500 dark:focus:border-cyan-400 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-cyan-500 transition font-medium"
+              />
+              <button
+                type="submit"
+                disabled={docAiLoading || !docAiQuestion.trim()}
+                className="bg-[#f37021] hover:bg-[#e05e10] disabled:opacity-50 text-white font-extrabold text-xs px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-md shrink-0"
+              >
+                {docAiLoading ? (
+                  <span className="animate-spin text-sm">⏳</span>
+                ) : (
+                  <>
+                    <span>Ask AI</span>
+                    <span>→</span>
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

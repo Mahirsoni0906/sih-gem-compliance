@@ -22,6 +22,20 @@ export default function App() {
   const [bidsTab, setBidsTab] = useState<BidsPortalTab>('ongoing');
   const [sellerTab, setSellerTab] = useState<string>('dashboard-view');
   const [registrationRole, setRegistrationRole] = useState<'seller' | 'buyer'>('seller');
+  const [initialGemmyQuestion, setInitialGemmyQuestion] = useState<string>('');
+  const [autoSendGemmy, setAutoSendGemmy] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    const handleOpenGeMMy = (e: any) => {
+      const q = e.detail?.question || '';
+      const autoSend = e.detail?.autoSend ?? true;
+      setInitialGemmyQuestion(q);
+      setAutoSendGemmy(autoSend);
+      setIsChatOpen(true);
+    };
+    window.addEventListener('open-gemmy-ai', handleOpenGeMMy);
+    return () => window.removeEventListener('open-gemmy-ai', handleOpenGeMMy);
+  }, []);
 
   const handleNavigate = (page: string, options?: NavigationOptions) => {
     if (options?.bidsTab) {
@@ -250,8 +264,18 @@ export default function App() {
       {/* Global AI Statutory Compliance Modal Assistant - Available Everywhere */}
       <GeMMyChatModal
         isOpen={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
+        onClose={() => {
+          setIsChatOpen(false);
+          setInitialGemmyQuestion('');
+          setAutoSendGemmy(false);
+        }}
         onNavigate={handleNavigateFromAI}
+        initialQuestion={initialGemmyQuestion}
+        autoSendInitial={autoSendGemmy}
+        onClearInitial={() => {
+          setInitialGemmyQuestion('');
+          setAutoSendGemmy(false);
+        }}
       />
     </div>
   );

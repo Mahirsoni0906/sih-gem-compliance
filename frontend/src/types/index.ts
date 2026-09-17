@@ -61,12 +61,24 @@ export interface DocumentOCRResult {
   extracted_pan?: string;
   extracted_udyam?: string;
   extracted_legal_name?: string;
+  extracted_address?: string;
+  extracted_constitution?: string;
+  extracted_incorporation_date?: string;
+  extracted_epfo?: string;
+  extracted_esic?: string;
+  extracted_mii_percentage?: number;
+  extracted_mii_class?: string;
+  extracted_udin?: string;
+  extracted_oem_auth?: string;
+  tender_ref?: string;
+  turnover_breakdown?: Record<string, { declared_display: string; val_lakhs: number; is_crore?: boolean }>;
   extracted_turnover?: number;
   document_date?: string;
   confidence_score: number;
   seal_verified: boolean;
   tampering_detected: boolean;
   raw_snippet: string;
+  compliance_flags?: string[];
 
   // AI Legitimacy Cross-Check Fields
   is_legit?: boolean;
@@ -198,7 +210,9 @@ export interface DocumentChatResponse {
   owner_organization: string;
   is_comparison: boolean;
   redacted_fields: string[];
-  suggested_actions: Array<{ label: string; action: string }>;
+  suggested_actions: Array<{ label: string; action: string; query?: string }>;
+  redirect_to_gemmy?: boolean;
+  gemmy_query?: string;
 }
 
 export interface LiveWebUpdateItem {
