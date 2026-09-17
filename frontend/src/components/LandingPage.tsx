@@ -40,73 +40,105 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       id: 'saras',
       title: 'The Saras Collection',
       tag: 'Handicrafts & Rural Artisans',
-      bg: 'bg-gradient-to-r from-pink-100 via-rose-100 to-pink-200 border-pink-300',
-      accent: 'border-pink-400',
-      icon: '🧺',
       sub: 'A showcase of rural SHG women artisans',
+      icon: '🧺',
+      cardClass: 'bg-gradient-to-r from-pink-100 via-rose-100 to-pink-200 border-pink-300 dark:from-[#2e0e1e] dark:via-[#20101c] dark:to-[#131728] dark:border-rose-500/40 hover:border-pink-400 dark:hover:border-rose-400',
+      titleClass: 'text-rose-950 dark:text-rose-100',
+      subClass: 'text-rose-900/85 dark:text-rose-200/85',
+      tagClass: 'text-rose-950 dark:text-rose-300',
+      dividerClass: 'border-rose-950/15 dark:border-rose-500/30',
+      exploreClass: 'text-rose-900 dark:text-rose-300 group-hover:text-rose-700 dark:group-hover:text-rose-200',
     },
     {
       id: 'odop',
       title: 'ODOP GeM BAZAAR',
       tag: 'One District One Product',
-      bg: 'bg-gradient-to-r from-[#0d47a1] via-[#1565c0] to-[#1976d2] text-white border-blue-500',
-      accent: 'border-blue-600',
-      icon: '🏺',
       sub: 'Empowering district indigenous specialties',
+      icon: '🏺',
+      cardClass: 'bg-gradient-to-r from-[#0d47a1] via-[#1565c0] to-[#1976d2] border-blue-500 dark:from-[#0d2757] dark:via-[#112445] dark:to-[#0f172a] dark:border-blue-500/50 hover:border-blue-400 dark:hover:border-blue-400',
+      titleClass: 'text-white dark:text-blue-100',
+      subClass: 'text-blue-100/90 dark:text-blue-200/90',
+      tagClass: 'text-blue-100 dark:text-blue-300',
+      dividerClass: 'border-white/20 dark:border-blue-500/30',
+      exploreClass: 'text-white dark:text-blue-200 group-hover:text-blue-200 dark:group-hover:text-white',
     },
     {
       id: 'startup',
       title: 'Startup Runway',
       tag: 'Finest Indian Startups',
-      bg: 'bg-gradient-to-r from-slate-50 via-blue-50 to-indigo-50 border-indigo-200',
-      accent: 'border-indigo-400',
-      icon: '🚀',
       sub: 'Discover innovative products from DPIIT startups',
+      icon: '🚀',
+      cardClass: 'bg-gradient-to-r from-slate-100 via-blue-50 to-indigo-100 border-indigo-200 dark:from-[#112042] dark:via-[#131b35] dark:to-[#0f172a] dark:border-indigo-500/40 hover:border-indigo-300 dark:hover:border-indigo-400',
+      titleClass: 'text-indigo-950 dark:text-indigo-100',
+      subClass: 'text-indigo-900/85 dark:text-indigo-200/85',
+      tagClass: 'text-indigo-950 dark:text-indigo-300',
+      dividerClass: 'border-indigo-950/15 dark:border-indigo-500/30',
+      exploreClass: 'text-indigo-900 dark:text-indigo-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-200',
     },
     {
       id: 'aatmanirbhar',
       title: 'The Aabhaar Collection',
       tag: 'Aatmanirbhar Bharat Showcase',
-      bg: 'bg-gradient-to-r from-orange-100 via-white to-green-100 border-amber-300',
-      accent: 'border-amber-400',
+      sub: "Celebrating India's Artisans & Master Weavers",
       icon: '🇮🇳',
-      sub: 'Celebrating India\'s Artisans & Master Weavers',
+      cardClass: 'bg-gradient-to-r from-amber-100/90 via-orange-50 to-emerald-100/80 border-amber-300 dark:from-[#2e1d0a] dark:via-[#1d1b1f] dark:to-[#0e2417] dark:border-amber-500/40 hover:border-amber-400 dark:hover:border-amber-400',
+      titleClass: 'text-amber-950 dark:text-amber-100',
+      subClass: 'text-amber-900/85 dark:text-amber-200/85',
+      tagClass: 'text-amber-950 dark:text-amber-300',
+      dividerClass: 'border-amber-950/15 dark:border-amber-500/30',
+      exploreClass: 'text-amber-900 dark:text-amber-300 group-hover:text-amber-700 dark:group-hover:text-amber-200',
     },
     {
       id: 'handloom',
       title: 'Handloom & Textiles',
       tag: 'Rich Indigenous Weaves',
-      bg: 'bg-gradient-to-r from-rose-100 via-amber-100 to-yellow-100 border-orange-300',
-      accent: 'border-orange-400',
-      icon: '🧵',
       sub: 'Authentic Indian Khadi & Silk Loomcraft',
+      icon: '🧵',
+      cardClass: 'bg-gradient-to-r from-rose-100 via-amber-100 to-yellow-100 border-orange-300 dark:from-[#2f160d] dark:via-[#22171c] dark:to-[#121625] dark:border-orange-500/40 hover:border-orange-400 dark:hover:border-orange-400',
+      titleClass: 'text-orange-950 dark:text-orange-100',
+      subClass: 'text-orange-900/85 dark:text-orange-200/85',
+      tagClass: 'text-orange-950 dark:text-orange-300',
+      dividerClass: 'border-orange-950/15 dark:border-orange-500/30',
+      exploreClass: 'text-orange-900 dark:text-orange-300 group-hover:text-orange-700 dark:group-hover:text-orange-200',
     },
     {
       id: 'tribal',
       title: 'Tribal & Khadi India',
       tag: 'Forest Produce & Crafts',
-      bg: 'bg-gradient-to-r from-amber-100 via-orange-100 to-amber-200 border-amber-400',
-      accent: 'border-amber-500',
-      icon: '🏹',
       sub: 'TRIFED certified indigenous heritage',
+      icon: '🏹',
+      cardClass: 'bg-gradient-to-r from-amber-100 via-orange-100 to-amber-200 border-amber-400 dark:from-[#2e1d08] dark:via-[#201815] dark:to-[#121624] dark:border-amber-500/40 hover:border-amber-500 dark:hover:border-amber-400',
+      titleClass: 'text-amber-950 dark:text-amber-100',
+      subClass: 'text-amber-900/85 dark:text-amber-200/85',
+      tagClass: 'text-amber-950 dark:text-amber-300',
+      dividerClass: 'border-amber-950/15 dark:border-amber-500/30',
+      exploreClass: 'text-amber-900 dark:text-amber-300 group-hover:text-amber-700 dark:group-hover:text-amber-200',
     },
     {
       id: 'womaniya',
       title: 'WOMANIYA ON GEM',
       tag: 'Women Entrepreneurs',
-      bg: 'bg-gradient-to-r from-[#ff4081] via-[#f50057] to-[#c51162] text-white border-rose-400',
-      accent: 'border-rose-500',
-      icon: '💃',
       sub: 'In pursuit of life, liberty and happiness',
+      icon: '💃',
+      cardClass: 'bg-gradient-to-r from-[#ff4081] via-[#f50057] to-[#c51162] border-rose-400 dark:from-[#3a0820] dark:via-[#250d1e] dark:to-[#141224] dark:border-rose-500/50 hover:border-rose-400 dark:hover:border-rose-400',
+      titleClass: 'text-white dark:text-pink-100',
+      subClass: 'text-pink-100/90 dark:text-pink-200/90',
+      tagClass: 'text-pink-100 dark:text-pink-300',
+      dividerClass: 'border-white/20 dark:border-pink-500/30',
+      exploreClass: 'text-white dark:text-pink-200 group-hover:text-pink-200 dark:group-hover:text-white',
     },
     {
       id: 'millet',
       title: 'Millet (Shree Anna)',
       tag: 'Superfoods & Agri Produce',
-      bg: 'bg-gradient-to-r from-[#2e7d32] via-[#388e3c] to-[#1b5e20] text-white border-green-600',
-      accent: 'border-green-700',
-      icon: '🌾',
       sub: 'Nutri-cereals promoting health & farmers',
+      icon: '🌾',
+      cardClass: 'bg-gradient-to-r from-[#2e7d32] via-[#388e3c] to-[#1b5e20] border-green-600 dark:from-[#083318] dark:via-[#0e271d] dark:to-[#0f172a] dark:border-emerald-500/50 hover:border-green-500 dark:hover:border-emerald-400',
+      titleClass: 'text-white dark:text-emerald-100',
+      subClass: 'text-green-100/90 dark:text-emerald-200/90',
+      tagClass: 'text-green-200 dark:text-emerald-300',
+      dividerClass: 'border-white/20 dark:border-emerald-500/30',
+      exploreClass: 'text-white dark:text-emerald-200 group-hover:text-emerald-200 dark:group-hover:text-white',
     },
   ];
 
@@ -465,7 +497,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 3. #vocalforlocal GeM Outlet Stores matching media_1789184091731.png */}
-      <section className="py-10 px-4 sm:px-8 bg-white border-b">
+      <section className="py-10 px-4 sm:px-8 bg-white dark:bg-[#071324] border-b border-gray-200 dark:border-slate-800 transition-colors">
         <div className="max-w-[1400px] mx-auto space-y-6">
           <div className="text-center space-y-1">
             <h2 className="text-3xl sm:text-4xl font-black text-center tracking-wide">
@@ -473,7 +505,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 #vocalforlocal
               </span>
             </h2>
-            <p className="text-center text-gray-700 text-lg sm:text-xl font-medium">
+            <p className="text-center text-gray-700 dark:text-slate-300 text-lg sm:text-xl font-medium">
               {t('gemOutlets')}
             </p>
           </div>
@@ -484,23 +516,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div
                 key={store.id}
                 onClick={() => onOpenProducts?.(store.title)}
-                className={`p-3.5 rounded-lg border ${store.bg} ${store.accent} shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between h-28 group relative overflow-hidden`}
+                className={`p-3.5 rounded-lg border shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between h-28 group relative overflow-hidden ${store.cardClass}`}
               >
                 <div className="flex items-start justify-between">
                   <div className="z-10">
-                    <h4 className="font-extrabold text-xs sm:text-sm group-hover:underline">
+                    <h4 className={`font-extrabold text-xs sm:text-sm group-hover:underline ${store.titleClass}`}>
                       {store.title}
                     </h4>
-                    <p className="text-[10px] opacity-80 mt-0.5 leading-tight max-w-[160px]">
+                    <p className={`text-[10px] mt-0.5 leading-tight max-w-[160px] ${store.subClass}`}>
                       {store.sub}
                     </p>
                   </div>
-                  <span className="text-3xl z-10">{store.icon}</span>
+                  <span className="text-3xl z-10 shrink-0 select-none drop-shadow-sm">{store.icon}</span>
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] font-bold opacity-90 z-10 pt-1 border-t border-black/10">
-                  <span>{store.tag}</span>
-                  <span className="group-hover:translate-x-1 transition font-black">Explore →</span>
+                <div className={`flex items-center justify-between text-[10px] font-bold z-10 pt-1 border-t ${store.dividerClass}`}>
+                  <span className={store.tagClass}>{store.tag}</span>
+                  <span className={`group-hover:translate-x-1 transition font-black flex items-center gap-0.5 ${store.exploreClass}`}>
+                    Explore →
+                  </span>
                 </div>
               </div>
             ))}
@@ -509,10 +543,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 4. Popular Product Categories (6 Cards in 2 rows of 3) matching media_1789184098951.png & media_1789184104801.png */}
-      <section className="py-12 px-4 sm:px-8 bg-[#fbfcfd] border-b">
+      <section className="py-12 px-4 sm:px-8 bg-[#fbfcfd] dark:bg-[#0b1528] border-b border-gray-200 dark:border-slate-800 transition-colors">
         <div className="max-w-[1400px] mx-auto space-y-8">
           <div className="text-center">
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#1f2937]">
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#1f2937] dark:text-white">
               {t('popularProducts')}
             </h2>
           </div>

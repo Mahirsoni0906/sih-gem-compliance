@@ -178,6 +178,7 @@ html.dark .bg-neutral-50,
 html.dark .bg-\[\#f4f6f9\],
 html.dark .bg-\[\#f8fafc\],
 html.dark .bg-\[\#f1f5f9\],
+html.dark .bg-\[\#fbfcfd\],
 html.dark .bg-gray-100\/50,
 html.dark .bg-gray-100\/80 {
   background-color: #0b1528 !important;
@@ -281,6 +282,24 @@ html.dark .text-green-900 {
 html.dark .text-amber-950,
 html.dark .text-amber-900 {
   color: #fde68a !important;
+}
+
+html.dark .text-rose-950,
+html.dark .text-rose-900,
+html.dark .text-rose-800 {
+  color: #fecdd3 !important;
+}
+
+html.dark .text-indigo-950,
+html.dark .text-indigo-900,
+html.dark .text-indigo-800 {
+  color: #c7d2fe !important;
+}
+
+html.dark .text-pink-950,
+html.dark .text-pink-900,
+html.dark .text-pink-800 {
+  color: #fbcfe8 !important;
 }
 
 /* Form inputs & controls in Dark Mode */
