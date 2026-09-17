@@ -150,14 +150,14 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
         ref={servicesSectionRef}
         className="max-w-7xl mx-auto w-full px-4 sm:px-8 pt-4 pb-6 space-y-4 scroll-mt-14"
       >
-        {/* 1. Main Classification Tabs (All / Trending / Emerging) */}
+        {/* 1. Main Classification Tabs (All / Trending / Emerging) with Smooth Transitions */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-3">
           <div className="flex items-center space-x-2">
             <button
               onClick={() => setActiveTab('ALL')}
-              className={`px-4 py-2 rounded-lg font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-lg font-bold text-xs transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'ALL'
-                  ? 'bg-[#155998] text-white shadow-sm'
+                  ? 'bg-[#155998] text-white shadow-sm scale-[1.02]'
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
@@ -166,9 +166,9 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('TRENDING')}
-              className={`px-4 py-2 rounded-lg font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-lg font-bold text-xs transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'TRENDING'
-                  ? 'bg-[#f37021] text-white shadow-sm'
+                  ? 'bg-[#f37021] text-white shadow-sm scale-[1.02]'
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
@@ -177,9 +177,9 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('EMERGING')}
-              className={`px-4 py-2 rounded-lg font-bold text-xs transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-lg font-bold text-xs transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'EMERGING'
-                  ? 'bg-emerald-600 text-white shadow-sm'
+                  ? 'bg-emerald-600 text-white shadow-sm scale-[1.02]'
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
@@ -193,16 +193,16 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
           </span>
         </div>
 
-        {/* 2. Domain Filter Chips */}
+        {/* 2. Domain Filter Chips with Smooth Transitions */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
           {CORE_SERVICE_DOMAINS.map((dom) => (
             <button
               key={dom.name}
               onClick={() => setSelectedDomain(dom.name)}
-              className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 selectedDomain === dom.name
-                  ? 'bg-[#0c2340] text-white shadow-xs'
-                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                  ? 'bg-[#0c2340] text-white shadow-xs scale-[1.02]'
+                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 hover:border-gray-300'
               }`}
             >
               <span>{dom.icon}</span>
@@ -211,9 +211,9 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
           ))}
         </div>
 
-        {/* 3. Services Grid */}
+        {/* 3. Services Grid with Smooth Tab & Filter Transition */}
         {filteredServices.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center border border-gray-200 space-y-3">
+          <div key="empty" className="bg-white rounded-xl p-12 text-center border border-gray-200 space-y-3 tab-content-enter">
             <span className="text-4xl">🔍</span>
             <h3 className="text-base font-bold text-gray-800">No Services Found</h3>
             <p className="text-xs text-gray-500 max-w-md mx-auto">
@@ -225,13 +225,16 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                 setSelectedDomain('All Services');
                 setActiveTab('ALL');
               }}
-              className="bg-[#f37021] text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-orange-600 transition"
+              className="bg-[#f37021] text-white text-xs font-bold px-4 py-2 rounded-md hover:bg-orange-600 transition active:scale-95"
             >
               Reset Filters
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div
+            key={`${activeTab}-${selectedDomain}-${searchQuery}`}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 tab-content-enter"
+          >
             {filteredServices.map((service) => (
               <div
                 key={service.id}

@@ -651,7 +651,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setHomeServicesTab('TRENDING')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                       homeServicesTab === 'TRENDING'
                         ? 'bg-[#f37021] text-white shadow-xs'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -662,7 +662,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </button>
                   <button
                     onClick={() => setHomeServicesTab('EMERGING')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                       homeServicesTab === 'EMERGING'
                         ? 'bg-emerald-600 text-white shadow-xs'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -678,8 +678,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </span>
               </div>
 
-              {/* Service Pills Grid (Top 8 of current tab) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-1">
+              {/* Service Pills Grid (Top 8 of current tab) with smooth transition */}
+              <div key={homeServicesTab} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 pt-1 tab-content-enter">
                 {OFFICIAL_GEM_SERVICES
                   .filter((s) => s.category === (homeServicesTab === 'TRENDING' ? 'Trending' : 'Emerging'))
                   .slice(0, 8)
@@ -783,20 +783,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {t('customersSpeak')}
           </h3>
 
-          <p className="text-xs sm:text-sm text-gray-600 leading-relaxed italic max-w-2xl mx-auto">
-            "{testimonials[activeTestimonial].quote}"
-          </p>
-
-          <div className="space-y-0.5 pt-2">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-orange-400 to-amber-200 mx-auto flex items-center justify-center text-xl shadow-md border-2 border-white">
-              👤
-            </div>
-            <h4 className="font-extrabold text-xs text-gray-900 pt-1">
-              {testimonials[activeTestimonial].name}
-            </h4>
-            <p className="text-[11px] text-gray-500">
-              {testimonials[activeTestimonial].designation}
+          <div key={activeTestimonial} className="tab-content-enter space-y-4">
+            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed italic max-w-2xl mx-auto">
+              "{testimonials[activeTestimonial].quote}"
             </p>
+
+            <div className="space-y-0.5 pt-2">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-orange-400 to-amber-200 mx-auto flex items-center justify-center text-xl shadow-md border-2 border-white">
+                👤
+              </div>
+              <h4 className="font-extrabold text-xs text-gray-900 pt-1">
+                {testimonials[activeTestimonial].name}
+              </h4>
+              <p className="text-[11px] text-gray-500">
+                {testimonials[activeTestimonial].designation}
+              </p>
+            </div>
           </div>
 
           {/* 5 Pagination Dots matching screenshot */}
@@ -896,7 +898,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div className="flex space-x-4 border-b pb-2">
                 <button
                   onClick={() => setSocialTab('x')}
-                  className={`flex items-center gap-1 text-sm font-bold pb-1 cursor-pointer transition ${
+                  className={`flex items-center gap-1 text-sm font-bold pb-1 cursor-pointer transition-all duration-200 active:scale-95 ${
                     socialTab === 'x' ? 'text-black border-b-2 border-pink-500' : 'text-gray-400'
                   }`}
                 >
@@ -904,7 +906,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </button>
                 <button
                   onClick={() => setSocialTab('fb')}
-                  className={`flex items-center gap-1 text-sm font-bold pb-1 cursor-pointer transition ${
+                  className={`flex items-center gap-1 text-sm font-bold pb-1 cursor-pointer transition-all duration-200 active:scale-95 ${
                     socialTab === 'fb' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-400'
                   }`}
                 >
@@ -912,53 +914,55 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </button>
               </div>
 
-              {/* Feed Content */}
-              {socialTab === 'x' ? (
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
+              {/* Feed Content with Smooth Transition */}
+              <div key={socialTab} className="tab-content-enter">
+                {socialTab === 'x' ? (
+                  <div className="space-y-2 text-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <GeMStarLogo className="w-5 h-5" />
+                        <div>
+                          <p className="font-bold text-gray-900">GeM <span className="text-blue-500">✓</span></p>
+                          <p className="text-[10px] text-gray-400">@GeM_India • Follow</p>
+                        </div>
+                      </div>
+                      <span className="text-gray-400 font-bold">𝕏</span>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed text-[11px]">
+                      {language === 'hi' ? (
+                        <>
+                          जेम के साप्ताहिक <span onClick={() => onOpenTraining?.()} className="text-blue-600 font-bold hover:underline cursor-pointer">#TrainingCalendar</span> से लाभ उठाएं! चाहे आप Buyer हों या Seller, GeM पर आपकी ज़रूरतों को ध्यान में रखते हुए Free Online Training Sessions उपलब्ध हैं।
+                        </>
+                      ) : (
+                        <>
+                          Make the most of GeM's weekly <span onClick={() => onOpenTraining?.()} className="text-blue-600 font-bold hover:underline cursor-pointer">#TrainingCalendar</span>! Whether you are a Buyer or Seller, Free Online Training Sessions tailored to your needs are available.
+                        </>
+                      )}
+                    </p>
+                    <div
+                      onClick={() => onOpenTraining?.()}
+                      className="p-2 bg-blue-50/60 hover:bg-blue-100/70 cursor-pointer rounded text-[10px] text-blue-900 font-mono flex items-center justify-between transition"
+                      title="Click to open GeM Interactive LMS & Live Calendar"
+                    >
+                      <span>Session Link: gem.gov.in/training/sessions</span>
+                      <span className="font-sans font-bold text-blue-700 text-[11px]">Join Free →</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2 text-xs">
                     <div className="flex items-center gap-2">
-                      <GeMStarLogo className="w-5 h-5" />
+                      <span className="w-5 h-5 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-[10px]">f</span>
                       <div>
-                        <p className="font-bold text-gray-900">GeM <span className="text-blue-500">✓</span></p>
-                        <p className="text-[10px] text-gray-400">@GeM_India • Follow</p>
+                        <p className="font-bold text-gray-900">Government e Marketplace</p>
+                        <p className="text-[10px] text-gray-400">Official Page • 1.2M Followers</p>
                       </div>
                     </div>
-                    <span className="text-gray-400 font-bold">𝕏</span>
+                    <p className="text-gray-700 leading-relaxed text-[11px]">
+                      GeM surpasses ₹2,00,000 Crore in cumulative order value! Celebrating 10 years of public procurement excellence and transparent governance.
+                    </p>
                   </div>
-                  <p className="text-gray-700 leading-relaxed text-[11px]">
-                    {language === 'hi' ? (
-                      <>
-                        जेम के साप्ताहिक <span onClick={() => onOpenTraining?.()} className="text-blue-600 font-bold hover:underline cursor-pointer">#TrainingCalendar</span> से लाभ उठाएं! चाहे आप Buyer हों या Seller, GeM पर आपकी ज़रूरतों को ध्यान में रखते हुए Free Online Training Sessions उपलब्ध हैं।
-                      </>
-                    ) : (
-                      <>
-                        Make the most of GeM's weekly <span onClick={() => onOpenTraining?.()} className="text-blue-600 font-bold hover:underline cursor-pointer">#TrainingCalendar</span>! Whether you are a Buyer or Seller, Free Online Training Sessions tailored to your needs are available.
-                      </>
-                    )}
-                  </p>
-                  <div
-                    onClick={() => onOpenTraining?.()}
-                    className="p-2 bg-blue-50/60 hover:bg-blue-100/70 cursor-pointer rounded text-[10px] text-blue-900 font-mono flex items-center justify-between transition"
-                    title="Click to open GeM Interactive LMS & Live Calendar"
-                  >
-                    <span>Session Link: gem.gov.in/training/sessions</span>
-                    <span className="font-sans font-bold text-blue-700 text-[11px]">Join Free →</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-[10px]">f</span>
-                    <div>
-                      <p className="font-bold text-gray-900">Government e Marketplace</p>
-                      <p className="text-[10px] text-gray-400">Official Page • 1.2M Followers</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-700 leading-relaxed text-[11px]">
-                    GeM surpasses ₹2,00,000 Crore in cumulative order value! Celebrating 10 years of public procurement excellence and transparent governance.
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
 
             <div className="text-center pt-2">

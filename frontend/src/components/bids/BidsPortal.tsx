@@ -349,15 +349,15 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
         ref={bidsSectionRef}
         className="max-w-7xl mx-auto px-4 sm:px-6 pt-3 pb-6 flex-1 w-full space-y-4 scroll-mt-14"
       >
-        {/* Dedicated 7-Tab Navigation Bar */}
+        {/* Dedicated 7-Tab Navigation Bar with Smooth Transitions */}
         <div className="bg-white rounded-2xl p-2 shadow-xs border border-gray-200 overflow-x-auto">
           <div className="flex items-center space-x-1.5 min-w-max">
             <button
               onClick={() => setActiveTab('ongoing')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'ongoing'
-                  ? 'bg-[#062134] text-white shadow-xs'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-[#062134] text-white shadow-xs scale-[1.02]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <span>📑</span>
@@ -369,10 +369,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 
             <button
               onClick={() => setActiveTab('results')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'results'
-                  ? 'bg-[#062134] text-white shadow-xs'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-[#062134] text-white shadow-xs scale-[1.02]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <span>📊</span>
@@ -384,10 +384,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 
             <button
               onClick={() => setActiveTab('boq')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'boq'
-                  ? 'bg-[#062134] text-white shadow-xs'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-[#062134] text-white shadow-xs scale-[1.02]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <span>📦</span>
@@ -396,10 +396,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 
             <button
               onClick={() => setActiveTab('auctions')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'auctions'
-                  ? 'bg-[#062134] text-white shadow-xs'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-[#062134] text-white shadow-xs scale-[1.02]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <span>🔨</span>
@@ -409,10 +409,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 
             <button
               onClick={() => setActiveTab('notices')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'notices'
-                  ? 'bg-[#062134] text-white shadow-xs'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-[#062134] text-white shadow-xs scale-[1.02]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <span>📋</span>
@@ -421,10 +421,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 
             <button
               onClick={() => setActiveTab('cppp')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'cppp'
-                  ? 'bg-[#062134] text-white shadow-xs'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-[#062134] text-white shadow-xs scale-[1.02]'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
               <span>🌐</span>
@@ -433,9 +433,9 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 
             <button
               onClick={() => setActiveTab('opportunities')}
-              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'opportunities'
-                  ? 'bg-[#f37021] text-white shadow-xs font-black'
+                  ? 'bg-[#f37021] text-white shadow-xs font-black scale-[1.02]'
                   : 'text-orange-700 bg-orange-50 hover:bg-orange-100'
               }`}
             >
@@ -448,23 +448,15 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
         {/* Search & Filter Bar */}
         <div className="bg-white rounded-2xl p-4 shadow-xs border border-gray-200 flex flex-wrap items-center justify-between gap-4">
           <div className="flex-1 min-w-[280px]">
-            <div className="relative flex items-center bg-gray-50 rounded-xl border border-gray-300 px-3 py-2 focus-within:border-blue-600 focus-within:bg-white transition">
+            <div className="relative flex items-center bg-gray-50 rounded-xl border border-gray-300 px-3 py-2">
               <span className="text-gray-400 mr-2">🔍</span>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search reference, keywords, department or items..."
-                className="w-full text-xs text-gray-800 bg-transparent focus:outline-none"
+                placeholder="Search bids by ref no, title, department, or keyword..."
+                className="w-full text-xs text-gray-800 bg-transparent focus:outline-none placeholder-gray-400"
               />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="text-gray-400 hover:text-gray-600 text-xs px-2"
-                >
-                  ✕
-                </button>
-              )}
             </div>
           </div>
 
@@ -473,7 +465,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             <select
               value={departmentFilter}
               onChange={(e) => setDepartmentFilter(e.target.value)}
-              className="bg-gray-50 border border-gray-300 px-3 py-2 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none"
+              className="bg-gray-50 border border-gray-300 px-3 py-2 rounded-xl text-xs font-semibold text-gray-800 focus:outline-none cursor-pointer"
             >
               {departments.map((d) => (
                 <option key={d} value={d}>
@@ -484,8 +476,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
           </div>
         </div>
 
-        {/* ================= TAB 1: ONGOING BIDS / RA ================= */}
-        {activeTab === 'ongoing' && (
+        {/* Tab Panels Container with Smooth Tab Transition */}
+        <div key={activeTab} className="tab-content-enter space-y-4">
+          {/* ================= TAB 1: ONGOING BIDS / RA ================= */}
+          {activeTab === 'ongoing' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between text-xs text-gray-500 font-semibold px-1">
               <p>Showing {filteredTenders.length} Active Public Tenders & Reverse Auctions</p>
@@ -1014,6 +1008,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             </div>
           </div>
         )}
+        </div>
       </div>
 
       {/* Tender Details & BOQ Modal */}

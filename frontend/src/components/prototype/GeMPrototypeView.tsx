@@ -483,7 +483,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
         <div className="max-w-7xl mx-auto flex items-center space-x-2 overflow-x-auto py-1 text-xs font-bold">
           <button
             onClick={() => navigatePage('officer-dash-page')}
-            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition ${
+            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
               currentSubPage === 'officer-dash-page'
                 ? 'bg-yellow-400 text-blue-950 shadow-xs'
                 : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -493,7 +493,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
           </button>
           <button
             onClick={() => navigatePage('officer-compare-page')}
-            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition ${
+            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
               currentSubPage === 'officer-compare-page'
                 ? 'bg-yellow-400 text-blue-950 shadow-xs'
                 : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -503,7 +503,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
           </button>
           <button
             onClick={() => navigatePage('officer-page')}
-            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition ${
+            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
               currentSubPage === 'officer-page'
                 ? 'bg-yellow-400 text-blue-950 shadow-xs'
                 : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -513,7 +513,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
           </button>
           <button
             onClick={() => navigatePage('risk-page')}
-            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition ${
+            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
               currentSubPage === 'risk-page'
                 ? 'bg-yellow-400 text-blue-950 shadow-xs'
                 : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -523,7 +523,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
           </button>
           <button
             onClick={() => navigatePage('audit-page')}
-            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition ${
+            className={`py-1.5 px-3 rounded whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
               currentSubPage === 'audit-page'
                 ? 'bg-yellow-400 text-blue-950 shadow-xs'
                 : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -551,7 +551,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
            PAGE 2: GEM AUTHENTICATION / LOGIN VIEW
            ======================================================== */}
       {activePage === 'login-page' && (
-        <div id="login-page" className="flex-1 flex flex-col">
+        <div id="login-page" className="flex-1 flex flex-col page-enter">
           <div className="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
           <div className="bg-white border-b border-gray-200 py-3 px-6 shadow-xs flex justify-between items-center">
             <div
@@ -742,7 +742,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
            PAGE 3: SELLER COMPLIANCE PORTAL (S1, S2, S3, S4)
            ======================================================== */}
       {activePage === 'seller-page' && (
-        <div id="seller-page" className="flex-1 flex flex-col">
+        <div id="seller-page" className="flex-1 flex flex-col page-enter">
           <div className="h-1.5 w-full bg-gradient-to-r from-orange-500 via-white to-green-600"></div>
           <div className="bg-white border-b border-gray-200 shadow-xs">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -795,7 +795,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
               <nav className="flex space-x-2 text-xs font-semibold overflow-x-auto border-t border-gray-100 py-1">
                 <button
                   onClick={() => setActiveSellerTab('dashboard-view')}
-                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition ${
+                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
                     activeSellerTab === 'dashboard-view'
                       ? 'border-orange-500 text-orange-600 font-bold'
                       : 'border-transparent text-gray-500 hover:text-[#162c5b]'
@@ -805,7 +805,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 </button>
                 <button
                   onClick={() => setActiveSellerTab('checklist-view')}
-                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition ${
+                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
                     activeSellerTab === 'checklist-view'
                       ? 'border-orange-500 text-orange-600 font-bold'
                       : 'border-transparent text-gray-500 hover:text-[#162c5b]'
@@ -815,7 +815,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 </button>
                 <button
                   onClick={() => setActiveSellerTab('upload-view')}
-                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition ${
+                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 ${
                     activeSellerTab === 'upload-view'
                       ? 'border-orange-500 text-orange-600 font-bold'
                       : 'border-transparent text-gray-500 hover:text-[#162c5b]'
@@ -825,7 +825,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 </button>
                 <button
                   onClick={() => setActiveSellerTab('issues-view')}
-                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition relative ${
+                  className={`py-2 px-3 border-b-2 whitespace-nowrap cursor-pointer transition-all duration-200 active:scale-95 relative ${
                     activeSellerTab === 'issues-view'
                       ? 'border-orange-500 text-orange-600 font-bold'
                       : 'border-transparent text-gray-500 hover:text-[#162c5b]'
@@ -845,6 +845,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
           </div>
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+            <div key={activeSellerTab} className="tab-content-enter space-y-6">
             {/* S1. SELLER COMPLIANCE DASHBOARD */}
             {activeSellerTab === 'dashboard-view' && (
               <section id="dashboard-view" className="space-y-6">
@@ -1262,6 +1263,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 )}
               </section>
             )}
+            </div>
           </main>
         </div>
       )}
@@ -1270,7 +1272,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
            PAGE 4: O1. OFFICER DASHBOARD
            ======================================================== */}
       {activePage === 'officer-dash-page' && (
-        <div id="officer-dash-page" className="flex-1 flex flex-col">
+        <div id="officer-dash-page" className="flex-1 flex flex-col page-enter">
           {renderOfficerHeader('officer-dash-page')}
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
@@ -1444,7 +1446,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
            PAGE 5: O2. BIDDER COMPARISON
            ======================================================== */}
       {activePage === 'officer-compare-page' && (
-        <div id="officer-compare-page" className="flex-1 flex flex-col">
+        <div id="officer-compare-page" className="flex-1 flex flex-col page-enter">
           {renderOfficerHeader('officer-compare-page')}
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
@@ -1613,7 +1615,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
            PAGE 6: O3. BIDDER VERIFICATION DETAIL ⭐ (HERO SCREEN)
            ======================================================== */}
       {activePage === 'officer-page' && (
-        <div id="officer-page" className="flex-1 flex flex-col">
+        <div id="officer-page" className="flex-1 flex flex-col page-enter">
           {renderOfficerHeader('officer-page')}
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
@@ -1905,7 +1907,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
            PAGE 7: O4. AI FINDINGS & RISK ANALYSIS
            ======================================================== */}
       {activePage === 'risk-page' && (
-        <div id="risk-page" className="flex-1 flex flex-col">
+        <div id="risk-page" className="flex-1 flex flex-col page-enter">
           {renderOfficerHeader('risk-page')}
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
@@ -2055,7 +2057,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
            PAGE 8: O5. AUDIT TRAIL + FINAL DECISION ⭐
            ======================================================== */}
       {activePage === 'audit-page' && (
-        <div id="audit-page" className="flex-1 flex flex-col">
+        <div id="audit-page" className="flex-1 flex flex-col page-enter">
           {renderOfficerHeader('audit-page')}
 
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">

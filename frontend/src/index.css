@@ -17,6 +17,7 @@ html {
   font-family: var(--font-sans);
   font-size: 100%;
   line-height: 1.55;
+  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -466,5 +467,53 @@ html.dark .gemmy-input-bar input {
 
 html.dark .gemmy-input-bar input::placeholder {
   color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   Universal Smooth Tab, Section & Page Transitions
+   Ultra-fluid 60fps micro-animations designed for seamless browsing
+   ========================================================================== */
+
+@keyframes tabFadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageFadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-content-enter {
+  animation: tabFadeSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.page-enter {
+  animation: pageFadeSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+/* Universal smooth micro-transitions for tabs, buttons, chips, and cards */
+button, a, input, select {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 180ms;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 

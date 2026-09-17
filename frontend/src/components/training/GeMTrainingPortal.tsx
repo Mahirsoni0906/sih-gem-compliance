@@ -211,7 +211,7 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabType)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 flex items-center gap-1.5 cursor-pointer ${
                 activeTab === tab.id
                   ? 'bg-[#062134] text-white shadow-sm'
                   : 'bg-white hover:bg-gray-100 text-gray-700 border border-gray-200'
@@ -231,6 +231,8 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
           </div>
         )}
 
+        {/* Tab Content with Smooth Transition */}
+        <div key={activeTab} className="tab-content-enter space-y-6">
         {/* TAB 1, 2, 3, 4: Course Cards Grid */}
         {(activeTab === 'all' || activeTab === 'buyer' || activeTab === 'seller' || activeTab === 'statutory') && (
           <div className="space-y-6">
@@ -442,6 +444,7 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
             </div>
           </div>
         )}
+        </div>
 
         {/* Interactive FAQ Section */}
         <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-4">

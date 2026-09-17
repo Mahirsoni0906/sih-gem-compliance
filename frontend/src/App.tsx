@@ -110,24 +110,25 @@ export default function App() {
         }}
       />
 
-      {/* Main Routed Content */}
+      {/* Main Routed Content with Smooth Section & Page Transitions */}
       <main className="flex-1 flex flex-col">
-        {isWorkflowModule ? (
-          <GeMPrototypeView
-            initialPage={activePage}
-            initialSellerTab={sellerTab}
-            onOpenChat={() => setIsChatOpen(true)}
-            onGoHome={() => {
-              setActivePage('landing-page');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onNavigate={(targetPage) => {
-              setActivePage(targetPage);
-            }}
-          />
-        ) : (
-          <>
-            {activePage === 'landing-page' && (
+        <div key={activePage} className="flex-1 flex flex-col page-enter">
+          {isWorkflowModule ? (
+            <GeMPrototypeView
+              initialPage={activePage}
+              initialSellerTab={sellerTab}
+              onOpenChat={() => setIsChatOpen(true)}
+              onGoHome={() => {
+                setActivePage('landing-page');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onNavigate={(targetPage) => {
+                setActivePage(targetPage);
+              }}
+            />
+          ) : (
+            <>
+              {activePage === 'landing-page' && (
               <LandingPage
                 onEnterSeller={() => {
                   setUserRole('seller');
@@ -257,6 +258,7 @@ export default function App() {
             )}
           </>
         )}
+        </div>
       </main>
 
       {/* Floating Ask GeMMy Button (Across Landing Page, Seller & Buyer Desks) */}

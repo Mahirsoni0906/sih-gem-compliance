@@ -193,16 +193,16 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           </div>
         </div>
 
-        {/* Category Filter Pills */}
+        {/* Category Filter Pills with Smooth Transitions */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 text-xs font-bold scrollbar-thin">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-xl transition whitespace-nowrap shadow-2xs border cursor-pointer ${
+              className={`px-4 py-2 rounded-xl whitespace-nowrap shadow-2xs border cursor-pointer transition-all duration-200 ease-out active:scale-95 ${
                 category === cat
-                  ? 'bg-[#162c5b] dark:bg-blue-600 text-white border-[#162c5b] dark:border-blue-500'
-                  : 'bg-white dark:bg-[#0c1e33] text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800'
+                  ? 'bg-[#162c5b] dark:bg-blue-600 text-white border-[#162c5b] dark:border-blue-500 shadow-md scale-[1.02]'
+                  : 'bg-white dark:bg-[#0c1e33] text-gray-600 dark:text-slate-300 border-gray-200 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-700'
               }`}
             >
               {cat}
@@ -210,14 +210,14 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           ))}
         </div>
 
-        {/* Product Cards Grid */}
+        {/* Product Cards Grid with Smooth Tab & Category Transition */}
         {loading ? (
-          <div className="py-20 text-center space-y-3">
+          <div key="loading" className="py-20 text-center space-y-3 tab-content-enter">
             <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
             <p className="text-xs text-gray-500 dark:text-slate-400 font-bold">Querying GeM Statutory Product Catalog...</p>
           </div>
         ) : filteredProducts.length === 0 ? (
-          <div className="bg-white dark:bg-[#0c1e33] rounded-2xl p-12 text-center border border-gray-200 dark:border-slate-800 space-y-3 transition-colors">
+          <div key="empty" className="bg-white dark:bg-[#0c1e33] rounded-2xl p-12 text-center border border-gray-200 dark:border-slate-800 space-y-3 transition-colors tab-content-enter">
             <span className="text-4xl">📦</span>
             <h3 className="text-base font-bold text-gray-800 dark:text-slate-100">No matching products found</h3>
             <p className="text-xs text-gray-500 dark:text-slate-400 max-w-sm mx-auto">
@@ -230,13 +230,16 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 setMiiOnly(false);
                 setMsmeOnly(false);
               }}
-              className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-4 py-2 rounded-lg cursor-pointer transition"
+              className="bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold px-4 py-2 rounded-lg cursor-pointer transition active:scale-95"
             >
               Reset Filters
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            key={`${category}-${miiOnly}-${msmeOnly}-${searchQuery}`}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 tab-content-enter"
+          >
             {filteredProducts.map((p) => {
               const isClassI = p.mii_percentage >= 50;
               return (
