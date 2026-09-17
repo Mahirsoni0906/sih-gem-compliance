@@ -23,7 +23,9 @@ export const AuditTrailView: React.FC = () => {
     }
   };
 
-  const filteredLogs = logs.filter((log) => {
+  const safeLogs = Array.isArray(logs) ? logs : [];
+  const filteredLogs = safeLogs.filter((log) => {
+    if (!log || !log.role) return false;
     if (roleFilter === 'all') return true;
     return log.role.toLowerCase() === roleFilter.toLowerCase();
   });

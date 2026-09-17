@@ -267,17 +267,145 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
       closingDate: '22-Apr-2026',
       highlight: 'Make In India Special Focus',
     },
+    {
+      oppId: 'OPP-MEGA-2026-03',
+      refNo: 'GEM/2026/B/MEGA-773',
+      title: 'Offshore Subsea Cryogenic Flow Control & High-Pressure Gate Valving Systems',
+      department: 'Oil and Natural Gas Corporation (ONGC)',
+      estimatedValueLakhs: 1180.0,
+      miiQuota: 'Class-I Local Supplier (Min 65% MII)',
+      msmeReservation: 'Relaxation in Prior Turnover for Startups & MSEs',
+      closingDate: '18-Apr-2026',
+      highlight: 'PSU Critical Infrastructure',
+    },
+    {
+      oppId: 'OPP-MEGA-2026-04',
+      refNo: 'GEM/2026/B/MEGA-664',
+      title: 'Supercritical Thermal Turbine Electro-Hydraulic Actuators & Control Modules',
+      department: 'Bharat Heavy Electricals Limited (BHEL)',
+      estimatedValueLakhs: 960.0,
+      miiQuota: 'Class-I Local Supplier (Min 80% MII)',
+      msmeReservation: 'Mandatory MSE Vendor Sourcing Norms',
+      closingDate: '25-Apr-2026',
+      highlight: 'Power Sector Strategic Asset',
+    },
+    {
+      oppId: 'OPP-MEGA-2026-05',
+      refNo: 'GEM/2026/B/MEGA-555',
+      title: 'Pan-India Medical Grade Oxygen Grid, Cryogenic Storage & ICU Life-Support Systems',
+      department: 'Department of Health & Family Welfare',
+      estimatedValueLakhs: 680.0,
+      miiQuota: 'Class-I Local Supplier (Min 75% MII)',
+      msmeReservation: 'EMD Waiver and Tender Fee Exemption for MSEs',
+      closingDate: '29-Apr-2026',
+      highlight: 'Healthcare Mission Project',
+    },
+    {
+      oppId: 'OPP-MEGA-2026-06',
+      refNo: 'GEM/2026/B/MEGA-446',
+      title: 'Naval Surface & Submarine Hydraulic Fluid Valving and Marine Propulsion Seals',
+      department: 'Ministry of Defence',
+      estimatedValueLakhs: 1290.0,
+      miiQuota: 'Class-I Local Supplier (Min 85% MII)',
+      msmeReservation: 'Security Clearance & Strict GFR 144(xi) Verification',
+      closingDate: '04-May-2026',
+      highlight: 'Defence Indigenisation Focus',
+    },
   ];
 
-  const filteredTenders = tenders.filter((t) => {
-    if (departmentFilter !== 'All' && !t.department.includes(departmentFilter)) return false;
+  // Defensive array safeguards and dynamic multi-tab filters
+  const safeTenders = Array.isArray(tenders) && tenders.length > 0 ? tenders : api.getInitialTenders();
+  const filteredTenders = safeTenders.filter((t) => {
+    if (!t) return false;
+    if (departmentFilter !== 'All' && !t.department?.includes(departmentFilter)) return false;
     if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.toLowerCase().trim();
       return (
-        t.ref_no.toLowerCase().includes(q) ||
-        t.title.toLowerCase().includes(q) ||
-        t.department.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q)
+        (t.ref_no || '').toLowerCase().includes(q) ||
+        (t.title || '').toLowerCase().includes(q) ||
+        (t.department || '').toLowerCase().includes(q) ||
+        (t.category || '').toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  const safeOpportunities = Array.isArray(highValueOpportunities) ? highValueOpportunities : [];
+  const filteredOpportunities = safeOpportunities.filter((opp) => {
+    if (!opp) return false;
+    if (departmentFilter !== 'All' && !opp.department?.includes(departmentFilter)) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase().trim();
+      return (
+        (opp.refNo || '').toLowerCase().includes(q) ||
+        (opp.title || '').toLowerCase().includes(q) ||
+        (opp.department || '').toLowerCase().includes(q) ||
+        (opp.miiQuota || '').toLowerCase().includes(q) ||
+        (opp.highlight || '').toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  const safeAwards = Array.isArray(contractAwards) ? contractAwards : [];
+  const filteredAwards = safeAwards.filter((award) => {
+    if (!award) return false;
+    if (departmentFilter !== 'All' && !award.department?.includes(departmentFilter)) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase().trim();
+      return (
+        (award.contractNo || '').toLowerCase().includes(q) ||
+        (award.tenderRef || '').toLowerCase().includes(q) ||
+        (award.title || '').toLowerCase().includes(q) ||
+        (award.department || '').toLowerCase().includes(q) ||
+        (award.awardedTo || '').toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  const safeBoq = Array.isArray(boqTenders) ? boqTenders : [];
+  const filteredBoqTenders = safeBoq.filter((b) => {
+    if (!b) return false;
+    if (departmentFilter !== 'All' && !b.department?.includes(departmentFilter)) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase().trim();
+      return (
+        (b.refNo || '').toLowerCase().includes(q) ||
+        (b.title || '').toLowerCase().includes(q) ||
+        (b.department || '').toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  const safeAuctions = Array.isArray(forwardAuctions) ? forwardAuctions : [];
+  const filteredAuctions = safeAuctions.filter((a) => {
+    if (!a) return false;
+    if (departmentFilter !== 'All' && !a.department?.includes(departmentFilter)) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase().trim();
+      return (
+        (a.auctionId || '').toLowerCase().includes(q) ||
+        (a.title || '').toLowerCase().includes(q) ||
+        (a.department || '').toLowerCase().includes(q) ||
+        (a.category || '').toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  const safeCppp = Array.isArray(cpppTenders) ? cpppTenders : [];
+  const filteredCppp = safeCppp.filter((c) => {
+    if (!c) return false;
+    if (departmentFilter !== 'All' && !c.department?.includes(departmentFilter)) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase().trim();
+      return (
+        (c.cpppId || '').toLowerCase().includes(q) ||
+        (c.refNo || '').toLowerCase().includes(q) ||
+        (c.title || '').toLowerCase().includes(q) ||
+        (c.department || '').toLowerCase().includes(q)
       );
     }
     return true;
@@ -588,69 +716,79 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             </div>
 
             <div className="space-y-4">
-              {contractAwards.map((award) => (
-                <div
-                  key={award.contractNo}
-                  className="bg-white rounded-2xl border border-gray-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-emerald-400 transition"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-black text-emerald-900 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-300">
-                          {award.contractNo}
-                        </span>
-                        <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded">
-                          AWARDED
-                        </span>
-                        <span className="text-[10px] text-gray-400 font-mono">
-                          Ref: {award.tenderRef}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-black text-gray-900">{award.title}</h3>
-                      <p className="text-xs text-gray-600">
-                        🏛️ Purchasing Entity: <strong className="text-gray-800">{award.department}</strong>
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Award Contract Value</span>
-                      <p className="text-xl font-black text-emerald-700">
-                        ₹{award.awardedValueLakhs.toFixed(2)} Lakhs
-                      </p>
-                      <p className="text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded inline-block mt-0.5">
-                        Saved ₹{award.savingsLakhs} Lakhs vs Estimate
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs">
-                    <div>
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Awarded Vendor</span>
-                      <p className="font-bold text-[#162c5b] mt-0.5">{award.awardedTo}</p>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Award Date</span>
-                      <p className="font-bold text-gray-800 mt-0.5">{award.awardDate}</p>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Verified Local Content</span>
-                      <p className="font-bold text-emerald-700 mt-0.5">{award.miiPercentage}% (Class-I)</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-[11px] text-gray-500 font-mono">
-                      Immutable SHA-256 Ledger Record Verified
-                    </span>
-                    <button
-                      onClick={() => onOpenOfficerScrutiny(award.tenderRef)}
-                      className="text-xs text-blue-900 font-bold hover:underline cursor-pointer"
-                    >
-                      View Bid Evaluation Matrix & Audit Ledger &gt;
-                    </button>
-                  </div>
+              {filteredAwards.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
+                  <span className="text-4xl">📊</span>
+                  <h3 className="text-base font-bold text-gray-800">No matching contract awards found</h3>
+                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                    Please try clearing your search query or switching the department filter to All.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                filteredAwards.map((award) => (
+                  <div
+                    key={award.contractNo}
+                    className="bg-white rounded-2xl border border-gray-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-emerald-400 transition"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-black text-emerald-900 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-300">
+                            {award.contractNo}
+                          </span>
+                          <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded">
+                            AWARDED
+                          </span>
+                          <span className="text-[10px] text-gray-400 font-mono">
+                            Ref: {award.tenderRef}
+                          </span>
+                        </div>
+                        <h3 className="text-base font-black text-gray-900">{award.title}</h3>
+                        <p className="text-xs text-gray-600">
+                          🏛️ Purchasing Entity: <strong className="text-gray-800">{award.department}</strong>
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Award Contract Value</span>
+                        <p className="text-xl font-black text-emerald-700">
+                          ₹{award.awardedValueLakhs.toFixed(2)} Lakhs
+                        </p>
+                        <p className="text-[10px] text-emerald-800 font-bold bg-emerald-50 px-2 py-0.5 rounded inline-block mt-0.5">
+                          Saved ₹{award.savingsLakhs} Lakhs vs Estimate
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs">
+                      <div>
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Awarded Vendor</span>
+                        <p className="font-bold text-[#162c5b] mt-0.5">{award.awardedTo}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Award Date</span>
+                        <p className="font-bold text-gray-800 mt-0.5">{award.awardDate}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Verified Local Content</span>
+                        <p className="font-bold text-emerald-700 mt-0.5">{award.miiPercentage}% (Class-I)</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-[11px] text-gray-500 font-mono">
+                        Immutable SHA-256 Ledger Record Verified
+                      </span>
+                      <button
+                        onClick={() => onOpenOfficerScrutiny(award.tenderRef)}
+                        className="text-xs text-blue-900 font-bold hover:underline cursor-pointer"
+                      >
+                        View Bid Evaluation Matrix & Audit Ledger &gt;
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -666,69 +804,79 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             </div>
 
             <div className="space-y-4">
-              {boqTenders.map((b) => (
-                <div
-                  key={b.refNo}
-                  className="bg-white rounded-2xl border border-gray-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-orange-400 transition"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-black text-orange-950 bg-orange-50 px-2.5 py-0.5 rounded border border-orange-200">
-                          {b.refNo}
-                        </span>
-                        <span className="bg-orange-600 text-white text-[10px] font-black px-2 py-0.5 rounded">
-                          CUSTOM BOQ
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {b.boqItemCount} Itemized Schedule Lines
-                        </span>
-                      </div>
-                      <h3 className="text-base font-black text-gray-900">{b.title}</h3>
-                      <p className="text-xs text-gray-600">
-                        🏛️ Department: <strong className="text-gray-800">{b.department}</strong>
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Total Estimated Value</span>
-                      <p className="text-xl font-black text-orange-950">
-                        ₹{b.estimatedValueLakhs.toFixed(2)} Lakhs
-                      </p>
-                      <p className="text-[10px] text-gray-500">Closing: {b.closingDate}</p>
-                    </div>
-                  </div>
-
-                  {/* BOQ Items Preview Table */}
-                  <div className="border border-gray-200 rounded-xl overflow-hidden text-xs">
-                    <div className="bg-gray-100 px-3 py-1.5 font-bold text-gray-700 grid grid-cols-12">
-                      <div className="col-span-6">BOQ Item Description</div>
-                      <div className="col-span-3 text-right">Quantity</div>
-                      <div className="col-span-3 text-right">Unit Estimate</div>
-                    </div>
-                    {b.items.map((item, idx) => (
-                      <div key={idx} className="px-3 py-2 border-t grid grid-cols-12 hover:bg-gray-50">
-                        <div className="col-span-6 font-semibold text-gray-800">{item.itemName}</div>
-                        <div className="col-span-3 text-right text-gray-600 font-mono">
-                          {item.qty} {item.unit}
-                        </div>
-                        <div className="col-span-3 text-right font-black text-blue-950 font-mono">
-                          ₹{item.estimatedRate.toLocaleString('en-IN')}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-end gap-3 pt-1">
-                    <button
-                      onClick={() => onOpenSellerBid(b.refNo)}
-                      className="bg-[#f37021] hover:bg-[#e05e10] text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition cursor-pointer"
-                    >
-                      Fill BOQ Schedule & Bid &gt;
-                    </button>
-                  </div>
+              {filteredBoqTenders.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
+                  <span className="text-4xl">📦</span>
+                  <h3 className="text-base font-bold text-gray-800">No matching custom BOQ bids found</h3>
+                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                    Please try clearing your search query or switching the department filter to All.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                filteredBoqTenders.map((b) => (
+                  <div
+                    key={b.refNo}
+                    className="bg-white rounded-2xl border border-gray-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-orange-400 transition"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-black text-orange-950 bg-orange-50 px-2.5 py-0.5 rounded border border-orange-200">
+                            {b.refNo}
+                          </span>
+                          <span className="bg-orange-600 text-white text-[10px] font-black px-2 py-0.5 rounded">
+                            CUSTOM BOQ
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {b.boqItemCount} Itemized Schedule Lines
+                          </span>
+                        </div>
+                        <h3 className="text-base font-black text-gray-900">{b.title}</h3>
+                        <p className="text-xs text-gray-600">
+                          🏛️ Department: <strong className="text-gray-800">{b.department}</strong>
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Total Estimated Value</span>
+                        <p className="text-xl font-black text-orange-950">
+                          ₹{b.estimatedValueLakhs.toFixed(2)} Lakhs
+                        </p>
+                        <p className="text-[10px] text-gray-500">Closing: {b.closingDate}</p>
+                      </div>
+                    </div>
+
+                    {/* BOQ Items Preview Table */}
+                    <div className="border border-gray-200 rounded-xl overflow-hidden text-xs">
+                      <div className="bg-gray-100 px-3 py-1.5 font-bold text-gray-700 grid grid-cols-12">
+                        <div className="col-span-6">BOQ Item Description</div>
+                        <div className="col-span-3 text-right">Quantity</div>
+                        <div className="col-span-3 text-right">Unit Estimate</div>
+                      </div>
+                      {b.items.map((item, idx) => (
+                        <div key={idx} className="px-3 py-2 border-t grid grid-cols-12 hover:bg-gray-50">
+                          <div className="col-span-6 font-semibold text-gray-800">{item.itemName}</div>
+                          <div className="col-span-3 text-right text-gray-600 font-mono">
+                            {item.qty} {item.unit}
+                          </div>
+                          <div className="col-span-3 text-right font-black text-blue-950 font-mono">
+                            ₹{item.estimatedRate.toLocaleString('en-IN')}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-1">
+                      <button
+                        onClick={() => onOpenSellerBid(b.refNo)}
+                        className="bg-[#f37021] hover:bg-[#e05e10] text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition cursor-pointer"
+                      >
+                        Fill BOQ Schedule & Bid &gt;
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -745,74 +893,84 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             </div>
 
             <div className="space-y-4">
-              {forwardAuctions.map((f) => (
-                <div
-                  key={f.auctionId}
-                  className="bg-white rounded-2xl border-2 border-amber-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-amber-400 transition"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-black text-amber-950 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200">
-                          {f.auctionId}
-                        </span>
-                        <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1">
-                          <span>🔨</span>
-                          <span>{f.status}</span>
-                        </span>
-                        <span className="text-[10px] text-gray-400 uppercase font-bold">
-                          {f.category}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-black text-gray-900">{f.title}</h3>
-                      <p className="text-xs text-gray-600">
-                        Disposal Organization: <strong className="text-gray-800">{f.department}</strong>
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Current Highest Bid</span>
-                      <p className="text-2xl font-black text-emerald-700">
-                        ₹{f.currentBidLakhs.toFixed(2)} Lakhs
-                      </p>
-                      <p className="text-[10px] font-bold text-red-600 mt-0.5">
-                        ⏳ {f.endTime}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-amber-50/50 p-3 rounded-xl border border-amber-100 text-xs">
-                    <div>
-                      <span className="text-[10px] text-gray-500 uppercase font-bold">Starting Price</span>
-                      <p className="font-bold text-gray-800 mt-0.5">₹{f.startingPriceLakhs} Lakhs</p>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-gray-500 uppercase font-bold">Reserve Price</span>
-                      <p className="font-bold text-emerald-800 mt-0.5">₹{f.reservePriceLakhs} Lakhs (Met)</p>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-gray-500 uppercase font-bold">Bids Logged</span>
-                      <p className="font-bold text-blue-900 mt-0.5">{f.totalBidsPlaced} Competitive Bids</p>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-gray-500 uppercase font-bold">Min Increment</span>
-                      <p className="font-bold text-gray-800 mt-0.5">₹25,000 / round</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-xs text-gray-500">
-                      EMD Deposit Verified via GeM Escrow
-                    </span>
-                    <button
-                      onClick={() => onOpenOfficerScrutiny(f.auctionId)}
-                      className="bg-gradient-to-r from-amber-600 to-orange-600 hover:brightness-110 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition cursor-pointer"
-                    >
-                      Enter Forward Auction Floor &gt;
-                    </button>
-                  </div>
+              {filteredAuctions.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
+                  <span className="text-4xl">🔨</span>
+                  <h3 className="text-base font-bold text-gray-800">No matching forward auctions found</h3>
+                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                    Please try clearing your search query or switching the department filter to All.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                filteredAuctions.map((f) => (
+                  <div
+                    key={f.auctionId}
+                    className="bg-white rounded-2xl border-2 border-amber-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-amber-400 transition"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-black text-amber-950 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-200">
+                            {f.auctionId}
+                          </span>
+                          <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1">
+                            <span>🔨</span>
+                            <span>{f.status}</span>
+                          </span>
+                          <span className="text-[10px] text-gray-400 uppercase font-bold">
+                            {f.category}
+                          </span>
+                        </div>
+                        <h3 className="text-base font-black text-gray-900">{f.title}</h3>
+                        <p className="text-xs text-gray-600">
+                          Disposal Organization: <strong className="text-gray-800">{f.department}</strong>
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Current Highest Bid</span>
+                        <p className="text-2xl font-black text-emerald-700">
+                          ₹{f.currentBidLakhs.toFixed(2)} Lakhs
+                        </p>
+                        <p className="text-[10px] font-bold text-red-600 mt-0.5">
+                          ⏳ {f.endTime}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-amber-50/50 p-3 rounded-xl border border-amber-100 text-xs">
+                      <div>
+                        <span className="text-[10px] text-gray-500 uppercase font-bold">Starting Price</span>
+                        <p className="font-bold text-gray-800 mt-0.5">₹{f.startingPriceLakhs} Lakhs</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-gray-500 uppercase font-bold">Reserve Price</span>
+                        <p className="font-bold text-emerald-800 mt-0.5">₹{f.reservePriceLakhs} Lakhs (Met)</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-gray-500 uppercase font-bold">Bids Logged</span>
+                        <p className="font-bold text-blue-900 mt-0.5">{f.totalBidsPlaced} Competitive Bids</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-gray-500 uppercase font-bold">Min Increment</span>
+                        <p className="font-bold text-gray-800 mt-0.5">₹25,000 / round</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-xs text-gray-500">
+                        EMD Deposit Verified via GeM Escrow
+                      </span>
+                      <button
+                        onClick={() => onOpenOfficerScrutiny(f.auctionId)}
+                        className="bg-gradient-to-r from-amber-600 to-orange-600 hover:brightness-110 text-white font-bold text-xs px-4 py-2 rounded-lg shadow transition cursor-pointer"
+                      >
+                        Enter Forward Auction Floor &gt;
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -873,55 +1031,65 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
         {activeTab === 'cppp' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between text-xs text-gray-500 font-semibold px-1">
-              <p>Synchronized from Central Public Procurement Portal (eprocure.gov.in)</p>
+              <p>Showing {filteredCppp.length} Tenders Synchronized from Central Public Procurement Portal (eprocure.gov.in)</p>
               <span className="text-blue-800 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                 CPPP e-Publishing API Active
               </span>
             </div>
 
             <div className="space-y-4">
-              {cpppTenders.map((c) => (
-                <div
-                  key={c.cpppId}
-                  className="bg-white rounded-2xl border border-blue-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-blue-400 transition"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-black text-blue-950 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200">
-                          {c.cpppId}
-                        </span>
-                        <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">
-                          CPPP SYNC
-                        </span>
-                        <span className="text-xs text-gray-500">{c.type}</span>
-                      </div>
-                      <h3 className="text-base font-black text-gray-900">{c.title}</h3>
-                      <p className="text-xs text-gray-600">
-                        Department: <strong className="text-gray-800">{c.department}</strong>
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Tender Estimate</span>
-                      <p className="text-xl font-black text-blue-950">₹{c.valueLakhs} Lakhs</p>
-                      <p className="text-[10px] text-gray-500">Closing: {c.closingDate}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-xs text-gray-500 font-medium">
-                      Gateway Source: {c.portalSource}
-                    </span>
-                    <button
-                      onClick={() => onOpenSellerBid(c.refNo)}
-                      className="bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs px-4 py-2 rounded-lg transition cursor-pointer"
-                    >
-                      View CPPP Specification & Bid &gt;
-                    </button>
-                  </div>
+              {filteredCppp.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
+                  <span className="text-4xl">🌐</span>
+                  <h3 className="text-base font-bold text-gray-800">No matching CPPP tenders found</h3>
+                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                    Please try clearing your search query or switching the department filter to All.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                filteredCppp.map((c) => (
+                  <div
+                    key={c.cpppId}
+                    className="bg-white rounded-2xl border border-blue-200 shadow-xs p-5 sm:p-6 space-y-4 hover:border-blue-400 transition"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3 border-b pb-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-black text-blue-950 bg-blue-50 px-2.5 py-0.5 rounded border border-blue-200">
+                            {c.cpppId}
+                          </span>
+                          <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded">
+                            CPPP SYNC
+                          </span>
+                          <span className="text-xs text-gray-500">{c.type}</span>
+                        </div>
+                        <h3 className="text-base font-black text-gray-900">{c.title}</h3>
+                        <p className="text-xs text-gray-600">
+                          Department: <strong className="text-gray-800">{c.department}</strong>
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Tender Estimate</span>
+                        <p className="text-xl font-black text-blue-950">₹{c.valueLakhs} Lakhs</p>
+                        <p className="text-[10px] text-gray-500">Closing: {c.closingDate}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-xs text-gray-500 font-medium">
+                        Gateway Source: {c.portalSource}
+                      </span>
+                      <button
+                        onClick={() => onOpenSellerBid(c.refNo)}
+                        className="bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs px-4 py-2 rounded-lg transition cursor-pointer"
+                      >
+                        View CPPP Specification & Bid &gt;
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -929,68 +1097,78 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
         {/* ================= TAB 7: HIGH-VALUE BUSINESS OPPORTUNITIES ================= */}
         {activeTab === 'opportunities' && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between text-xs text-gray-500 font-semibold px-1">
-              <p>Showing High-Value Institutional Procurement Opportunities & Make in India Reserved Tenders</p>
-              <span className="text-orange-900 bg-orange-100 font-bold px-2 py-0.5 rounded">
-                Tier-1 Mega Opportunities (&gt; ₹500 Lakhs)
+            <div className="flex flex-wrap items-center justify-between text-xs text-gray-500 font-semibold px-1 gap-2">
+              <p>Showing {filteredOpportunities.length} High-Value Institutional Procurement Opportunities & Make in India Reserved Tenders</p>
+              <span className="text-orange-900 bg-orange-100 font-bold px-2 py-0.5 rounded border border-orange-200">
+                ⭐ Tier-1 Mega Opportunities (&gt; ₹500 Lakhs)
               </span>
             </div>
 
             <div className="space-y-4">
-              {highValueOpportunities.map((opp) => (
-                <div
-                  key={opp.oppId}
-                  className="bg-gradient-to-r from-orange-50/70 via-white to-white rounded-2xl border-2 border-orange-300 shadow-sm p-5 sm:p-6 space-y-4"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3 border-b border-orange-100 pb-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-black text-orange-900 bg-orange-100 px-2.5 py-0.5 rounded">
-                          {opp.refNo}
-                        </span>
-                        <span className="bg-gradient-to-r from-orange-600 to-amber-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-xs">
-                          {opp.highlight}
-                        </span>
-                      </div>
-                      <h3 className="text-base font-black text-gray-900">{opp.title}</h3>
-                      <p className="text-xs text-gray-600">
-                        Entity: <strong className="text-gray-800">{opp.department}</strong>
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Estimated Contract Size</span>
-                      <p className="text-2xl font-black text-orange-900">
-                        ₹{(opp.estimatedValueLakhs / 100).toFixed(2)} Crore
-                      </p>
-                      <p className="text-[10px] text-gray-500">Closing: {opp.closingDate}</p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-3 rounded-xl border border-orange-200 text-xs">
-                    <div>
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">Make In India Quota</span>
-                      <p className="font-bold text-emerald-700 mt-0.5">{opp.miiQuota}</p>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-gray-400 uppercase font-bold">MSME Policy Privilege</span>
-                      <p className="font-bold text-blue-900 mt-0.5">{opp.msmeReservation}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-xs text-gray-500">
-                      Mandatory Pre-Qualification Technical Scrutiny Active
-                    </span>
-                    <button
-                      onClick={() => onOpenSellerBid(opp.refNo)}
-                      className="bg-gradient-to-r from-[#f37021] to-[#d35400] text-white font-extrabold text-xs px-5 py-2 rounded-lg shadow transition hover:brightness-110 cursor-pointer"
-                    >
-                      Check Eligibility & Express Interest &gt;
-                    </button>
-                  </div>
+              {filteredOpportunities.length === 0 ? (
+                <div className="bg-white rounded-2xl p-12 text-center border border-orange-200 space-y-3">
+                  <span className="text-4xl">⭐</span>
+                  <h3 className="text-base font-bold text-gray-800">No matching business opportunities found</h3>
+                  <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                    Please try clearing your search query or switching the department filter to All.
+                  </p>
                 </div>
-              ))}
+              ) : (
+                filteredOpportunities.map((opp) => (
+                  <div
+                    key={opp.oppId}
+                    className="bg-gradient-to-r from-orange-50/70 via-white to-white rounded-2xl border-2 border-orange-300 shadow-sm p-5 sm:p-6 space-y-4"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-orange-100 pb-3">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-black text-orange-900 bg-orange-100 px-2.5 py-0.5 rounded">
+                            {opp.refNo}
+                          </span>
+                          <span className="bg-gradient-to-r from-orange-600 to-amber-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full shadow-xs">
+                            {opp.highlight}
+                          </span>
+                        </div>
+                        <h3 className="text-base font-black text-gray-900">{opp.title}</h3>
+                        <p className="text-xs text-gray-600">
+                          Entity: <strong className="text-gray-800">{opp.department}</strong>
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Estimated Contract Size</span>
+                        <p className="text-2xl font-black text-orange-900">
+                          ₹{(opp.estimatedValueLakhs / 100).toFixed(2)} Crore
+                        </p>
+                        <p className="text-[10px] text-gray-500">Closing: {opp.closingDate}</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-white p-3 rounded-xl border border-orange-200 text-xs">
+                      <div>
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">Make In India Quota</span>
+                        <p className="font-bold text-emerald-700 mt-0.5">{opp.miiQuota}</p>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-gray-400 uppercase font-bold">MSME Policy Privilege</span>
+                        <p className="font-bold text-blue-900 mt-0.5">{opp.msmeReservation}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-xs text-gray-500">
+                        Mandatory Pre-Qualification Technical Scrutiny Active
+                      </span>
+                      <button
+                        onClick={() => onOpenSellerBid(opp.refNo)}
+                        className="bg-gradient-to-r from-[#f37021] to-[#d35400] text-white font-extrabold text-xs px-5 py-2 rounded-lg shadow transition hover:brightness-110 cursor-pointer"
+                      >
+                        Check Eligibility & Express Interest &gt;
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}

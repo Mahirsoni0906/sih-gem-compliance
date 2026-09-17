@@ -28,16 +28,18 @@ export const OfficerDashboard: React.FC = () => {
         api.getTenders(),
         api.getBidders(),
       ]);
-      setTenders(tList);
-      setBidders(bList);
+      setTenders(Array.isArray(tList) && tList.length > 0 ? tList : api.getInitialTenders());
+      setBidders(Array.isArray(bList) ? bList : []);
     } catch (err) {
       console.error(err);
+      setTenders(api.getInitialTenders());
     } finally {
       setLoading(false);
     }
   };
 
-  const currentTender = tenders.find((t) => t.ref_no === selectedTenderRef) || tenders[0];
+  const safeTenders = Array.isArray(tenders) && tenders.length > 0 ? tenders : api.getInitialTenders();
+  const currentTender = safeTenders.find((t) => t.ref_no === selectedTenderRef) || safeTenders[0];
 
   const handleInspectBidder = async (bidder: Bidder) => {
     setEvaluatingBidderId(bidder.id);
