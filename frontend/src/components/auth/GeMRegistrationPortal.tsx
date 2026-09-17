@@ -1,4 +1,13 @@
 import React, { useState } from 'react';
+import {
+  Building2,
+  Landmark,
+  FileCheck,
+  CheckCircle2,
+  Check,
+  ShieldCheck,
+  ArrowRight
+} from 'lucide-react';
 import { AshokaEmblem, GeMStarLogo } from '../common/GeMAssets';
 
 interface GeMRegistrationPortalProps {
@@ -108,7 +117,7 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
             }`}
           >
-            <span className="text-base">🏢</span>
+            <Building2 className="w-5 h-5 shrink-0" />
             <div className="text-left">
               <p className="leading-tight">Seller Registration</p>
               <p className={`text-[10px] ${activeRole === 'seller' ? 'text-orange-100' : 'text-gray-500'}`}>
@@ -125,7 +134,7 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
             }`}
           >
-            <span className="text-base">🏛️</span>
+            <Landmark className="w-5 h-5 shrink-0" />
             <div className="text-left">
               <p className="leading-tight">Buyer Registration</p>
               <p className={`text-[10px] ${activeRole === 'buyer' ? 'text-blue-200' : 'text-gray-500'}`}>
@@ -150,13 +159,13 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                   Complete statutory verification via Income Tax PAN, GSTN, and Udyam MSME database.
                 </p>
               </div>
-              <span className="text-3xl">📝</span>
+              <FileCheck className="w-8 h-8 text-orange-600 shrink-0" />
             </div>
 
             {sellerVerified ? (
               <div className="p-8 text-center space-y-4">
-                <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
-                  ✓
+                <div className="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                  <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-black text-gray-900">
                   Seller Account Provisioned & Statutorily Verified!
@@ -216,7 +225,10 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                   <div className="space-y-1.5">
                     <label className="font-bold text-gray-700 flex items-center justify-between">
                       <span>Income Tax PAN <span className="text-red-500">*</span></span>
-                      <span className="text-[10px] text-emerald-700 font-semibold">✓ CBDT API Connected</span>
+                      <span className="flex items-center gap-1 text-[10px] text-emerald-700 font-semibold">
+                        <Check className="w-3 h-3" />
+                        <span>CBDT API Connected</span>
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -234,7 +246,10 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                   <div className="space-y-1.5">
                     <label className="font-bold text-gray-700 flex items-center justify-between">
                       <span>GSTIN (Goods and Services Tax ID) <span className="text-red-500">*</span></span>
-                      <span className="text-[10px] text-blue-700 font-semibold">✓ GSTN Portal 2.0</span>
+                      <span className="flex items-center gap-1 text-[10px] text-blue-700 font-semibold">
+                        <Check className="w-3 h-3" />
+                        <span>GSTN Portal 2.0</span>
+                      </span>
                     </label>
                     <input
                       type="text"
@@ -361,13 +376,13 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                   Designate Primary or Secondary Procurement Officers with NIC/Gov email domain validation.
                 </p>
               </div>
-              <span className="text-3xl">🏛️</span>
+              <Landmark className="w-8 h-8 text-blue-900 shrink-0" />
             </div>
 
             {buyerVerified ? (
               <div className="p-8 text-center space-y-4">
-                <div className="w-14 h-14 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center text-2xl mx-auto shadow-inner">
-                  ✓
+                <div className="w-14 h-14 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                  <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-lg font-black text-gray-900">
                   Buyer Authority Credentials Authorized!
@@ -499,7 +514,7 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                 {/* Statutory Buyer Note */}
                 <div className="bg-blue-50/70 p-4 rounded-xl border border-blue-200 text-[11px] text-blue-950 space-y-1">
                   <p className="font-bold flex items-center gap-1.5">
-                    <span>🛡️</span>
+                    <ShieldCheck className="w-4 h-4 text-blue-700 shrink-0" />
                     <span>GFR 2017 Rule 149 Compliance:</span>
                   </p>
                   <p className="text-gray-700 leading-relaxed">
@@ -512,7 +527,7 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                   <button
                     type="button"
                     onClick={onGoBack}
-                    className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-xl"
+                    className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-xl cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -530,7 +545,7 @@ export const GeMRegistrationPortal: React.FC<GeMRegistrationPortalProps> = ({
                     ) : (
                       <>
                         <span>Authorize Buyer & Open Officer Console</span>
-                        <span>→</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
                       </>
                     )}
                   </button>

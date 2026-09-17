@@ -2,6 +2,36 @@ import React, { useState } from 'react';
 import { GeMStarLogo, Commemorative10Graphic, ProductCutouts } from './common/GeMAssets';
 import { useLanguage } from '../context/LanguageContext';
 import { OFFICIAL_GEM_SERVICES } from '../data/gemServicesData';
+import {
+  Sparkles,
+  Compass,
+  Store,
+  Landmark,
+  Rocket,
+  Layers,
+  Leaf,
+  ShieldCheck,
+  Building2,
+  Scale,
+  Flame,
+  PackageCheck,
+  CreditCard,
+  Monitor,
+  FileCheck,
+  Printer,
+  BadgeCheck,
+  Handshake,
+  Zap,
+  Shield,
+  HeartHandshake,
+  X,
+  Bell,
+  Camera,
+  Play,
+  User,
+  Accessibility,
+} from 'lucide-react';
+import { EnterpriseIconBadge } from './common/ProfessionalIcon';
 
 interface LandingPageProps {
   onEnterSeller: () => void;
@@ -41,7 +71,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'The Saras Collection',
       tag: 'Handicrafts & Rural Artisans',
       sub: 'A showcase of rural SHG women artisans',
-      icon: '🧺',
+      icon: <Store className="w-8 h-8 text-rose-900/90 dark:text-rose-200" />,
       cardClass: 'bg-gradient-to-r from-pink-100 via-rose-100 to-pink-200 border-pink-300 dark:from-[#2e0e1e] dark:via-[#20101c] dark:to-[#131728] dark:border-rose-500/40 hover:border-pink-400 dark:hover:border-rose-400',
       titleClass: 'text-rose-950 dark:text-rose-100',
       subClass: 'text-rose-900/85 dark:text-rose-200/85',
@@ -54,7 +84,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'ODOP GeM BAZAAR',
       tag: 'One District One Product',
       sub: 'Empowering district indigenous specialties',
-      icon: '🏺',
+      icon: <Landmark className="w-8 h-8 text-white/95 dark:text-blue-200" />,
       cardClass: 'bg-gradient-to-r from-[#0d47a1] via-[#1565c0] to-[#1976d2] border-blue-500 dark:from-[#0d2757] dark:via-[#112445] dark:to-[#0f172a] dark:border-blue-500/50 hover:border-blue-400 dark:hover:border-blue-400',
       titleClass: 'text-white dark:text-blue-100',
       subClass: 'text-blue-100/90 dark:text-blue-200/90',
@@ -67,7 +97,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'Startup Runway',
       tag: 'Finest Indian Startups',
       sub: 'Discover innovative products from DPIIT startups',
-      icon: '🚀',
+      icon: <Rocket className="w-8 h-8 text-indigo-900/90 dark:text-indigo-200" />,
       cardClass: 'bg-gradient-to-r from-slate-100 via-blue-50 to-indigo-100 border-indigo-200 dark:from-[#112042] dark:via-[#131b35] dark:to-[#0f172a] dark:border-indigo-500/40 hover:border-indigo-300 dark:hover:border-indigo-400',
       titleClass: 'text-indigo-950 dark:text-indigo-100',
       subClass: 'text-indigo-900/85 dark:text-indigo-200/85',
@@ -80,7 +110,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'The Aabhaar Collection',
       tag: 'Aatmanirbhar Bharat Showcase',
       sub: "Celebrating India's Artisans & Master Weavers",
-      icon: '🇮🇳',
+      icon: <ShieldCheck className="w-8 h-8 text-amber-950/90 dark:text-amber-200" />,
       cardClass: 'bg-gradient-to-r from-amber-100/90 via-orange-50 to-emerald-100/80 border-amber-300 dark:from-[#2e1d0a] dark:via-[#1d1b1f] dark:to-[#0e2417] dark:border-amber-500/40 hover:border-amber-400 dark:hover:border-amber-400',
       titleClass: 'text-amber-950 dark:text-amber-100',
       subClass: 'text-amber-900/85 dark:text-amber-200/85',
@@ -93,7 +123,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'Handloom & Textiles',
       tag: 'Rich Indigenous Weaves',
       sub: 'Authentic Indian Khadi & Silk Loomcraft',
-      icon: '🧵',
+      icon: <Layers className="w-8 h-8 text-orange-950/90 dark:text-orange-200" />,
       cardClass: 'bg-gradient-to-r from-rose-100 via-amber-100 to-yellow-100 border-orange-300 dark:from-[#2f160d] dark:via-[#22171c] dark:to-[#121625] dark:border-orange-500/40 hover:border-orange-400 dark:hover:border-orange-400',
       titleClass: 'text-orange-950 dark:text-orange-100',
       subClass: 'text-orange-900/85 dark:text-orange-200/85',
@@ -106,7 +136,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'Tribal & Khadi India',
       tag: 'Forest Produce & Crafts',
       sub: 'TRIFED certified indigenous heritage',
-      icon: '🏹',
+      icon: <Compass className="w-8 h-8 text-amber-950/90 dark:text-amber-200" />,
       cardClass: 'bg-gradient-to-r from-amber-100 via-orange-100 to-amber-200 border-amber-400 dark:from-[#2e1d08] dark:via-[#201815] dark:to-[#121624] dark:border-amber-500/40 hover:border-amber-500 dark:hover:border-amber-400',
       titleClass: 'text-amber-950 dark:text-amber-100',
       subClass: 'text-amber-900/85 dark:text-amber-200/85',
@@ -119,7 +149,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'WOMANIYA ON GEM',
       tag: 'Women Entrepreneurs',
       sub: 'In pursuit of life, liberty and happiness',
-      icon: '💃',
+      icon: <Sparkles className="w-8 h-8 text-white/95 dark:text-pink-200" />,
       cardClass: 'bg-gradient-to-r from-[#ff4081] via-[#f50057] to-[#c51162] border-rose-400 dark:from-[#3a0820] dark:via-[#250d1e] dark:to-[#141224] dark:border-rose-500/50 hover:border-rose-400 dark:hover:border-rose-400',
       titleClass: 'text-white dark:text-pink-100',
       subClass: 'text-pink-100/90 dark:text-pink-200/90',
@@ -132,7 +162,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       title: 'Millet (Shree Anna)',
       tag: 'Superfoods & Agri Produce',
       sub: 'Nutri-cereals promoting health & farmers',
-      icon: '🌾',
+      icon: <Leaf className="w-8 h-8 text-white/95 dark:text-emerald-200" />,
       cardClass: 'bg-gradient-to-r from-[#2e7d32] via-[#388e3c] to-[#1b5e20] border-green-600 dark:from-[#083318] dark:via-[#0e271d] dark:to-[#0f172a] dark:border-emerald-500/50 hover:border-green-500 dark:hover:border-emerald-400',
       titleClass: 'text-white dark:text-emerald-100',
       subClass: 'text-green-100/90 dark:text-emerald-200/90',
@@ -141,6 +171,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       exploreClass: 'text-white dark:text-emerald-200 group-hover:text-emerald-200 dark:group-hover:text-white',
     },
   ];
+
 
   // 6 Popular Product Categories matching media_1789184098951.png & media_1789184104801.png
   const productCategories = [
@@ -430,14 +461,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   onClick={onEnterSeller}
                   className="bg-[#e67e22] hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm hover:shadow transition flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>🏢</span>
+                  <Building2 className="w-4 h-4" />
                   <span>{t('sellerDesk')}</span>
                 </button>
                 <button
                   onClick={onEnterOfficer}
                   className="bg-[#162c5b] hover:bg-[#0f1f42] text-yellow-300 font-bold text-xs px-4 py-2 rounded-lg shadow-sm hover:shadow transition flex items-center gap-1.5 cursor-pointer border border-yellow-400/30"
                 >
-                  <span>⚖️</span>
+                  <Scale className="w-4 h-4" />
                   <span>{t('officerPortal')}</span>
                 </button>
               </div>
@@ -470,7 +501,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="flex items-center space-x-2">
               <span className="text-4xl sm:text-5xl font-black text-[#0f3d64] tracking-tight">GeM</span>
               <span className="text-4xl sm:text-5xl font-black text-[#f59e0b]">10</span>
-              <span className="text-amber-400 text-2xl">✨</span>
+              <Sparkles className="w-7 h-7 text-amber-500 inline-block" />
             </div>
 
             <p className="text-lg sm:text-xl font-bold text-[#0c2340]">
@@ -527,7 +558,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       {store.sub}
                     </p>
                   </div>
-                  <span className="text-3xl z-10 shrink-0 select-none drop-shadow-sm">{store.icon}</span>
+                  <div className="w-10 h-10 rounded-xl bg-black/10 dark:bg-white/10 backdrop-blur-xs flex items-center justify-center shrink-0 z-10 select-none drop-shadow-sm group-hover:scale-110 transition-transform">
+                    {store.icon}
+                  </div>
                 </div>
 
                 <div className={`flex items-center justify-between text-[10px] font-bold z-10 pt-1 border-t ${store.dividerClass}`}>
@@ -657,7 +690,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    <span>🔥</span>
+                    <Flame className="w-3.5 h-3.5 text-orange-500" />
                     <span>Trending Services (20)</span>
                   </button>
                   <button
@@ -668,7 +701,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    <span>✨</span>
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
                     <span>Emerging Services (10)</span>
                   </button>
                 </div>
@@ -689,9 +722,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       onClick={() => onOpenServices?.(s.title)}
                       className="p-2.5 rounded-lg bg-gray-50/80 hover:bg-orange-50/60 border border-gray-200/80 hover:border-orange-300 transition cursor-pointer group flex items-start space-x-2.5"
                     >
-                      <span className="text-xl shrink-0 group-hover:scale-110 transition-transform">
-                        {s.domainIcon}
-                      </span>
+                      <div className="w-8 h-8 rounded-lg bg-orange-100/60 dark:bg-slate-800 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-orange-700 dark:text-orange-400">
+                        <EnterpriseIconBadge type={s.domain} className="w-4 h-4" />
+                      </div>
                       <div className="min-w-0 flex-1">
                         <p className="font-bold text-xs text-gray-900 group-hover:text-[#155998] truncate">
                           {s.title}
@@ -711,7 +744,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 onClick={() => onOpenServices?.()}
                 className="bg-gradient-to-r from-[#ff6026] to-[#f7931e] hover:brightness-105 text-white font-extrabold text-xs uppercase tracking-wider px-8 py-3 rounded-full shadow-md hover:shadow-lg transition cursor-pointer inline-flex items-center gap-2"
               >
-                <span>🏛️</span>
+                <Landmark className="w-4 h-4" />
                 <span>{t('viewAllServices')} (30+ Official GeM Services) →</span>
               </button>
             </div>
@@ -758,20 +791,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Bottom 5 Feature Icons */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
               {[
-                { title: 'Rich Listing of Products / Services', icon: '📦' },
-                { title: 'Integrated Payment System', icon: '💳' },
-                { title: 'Multiple Procurement Modes - Direct Purchase / Bid / RA', icon: '⚖️' },
-                { title: 'Great Transparency and Speed of Procurement', icon: '💻' },
-                { title: 'Online Ordering and Contract Generation', icon: '📝' },
+                { title: 'Rich Listing of Products / Services', icon: <PackageCheck className="w-6 h-6 text-white" /> },
+                { title: 'Integrated Payment System', icon: <CreditCard className="w-6 h-6 text-white" /> },
+                { title: 'Multiple Procurement Modes - Direct Purchase / Bid / RA', icon: <Scale className="w-6 h-6 text-white" /> },
+                { title: 'Great Transparency and Speed of Procurement', icon: <Monitor className="w-6 h-6 text-white" /> },
+                { title: 'Online Ordering and Contract Generation', icon: <FileCheck className="w-6 h-6 text-white" /> },
               ].map((f, i) => (
                 <div key={i} className="flex flex-col items-center space-y-2 p-1">
-                  <span className="text-3xl">{f.icon}</span>
+                  <div className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-xs flex items-center justify-center shadow-inner">
+                    {f.icon}
+                  </div>
                   <p className="text-[11px] font-medium leading-tight text-white/90">
                     {f.title}
                   </p>
                 </div>
               ))}
             </div>
+
           </div>
         </div>
       </section>
@@ -789,8 +825,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </p>
 
             <div className="space-y-0.5 pt-2">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-orange-400 to-amber-200 mx-auto flex items-center justify-center text-xl shadow-md border-2 border-white">
-                👤
+              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-orange-400 to-amber-200 mx-auto flex items-center justify-center shadow-md border-2 border-white">
+                <User className="w-6 h-6 text-orange-950" />
               </div>
               <h4 className="font-extrabold text-xs text-gray-900 pt-1">
                 {testimonials[activeTestimonial].name}
@@ -849,7 +885,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   {language === 'hi' ? 'और अधिक जानें' : 'Learn More'}
                 </button>
               </div>
-              <div className="text-4xl pr-4">💻 🖨️</div>
+              <div className="flex items-center gap-2 pr-4 text-blue-900/80">
+                <Monitor className="w-9 h-9" />
+                <Printer className="w-8 h-8 opacity-70" />
+              </div>
             </div>
 
             {/* Bottom 2 Cards: Cyber Security & Swachh Bharat */}
@@ -869,7 +908,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 onClick={() => setInitiativesModalOpen(true)}
                 className="bg-white border border-gray-200 p-4 rounded-xl shadow-2xs hover:shadow-md transition cursor-pointer flex flex-col items-center justify-center text-center h-32"
               >
-                <span className="text-3xl mb-1">🇮🇳 🧹</span>
+                <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mb-1.5 text-emerald-700">
+                  <Sparkles className="w-5 h-5" />
+                </div>
                 <p className="font-black text-xs text-gray-800">
                   {language === 'hi' ? 'स्वच्छ भारत मिशन' : 'Swachh Bharat Mission'}
                 </p>
@@ -922,7 +963,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       <div className="flex items-center gap-2">
                         <GeMStarLogo className="w-5 h-5" />
                         <div>
-                          <p className="font-bold text-gray-900">GeM <span className="text-blue-500">✓</span></p>
+                          <p className="font-bold text-gray-900 flex items-center gap-1">GeM <BadgeCheck className="w-3.5 h-3.5 text-blue-500 fill-blue-500 text-white" /></p>
                           <p className="text-[10px] text-gray-400">@GeM_India • Follow</p>
                         </div>
                       </div>
@@ -1108,7 +1149,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="bg-[#4a4a4a] text-white py-4 px-4 sm:px-8 mt-6">
           <div className="max-w-[1400px] mx-auto flex flex-wrap items-center justify-between gap-6">
             <div className="flex items-center space-x-2">
-              <span className="text-lg">🏛️</span>
+              <Landmark className="w-5 h-5 text-gray-200 shrink-0" />
               <div className="text-[10px] font-bold leading-tight">
                 <p>Department of Commerce</p>
                 <p className="text-gray-300">Ministry of Commerce and Industry</p>
@@ -1116,22 +1157,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-lg">🤝</span>
+              <Handshake className="w-5 h-5 text-gray-200 shrink-0" />
               <p className="text-[10px] font-bold">NATIONAL SC-ST HUB</p>
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-lg">⚡</span>
+              <Zap className="w-5 h-5 text-amber-400 shrink-0" />
               <p className="text-[10px] font-bold">Digital India</p>
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-lg">🇮🇳</span>
+              <Shield className="w-5 h-5 text-orange-400 shrink-0" />
               <p className="text-[10px] font-bold">india.gov.in</p>
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-lg">🛡️</span>
+              <ShieldCheck className="w-5 h-5 text-blue-400 shrink-0" />
               <div className="text-[10px] font-bold leading-tight">
                 <p>STQC Certification</p>
                 <p className="text-gray-300">Quality Compliance Certificate</p>
@@ -1139,12 +1180,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-lg">🌿</span>
+              <Leaf className="w-5 h-5 text-emerald-400 shrink-0" />
               <p className="text-[10px] font-bold">Apply for EcoMark</p>
             </div>
 
             <div className="flex items-center space-x-2">
-              <span className="text-lg">👧</span>
+              <HeartHandshake className="w-5 h-5 text-rose-400 shrink-0" />
               <p className="text-[10px] font-bold">Beti Bachao Beti Padhao</p>
             </div>
           </div>
@@ -1164,12 +1205,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             {/* Social Icons Stack */}
             <div className="flex items-center space-x-2">
-              <span className="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white flex items-center justify-center text-[9px] cursor-pointer">📸</span>
-              <span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[9px] cursor-pointer">𝕏</span>
-              <span className="w-5 h-5 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-[9px] cursor-pointer">f</span>
-              <span className="w-5 h-5 rounded-full bg-[#ff0000] text-white flex items-center justify-center text-[9px] cursor-pointer">▶</span>
-              <span className="w-5 h-5 rounded-full bg-[#0a66c2] text-white flex items-center justify-center text-[9px] cursor-pointer">in</span>
-              <span className="w-5 h-5 rounded-full bg-gray-700 text-white flex items-center justify-center text-[9px] cursor-pointer">♿</span>
+              <span className="w-5 h-5 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white flex items-center justify-center text-[9px] cursor-pointer">
+                <Camera className="w-3 h-3" />
+              </span>
+              <span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center text-[9px] cursor-pointer font-bold">𝕏</span>
+              <span className="w-5 h-5 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-[9px] cursor-pointer font-bold">f</span>
+              <span className="w-5 h-5 rounded-full bg-[#ff0000] text-white flex items-center justify-center text-[9px] cursor-pointer">
+                <Play className="w-2.5 h-2.5 fill-current" />
+              </span>
+              <span className="w-5 h-5 rounded-full bg-[#0a66c2] text-white flex items-center justify-center text-[9px] cursor-pointer font-bold">in</span>
+              <span className="w-5 h-5 rounded-full bg-gray-700 text-white flex items-center justify-center text-[9px] cursor-pointer" title="Accessibility Options">
+                <Accessibility className="w-3 h-3" />
+              </span>
             </div>
           </div>
         </div>
@@ -1185,16 +1232,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 text-white flex items-center justify-center text-xs shadow hover:scale-110 transition"
           title="Instagram"
         >
-          📸
+          <Camera className="w-4 h-4" />
         </a>
         <a
           href="https://www.facebook.com/GovernmenteMarketplace"
           target="_blank"
           rel="noreferrer"
-          className="w-8 h-8 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-xs shadow hover:scale-110 transition"
+          className="w-8 h-8 rounded-full bg-[#1877f2] text-white flex items-center justify-center text-xs shadow hover:scale-110 transition font-bold"
           title="Facebook"
         >
-          📘
+          f
         </a>
         <a
           href="https://twitter.com/gem_india"
@@ -1212,7 +1259,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           className="w-8 h-8 rounded-full bg-[#ff0000] text-white flex items-center justify-center text-xs shadow hover:scale-110 transition"
           title="YouTube"
         >
-          ▶️
+          <Play className="w-3.5 h-3.5 fill-current" />
         </a>
         <a
           href="https://www.linkedin.com/company/government-e-marketplace-gem"
@@ -1230,7 +1277,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           className="w-8 h-8 rounded-full bg-[#1e293b] text-white flex items-center justify-center text-xs shadow hover:scale-110 transition font-bold cursor-pointer"
           title="Feedback & AI Assistance"
         >
-          ✕
+          <X className="w-3.5 h-3.5" />
         </button>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -1247,13 +1294,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="bg-white text-gray-800 rounded-2xl shadow-2xl max-w-xl w-full p-6 space-y-4 border border-gray-200">
             <div className="flex items-center justify-between border-b pb-2">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">🌟</span>
+                <Sparkles className="w-5 h-5 text-amber-500" />
                 <div>
                   <h4 className="font-extrabold text-sm text-[#0c2340]">GeM Special Initiatives</h4>
                   <p className="text-[10px] text-gray-500">Government of India Procurement Missions</p>
                 </div>
               </div>
-              <button onClick={() => setInitiativesModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+              <button onClick={() => setInitiativesModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold">
+                <X className="w-4 h-4" />
+              </button>
             </div>
             <div className="space-y-3 text-xs">
               <div className="p-3 bg-red-50 rounded-lg border border-red-200">
@@ -1287,13 +1336,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="bg-white text-gray-800 rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4 border border-gray-200">
             <div className="flex items-center justify-between border-b pb-2">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">📢</span>
+                <Bell className="w-5 h-5 text-blue-600" />
                 <div>
                   <h4 className="font-extrabold text-sm text-[#0c2340]">Official GeM Notifications & OM</h4>
                   <p className="text-[10px] text-gray-500">Ministry of Finance & Department of Expenditure</p>
                 </div>
               </div>
-              <button onClick={() => setNotificationsModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+              <button onClick={() => setNotificationsModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold">
+                <X className="w-4 h-4" />
+              </button>
             </div>
             <div className="space-y-3 text-xs">
               <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
@@ -1316,6 +1367,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
         </div>
       )}
+
     </div>
   );
 };

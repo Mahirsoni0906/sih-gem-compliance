@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { DocumentIntakeOCR } from './DocumentIntakeOCR';
 import { ChecklistVerification } from './ChecklistVerification';
 import { DiscrepancyResolver } from './DiscrepancyResolver';
@@ -101,10 +102,11 @@ export const SellerDashboard: React.FC = () => {
                   <p className={`text-3xl font-black ${readinessScore >= 85 ? 'text-emerald-600' : 'text-amber-500'}`}>
                     {readinessScore}%
                   </p>
-                  <span className={`text-[10px] font-black px-2 py-0.5 rounded ${
+                  <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-2 py-0.5 rounded ${
                     readinessScore >= 85 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
                   }`}>
-                    {readinessScore >= 85 ? '🟢 LOW RISK' : '🟡 MEDIUM RISK'}
+                    <span className={`w-1.5 h-1.5 rounded-full ${readinessScore >= 85 ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
+                    <span>{readinessScore >= 85 ? 'LOW RISK' : 'MEDIUM RISK'}</span>
                   </span>
                 </div>
               </div>
@@ -147,7 +149,14 @@ export const SellerDashboard: React.FC = () => {
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
                     !isResolved ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800'
                   }`}>
-                    {!isResolved ? 'Fix Now ➔' : 'Resolved'}
+                    {!isResolved ? (
+                      <span className="flex items-center gap-1">
+                        <span>Fix Now</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </span>
+                    ) : (
+                      'Resolved'
+                    )}
                   </span>
                 </div>
               </div>

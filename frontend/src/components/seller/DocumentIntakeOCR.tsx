@@ -1,6 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import {
+  UploadCloud,
+  FolderOpen,
+  FileText,
+  AlertTriangle,
+  AlertOctagon,
+  CheckCircle2,
+  ShieldCheck,
+  Clock,
+  Ban,
+  RotateCw,
+  Info,
+  Bot,
+  Landmark,
+  Link2,
+  Search,
+  Zap,
+  Check,
+  X,
+  Building2,
+  Scale,
+  HardHat,
+  User,
+  MessageSquare,
+  ArrowRight
+} from 'lucide-react';
 import { api } from '../../services/api';
 import type { DocumentOCRResult, DocumentChatResponse } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -240,7 +266,7 @@ export const DocumentIntakeOCR: React.FC = () => {
           <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b pb-3">
               <h3 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center gap-1.5">
-                <span>📤</span>
+                <UploadCloud className="w-4 h-4 text-orange-500" />
                 <span>Document Intake Station</span>
               </h3>
               <div className="flex items-center gap-1 bg-gray-100 p-0.5 rounded-lg text-[10px] font-bold">
@@ -263,7 +289,7 @@ export const DocumentIntakeOCR: React.FC = () => {
 
             {errorMessage && (
               <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-800 flex items-start gap-2">
-                <span className="text-sm">⚠️</span>
+                <AlertTriangle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                 <div>
                   <p className="font-bold">Extraction Error</p>
                   <p className="text-[11px] mt-0.5">{errorMessage}</p>
@@ -298,8 +324,8 @@ export const DocumentIntakeOCR: React.FC = () => {
                     }
                   }}
                 />
-                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-2xl text-orange-600 shadow-xs">
-                  {customFile ? '📄' : '📁'}
+                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shadow-xs">
+                  {customFile ? <FileText className="w-6 h-6" /> : <FolderOpen className="w-6 h-6" />}
                 </div>
                 <div>
                   <p className="text-xs font-bold text-gray-800">
@@ -338,7 +364,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <span>⚡</span>
+                      <Zap className="w-3.5 h-3.5 text-white" />
                       <span>Process Pasted Document Text</span>
                     </>
                   )}
@@ -351,7 +377,7 @@ export const DocumentIntakeOCR: React.FC = () => {
               <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-gray-700 flex items-center gap-1.5 truncate">
-                    <span>📑</span>
+                    <FileText className="w-3.5 h-3.5 text-gray-600 shrink-0" />
                     <span className="truncate">{customFile.name}</span>
                   </span>
                   <span className="text-[10px] font-mono text-gray-500 shrink-0">
@@ -366,7 +392,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                     disabled={loading}
                     className="flex-1 bg-[#062134] hover:bg-[#0c3952] disabled:opacity-50 text-white text-xs font-bold py-2 rounded-lg transition cursor-pointer flex items-center justify-center gap-1.5"
                   >
-                    <span>🔄</span>
+                    <RotateCw className="w-3.5 h-3.5 text-white" />
                     <span>Re-Run OCR</span>
                   </button>
                   <button
@@ -383,8 +409,8 @@ export const DocumentIntakeOCR: React.FC = () => {
 
             {/* Instruction Checklist */}
             <div className="p-3.5 bg-blue-50/50 border border-blue-100 rounded-xl space-y-1.5 text-xs text-blue-950">
-              <p className="font-extrabold text-[11px] text-blue-900 flex items-center gap-1">
-                <span>ℹ️</span>
+              <p className="font-extrabold text-[11px] text-blue-900 flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                 <span>Statutory Parameters Evaluated by AI Engine:</span>
               </p>
               <ul className="text-[10px] text-blue-800 space-y-1 list-disc list-inside">
@@ -451,9 +477,13 @@ export const DocumentIntakeOCR: React.FC = () => {
                           : 'text-red-950'
                       }`}
                     >
-                      <span>
-                        {ocrResult.legitimacy_status === 'LEGITIMATE' ? '✅' : ocrResult.legitimacy_status === 'SUSPICIOUS' ? '⚠️' : '🚨'}
-                      </span>
+                      {ocrResult.legitimacy_status === 'LEGITIMATE' ? (
+                        <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                      ) : ocrResult.legitimacy_status === 'SUSPICIOUS' ? (
+                        <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                      ) : (
+                        <AlertOctagon className="w-5 h-5 text-red-600 shrink-0" />
+                      )}
                       <span>
                         {ocrResult.legitimacy_status === 'LEGITIMATE'
                           ? '100% LEGITIMATE (VERIFIED)'
@@ -473,8 +503,9 @@ export const DocumentIntakeOCR: React.FC = () => {
 
                   <div className="pt-2 border-t border-gray-200/60 flex items-center justify-between text-[10px]">
                     <span className="font-bold text-gray-500">Seal Verification:</span>
-                    <span className={`font-extrabold ${ocrResult.seal_verified ? 'text-emerald-700' : 'text-red-700'}`}>
-                      {ocrResult.seal_verified ? '✓ Govt Watermark Valid' : '✕ Forged / Seal Missing'}
+                    <span className={`font-extrabold flex items-center gap-1 ${ocrResult.seal_verified ? 'text-emerald-700' : 'text-red-700'}`}>
+                      {ocrResult.seal_verified ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                      <span>{ocrResult.seal_verified ? 'Govt Watermark Valid' : 'Forged / Seal Missing'}</span>
                     </span>
                   </div>
                 </div>
@@ -520,13 +551,13 @@ export const DocumentIntakeOCR: React.FC = () => {
                           : 'text-red-950'
                       }`}
                     >
-                      <span>
-                        {ocrResult.validity_status === 'VALID' || ocrResult.validity_status === 'PERPETUAL_ACTIVE'
-                          ? '🛡️'
-                          : ocrResult.validity_status === 'EXPIRING_SOON'
-                          ? '⏳'
-                          : '⛔'}
-                      </span>
+                      {ocrResult.validity_status === 'VALID' || ocrResult.validity_status === 'PERPETUAL_ACTIVE' ? (
+                        <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0" />
+                      ) : ocrResult.validity_status === 'EXPIRING_SOON' ? (
+                        <Clock className="w-5 h-5 text-amber-600 shrink-0" />
+                      ) : (
+                        <Ban className="w-5 h-5 text-red-600 shrink-0" />
+                      )}
                       <span>
                         {ocrResult.validity_status === 'PERPETUAL_ACTIVE'
                           ? 'PERMANENTLY VALID (ACTIVE)'
@@ -557,7 +588,8 @@ export const DocumentIntakeOCR: React.FC = () => {
               <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
                 <div className="flex items-center justify-between border-b pb-2">
                   <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center gap-1.5">
-                    <span>📋 Extracted Document Parameters</span>
+                    <FileText className="w-4 h-4 text-[#062134] shrink-0" />
+                    <span>Extracted Document Parameters</span>
                     <span className="text-[10px] text-gray-400 font-mono font-normal">({ocrResult.filename})</span>
                   </h4>
                   {/* Quick Floating DocScrutiny AI Launcher */}
@@ -569,7 +601,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                     }}
                     className="flex items-center gap-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold text-[11px] px-3 py-1 rounded-xl shadow-xs transition transform hover:scale-105 cursor-pointer"
                   >
-                    <span>🤖</span>
+                    <Bot className="w-3.5 h-3.5 text-white" />
                     <span>Ask DocScrutiny AI</span>
                     <span className="bg-white/20 text-[9px] px-1 py-0.2 rounded font-mono">Floating</span>
                   </button>
@@ -716,7 +748,10 @@ export const DocumentIntakeOCR: React.FC = () => {
               {/* Sovereign Database Cross-Verification Table */}
               <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
                 <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center justify-between">
-                  <span>🏛️ Sovereign Database Cross-Verification Checks</span>
+                  <span className="flex items-center gap-1.5">
+                    <Landmark className="w-4 h-4 text-[#062134] shrink-0" />
+                    <span>Sovereign Database Cross-Verification Checks</span>
+                  </span>
                   <span className="text-[10px] text-gray-400">Live Registry Handshake</span>
                 </h4>
 
@@ -733,9 +768,11 @@ export const DocumentIntakeOCR: React.FC = () => {
                       >
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5">
-                            <span className={check.passed ? 'text-emerald-700 font-bold' : 'text-red-700 font-bold'}>
-                              {check.passed ? '✓' : '✕'}
-                            </span>
+                            {check.passed ? (
+                              <Check className="w-3.5 h-3.5 text-emerald-700 shrink-0 font-bold" />
+                            ) : (
+                              <X className="w-3.5 h-3.5 text-red-700 shrink-0 font-bold" />
+                            )}
                             <span className="font-extrabold text-gray-900 text-xs">{check.name}</span>
                           </div>
                           <p className="text-[11px] text-gray-600">{check.details}</p>
@@ -762,7 +799,10 @@ export const DocumentIntakeOCR: React.FC = () => {
               {ocrResult.cross_check_summary && ocrResult.extracted_gstin && ocrResult.extracted_pan && (
                 <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
                   <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center justify-between">
-                    <span>🔗 Cross-Document Consistency & Reconciliation</span>
+                    <span className="flex items-center gap-1.5">
+                      <Link2 className="w-4 h-4 text-[#062134] shrink-0" />
+                      <span>Cross-Document Consistency & Reconciliation</span>
+                    </span>
                     <span className="text-[10px] text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded">
                       Tax Instrument Match
                     </span>
@@ -804,7 +844,10 @@ export const DocumentIntakeOCR: React.FC = () => {
               {/* Pixel-Level Forensic & Digital Seal Tamper Inspection */}
               <div className="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm space-y-3">
                 <h4 className="font-extrabold text-xs text-[#062134] uppercase tracking-wider flex items-center justify-between">
-                  <span>🔍 Pixel Forensics & Anti-Tamper Inspection</span>
+                  <span className="flex items-center gap-1.5">
+                    <Search className="w-4 h-4 text-[#062134] shrink-0" />
+                    <span>Pixel Forensics & Anti-Tamper Inspection</span>
+                  </span>
                   <span className="text-[10px] text-gray-400">Cryptographic Verification</span>
                 </h4>
 
@@ -832,8 +875,8 @@ export const DocumentIntakeOCR: React.FC = () => {
               {/* Floating Dock Status Banner */}
               <div className="bg-gradient-to-r from-cyan-900/10 via-blue-900/10 to-slate-900/10 dark:bg-slate-900/60 p-4 rounded-2xl border border-cyan-500/30 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-xl shrink-0">
-                    🤖
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center shrink-0">
+                    <Bot className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
                   </div>
                   <div>
                     <h4 className="font-extrabold text-xs text-cyan-950 dark:text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
@@ -855,7 +898,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                   }}
                   className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition cursor-pointer flex items-center gap-1.5 shrink-0"
                 >
-                  <span>💬</span>
+                  <MessageSquare className="w-3.5 h-3.5" />
                   <span>{isFloatingAiOpen && !isAiMinimized ? 'Bring AI to Front' : 'Open Floating AI'}</span>
                 </button>
               </div>
@@ -863,8 +906,8 @@ export const DocumentIntakeOCR: React.FC = () => {
           ) : (
             /* Clean Initial Empty State */
             <div className="bg-white p-12 rounded-2xl border border-gray-200 shadow-sm text-center space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-3xl mx-auto shadow-xs">
-                📄
+              <div className="w-16 h-16 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center mx-auto shadow-xs">
+                <FileText className="w-8 h-8 text-orange-600" />
               </div>
               <div className="max-w-md mx-auto space-y-1">
                 <h4 className="text-sm font-extrabold text-[#062134]">No Document Evaluated Yet</h4>
@@ -913,7 +956,7 @@ export const DocumentIntakeOCR: React.FC = () => {
               <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-cyan-500 border-2 border-white"></span>
             </span>
 
-            <span className="text-base group-hover:rotate-6 transition-transform">🤖</span>
+            <Bot className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
             <div className="text-left">
               <p className="text-xs font-black text-cyan-300 flex items-center gap-1">
                 DocScrutiny AI
@@ -934,8 +977,8 @@ export const DocumentIntakeOCR: React.FC = () => {
             {/* Top Window Header Bar */}
             <div className="bg-gradient-to-r from-[#062134] via-[#092b45] to-[#0d3b5c] text-white p-3.5 px-4 flex items-center justify-between gap-2 border-b border-cyan-500/30 shrink-0">
               <div className="flex items-center gap-2.5 min-w-0">
-                <span className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-lg shrink-0">
-                  🤖
+                <span className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center shrink-0">
+                  <Bot className="w-4 h-4 text-cyan-300" />
                 </span>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
@@ -959,18 +1002,20 @@ export const DocumentIntakeOCR: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => switchMasterRole('seller')}
-                      className={`px-2 py-0.5 rounded font-bold transition cursor-pointer ${!isOfficer ? 'bg-cyan-500 text-slate-950 shadow-xs' : 'text-gray-300 hover:text-white'}`}
+                      className={`px-2 py-0.5 rounded font-bold transition cursor-pointer flex items-center gap-1 ${!isOfficer ? 'bg-cyan-500 text-slate-950 shadow-xs' : 'text-gray-300 hover:text-white'}`}
                       title="Seller Mode"
                     >
-                      🏢 Seller
+                      <Building2 className="w-3 h-3" />
+                      <span>Seller</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => switchMasterRole('officer')}
-                      className={`px-2 py-0.5 rounded font-bold transition cursor-pointer ${isOfficer ? 'bg-purple-500 text-white shadow-xs' : 'text-gray-300 hover:text-white'}`}
+                      className={`px-2 py-0.5 rounded font-bold transition cursor-pointer flex items-center gap-1 ${isOfficer ? 'bg-purple-500 text-white shadow-xs' : 'text-gray-300 hover:text-white'}`}
                       title="Legal Officer Mode"
                     >
-                      ⚖️ Officer
+                      <Scale className="w-3 h-3" />
+                      <span>Officer</span>
                     </button>
                   </div>
                 )}
@@ -992,7 +1037,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                   className="w-7 h-7 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-200 hover:text-white flex items-center justify-center text-xs font-bold transition cursor-pointer"
                   title="Close AI Console"
                 >
-                  ✕
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -1016,37 +1061,42 @@ export const DocumentIntakeOCR: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleAskDocAI(`Verify all statutory details and tender eligibility for ${ocrResult.filename || 'this uploaded document'}`)}
-                      className="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-900 dark:text-cyan-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                      className="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-900 dark:text-cyan-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer flex items-center gap-1"
                     >
-                      <span>🏛️</span> Verify all statutory details
+                      <Landmark className="w-3 h-3 text-cyan-700 dark:text-cyan-300" />
+                      <span>Verify all statutory details</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI(`Verify EPFO and ESIC statutory labor compliance in ${ocrResult.filename || 'this document'}`)}
-                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer flex items-center gap-1"
                     >
-                      <span>👷</span> Check EPFO & ESIC
+                      <HardHat className="w-3 h-3 text-slate-600 dark:text-gray-300" />
+                      <span>Check EPFO & ESIC</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI(`Audit Make in India (MII) local content and OEM authorization in ${ocrResult.filename || 'this document'}`)}
-                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer flex items-center gap-1"
                     >
-                      <span>🇮🇳</span> Audit MII & OEM
+                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                      <span>Audit MII & OEM</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI(`When does ${ocrResult.filename || 'this certificate'} expire and how many days are left?`)}
-                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer flex items-center gap-1"
                     >
-                      <span>⏳</span> Expiry timeline
+                      <Clock className="w-3 h-3 text-amber-600" />
+                      <span>Expiry timeline</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI("Compare my bid with Zenith Global Tech on public technical criteria")}
-                      className="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                      className="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer flex items-center gap-1"
                     >
-                      <span>⚖️</span> Compare with Zenith
+                      <Scale className="w-3 h-3 text-amber-700" />
+                      <span>Compare with Zenith</span>
                     </button>
                   </>
                 ) : (
@@ -1054,37 +1104,42 @@ export const DocumentIntakeOCR: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => handleAskDocAI("What statutory documents and certificates are mandatory for GeM tender eligibility?")}
-                      className="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-900 dark:text-cyan-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                      className="bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-500/30 text-cyan-900 dark:text-cyan-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer flex items-center gap-1"
                     >
-                      <span>🏛️</span> Required Documents
+                      <Landmark className="w-3 h-3 text-cyan-700 dark:text-cyan-300" />
+                      <span>Required Documents</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI("What are the EPFO and ESIC compliance thresholds for public procurement bids?")}
-                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer flex items-center gap-1"
                     >
-                      <span>👷</span> EPFO & ESIC Thresholds
+                      <HardHat className="w-3 h-3 text-slate-600 dark:text-gray-300" />
+                      <span>EPFO & ESIC Thresholds</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI("What are Class-I and Class-II Make in India (MII) local content requirements under DPIIT?")}
-                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer flex items-center gap-1"
                     >
-                      <span>🇮🇳</span> MII Local Content Rules
+                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                      <span>MII Local Content Rules</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI("What are the validity and renewal rules for GST, PAN, and MSME on GeM?")}
-                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer"
+                      className="bg-white dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-gray-200 text-[11px] px-2.5 py-1 rounded-lg transition font-medium cursor-pointer flex items-center gap-1"
                     >
-                      <span>⏳</span> Validity & Expiry Rules
+                      <Clock className="w-3 h-3 text-amber-600" />
+                      <span>Validity & Expiry Rules</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => handleAskDocAI("Compare my bid with Zenith Global Tech on public technical criteria")}
-                      className="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer"
+                      className="bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-[11px] px-2.5 py-1 rounded-lg transition font-bold cursor-pointer flex items-center gap-1"
                     >
-                      <span>⚖️</span> Compare with Zenith
+                      <Scale className="w-3 h-3 text-amber-700" />
+                      <span>Compare with Zenith</span>
                     </button>
                   </>
                 )}
@@ -1103,8 +1158,12 @@ export const DocumentIntakeOCR: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-gray-400 font-bold mb-1 border-b pb-1 border-slate-100 dark:border-slate-800">
-                    <span className="flex items-center gap-1">
-                      <span>{item.role === 'user' ? '👤' : '🤖'}</span>
+                    <span className="flex items-center gap-1.5">
+                      {item.role === 'user' ? (
+                        <User className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                      ) : (
+                        <Bot className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+                      )}
                       <span>{item.role === 'user' ? 'Your Question' : 'DocScrutiny AI Legal Scrutiny'}</span>
                     </span>
                     {item.response?.tenant_verified && (
@@ -1117,7 +1176,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                   {/* DPDP Redaction Notice Banner */}
                   {item.response?.redacted_fields && item.response.redacted_fields.length > 0 && (
                     <div className="p-2 bg-red-50 dark:bg-red-950/80 border border-red-200 dark:border-red-500/50 rounded-lg text-red-900 dark:text-red-200 text-[11px] flex items-center gap-2">
-                      <span className="text-base">🛡️</span>
+                      <ShieldCheck className="w-4 h-4 text-red-600 shrink-0" />
                       <div>
                         <span className="font-bold block">DPDP Act 2023 Redaction Applied</span>
                         <span>Sensitive competitor fields protected: {item.response.redacted_fields.join(', ')}</span>
@@ -1138,7 +1197,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                       {item.response?.redirect_to_gemmy && (
                         <div className="mt-3 p-3 bg-gradient-to-r from-sky-50 via-blue-50 to-indigo-50 dark:from-sky-950/70 dark:via-blue-950/70 dark:to-indigo-950/70 border-2 border-sky-400 dark:border-sky-500/60 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-sm animate-in fade-in duration-300">
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <span className="text-2xl shrink-0">🤖</span>
+                            <Bot className="w-6 h-6 text-sky-600 dark:text-sky-400 shrink-0" />
                             <div className="min-w-0">
                               <div className="flex items-center gap-2">
                                 <span className="font-extrabold text-xs text-sky-950 dark:text-cyan-200">
@@ -1159,8 +1218,9 @@ export const DocumentIntakeOCR: React.FC = () => {
                             className="w-full sm:w-auto bg-gradient-to-r from-[#008cd3] to-[#0070a8] hover:from-[#007bbd] hover:to-[#005f8f] text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-md hover:shadow-cyan-500/40 transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0 transform active:scale-95"
                             title="Open GeMMy AI and automatically ask this question"
                           >
-                            <span>💬 Send to GeMMy AI</span>
-                            <span>→</span>
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            <span>Send to GeMMy AI</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       )}
@@ -1189,7 +1249,7 @@ export const DocumentIntakeOCR: React.FC = () => {
                                 : 'bg-cyan-50 dark:bg-cyan-500/20 hover:bg-cyan-100 dark:hover:bg-cyan-500/30 text-cyan-800 dark:text-cyan-200 border border-cyan-200 dark:border-cyan-400/30'
                             }`}
                           >
-                            {isGeMMyAction ? '🤖' : '↳'} {act.label}
+                            {isGeMMyAction ? <Bot className="w-3 h-3 inline" /> : '↳'} {act.label}
                           </button>
                         );
                       })}
@@ -1238,11 +1298,11 @@ export const DocumentIntakeOCR: React.FC = () => {
                 className="bg-[#f37021] hover:bg-[#e05e10] disabled:opacity-50 text-white font-extrabold text-xs px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-md shrink-0"
               >
                 {docAiLoading ? (
-                  <span className="animate-spin text-sm">⏳</span>
+                  <RotateCw className="w-3.5 h-3.5 animate-spin" />
                 ) : (
                   <>
                     <span>Ask AI</span>
-                    <span>→</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </>
                 )}
               </button>

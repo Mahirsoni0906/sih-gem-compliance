@@ -2,6 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../../services/api';
 import type { Tender } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
+import {
+  FileText,
+  BarChart3,
+  Package,
+  Gavel,
+  ClipboardList,
+  Globe,
+  Award,
+  Search,
+  Landmark,
+  ShieldCheck,
+  Building2,
+  Clock,
+  Check,
+  CheckCircle2,
+  X,
+} from 'lucide-react';
 
 export type BidsPortalTab =
   | 'ongoing'
@@ -82,6 +99,18 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
     }, 60);
     return () => clearTimeout(timer);
   }, [initialTab]);
+
+  // Prevent background scroll when Tender modal is open
+  useEffect(() => {
+    if (selectedTender) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedTender]);
 
   useEffect(() => {
     api.getTenders().then((data) => {
@@ -479,7 +508,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span>📑</span>
+              <FileText className="w-3.5 h-3.5 shrink-0" />
               <span>Ongoing Bids / RA</span>
               <span className="bg-amber-400 text-blue-950 text-[9px] px-1.5 py-0.2 rounded-full font-black ml-1">
                 LIVE
@@ -494,7 +523,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span>📊</span>
+              <BarChart3 className="w-3.5 h-3.5 shrink-0" />
               <span>Bid / RA Results</span>
               <span className="bg-emerald-100 text-emerald-800 text-[9px] px-1.5 py-0.2 rounded-full font-bold ml-1">
                 Awards
@@ -509,7 +538,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span>📦</span>
+              <Package className="w-3.5 h-3.5 shrink-0" />
               <span>Custom Bids & BOQ</span>
             </button>
 
@@ -521,7 +550,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span>🔨</span>
+              <Gavel className="w-3.5 h-3.5 shrink-0" />
               <span>Live Forward Auctions</span>
               <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse ml-1"></span>
             </button>
@@ -534,7 +563,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span>📋</span>
+              <ClipboardList className="w-3.5 h-3.5 shrink-0" />
               <span>Auction Notices & Schedules</span>
             </button>
 
@@ -546,7 +575,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span>🌐</span>
+              <Globe className="w-3.5 h-3.5 shrink-0" />
               <span>CPPP Integrated Tenders</span>
             </button>
 
@@ -558,7 +587,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   : 'text-orange-700 bg-orange-50 hover:bg-orange-100'
               }`}
             >
-              <span>⭐</span>
+              <Award className="w-3.5 h-3.5 shrink-0" />
               <span>Business Opportunities</span>
             </button>
           </div>
@@ -568,7 +597,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
         <div className="bg-white rounded-2xl p-4 shadow-xs border border-gray-200 flex flex-wrap items-center justify-between gap-4">
           <div className="flex-1 min-w-[280px]">
             <div className="relative flex items-center bg-gray-50 rounded-xl border border-gray-300 px-3 py-2">
-              <span className="text-gray-400 mr-2">🔍</span>
+              <Search className="w-3.5 h-3.5 text-gray-400 mr-2 shrink-0" />
               <input
                 type="text"
                 value={searchQuery}
@@ -602,14 +631,15 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between text-xs text-gray-500 font-semibold px-1">
               <p>Showing {filteredTenders.length} Active Public Tenders & Reverse Auctions</p>
-              <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                ✓ Connected to GSTN & Income Tax Registries
+              <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                <span>Connected to GSTN & Income Tax Registries</span>
               </span>
             </div>
 
             {filteredTenders.length === 0 ? (
               <div className="bg-white rounded-2xl p-12 text-center border space-y-3">
-                <span className="text-4xl">📋</span>
+                <ClipboardList className="w-10 h-10 text-gray-300 mx-auto" />
                 <h3 className="text-base font-bold text-gray-800">No matching tenders found</h3>
                 <p className="text-xs text-gray-500 max-w-sm mx-auto">
                   Please try clearing your search query or switching the department filter to All.
@@ -637,7 +667,8 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                         </div>
                         <h3 className="text-base font-black text-[#162c5b]">{t.title}</h3>
                         <p className="text-xs text-gray-600 flex items-center gap-1.5 font-medium">
-                          <span>🏛️ Department:</span>
+                          <Landmark className="w-3.5 h-3.5 text-gray-500 shrink-0" />
+                          <span>Department:</span>
                           <span className="font-bold text-gray-800">{t.department}</span>
                         </p>
                       </div>
@@ -677,23 +708,25 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                     <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
                       <button
                         onClick={() => setSelectedTender(t)}
-                        className="text-xs text-blue-900 hover:text-blue-950 font-bold underline cursor-pointer"
+                        className="text-xs text-blue-900 hover:text-blue-950 font-bold underline cursor-pointer inline-flex items-center gap-1"
                       >
-                        View Tender Specification Document & BOQ 📄
+                        <span>View Tender Specification Document & BOQ</span>
+                        <FileText className="w-3.5 h-3.5 text-blue-900 shrink-0" />
                       </button>
 
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => onOpenSellerBid(t.ref_no)}
-                          className="bg-white hover:bg-orange-50 border border-orange-400 text-orange-700 font-bold text-xs px-4 py-2 rounded-lg transition cursor-pointer"
+                          className="bg-white hover:bg-orange-50 border border-orange-400 text-orange-700 font-bold text-xs px-4 py-2 rounded-lg transition cursor-pointer flex items-center gap-1.5"
                         >
-                          🏢 Prepare Seller Bid & Check Readiness
+                          <Building2 className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                          <span>Prepare Seller Bid & Check Readiness</span>
                         </button>
                         <button
                           onClick={() => onOpenOfficerScrutiny(t.ref_no)}
                           className="bg-gradient-to-r from-[#162c5b] to-[#082435] hover:brightness-110 text-white font-extrabold text-xs px-5 py-2 rounded-lg shadow transition flex items-center gap-1.5 cursor-pointer"
                         >
-                          <span>⚡</span>
+                          <ShieldCheck className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
                           <span>AI Scrutiny Desk (Officer Console) &gt;</span>
                         </button>
                       </div>
@@ -718,7 +751,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             <div className="space-y-4">
               {filteredAwards.length === 0 ? (
                 <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
-                  <span className="text-4xl">📊</span>
+                  <BarChart3 className="w-10 h-10 text-gray-300 mx-auto" />
                   <h3 className="text-base font-bold text-gray-800">No matching contract awards found</h3>
                   <p className="text-xs text-gray-500 max-w-sm mx-auto">
                     Please try clearing your search query or switching the department filter to All.
@@ -744,8 +777,9 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                           </span>
                         </div>
                         <h3 className="text-base font-black text-gray-900">{award.title}</h3>
-                        <p className="text-xs text-gray-600">
-                          🏛️ Purchasing Entity: <strong className="text-gray-800">{award.department}</strong>
+                        <p className="text-xs text-gray-600 flex items-center gap-1">
+                          <Landmark className="w-3.5 h-3.5 text-gray-500 shrink-0" />
+                          <span>Purchasing Entity: <strong className="text-gray-800">{award.department}</strong></span>
                         </p>
                       </div>
 
@@ -806,7 +840,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             <div className="space-y-4">
               {filteredBoqTenders.length === 0 ? (
                 <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
-                  <span className="text-4xl">📦</span>
+                  <Package className="w-10 h-10 text-gray-300 mx-auto" />
                   <h3 className="text-base font-bold text-gray-800">No matching custom BOQ bids found</h3>
                   <p className="text-xs text-gray-500 max-w-sm mx-auto">
                     Please try clearing your search query or switching the department filter to All.
@@ -832,8 +866,9 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                           </span>
                         </div>
                         <h3 className="text-base font-black text-gray-900">{b.title}</h3>
-                        <p className="text-xs text-gray-600">
-                          🏛️ Department: <strong className="text-gray-800">{b.department}</strong>
+                        <p className="text-xs text-gray-600 flex items-center gap-1">
+                          <Landmark className="w-3.5 h-3.5 text-gray-500 shrink-0" />
+                          <span>Department: <strong className="text-gray-800">{b.department}</strong></span>
                         </p>
                       </div>
 
@@ -895,7 +930,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             <div className="space-y-4">
               {filteredAuctions.length === 0 ? (
                 <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
-                  <span className="text-4xl">🔨</span>
+                  <Gavel className="w-10 h-10 text-gray-300 mx-auto" />
                   <h3 className="text-base font-bold text-gray-800">No matching forward auctions found</h3>
                   <p className="text-xs text-gray-500 max-w-sm mx-auto">
                     Please try clearing your search query or switching the department filter to All.
@@ -914,7 +949,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                             {f.auctionId}
                           </span>
                           <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1">
-                            <span>🔨</span>
+                            <Gavel className="w-3 h-3 text-white shrink-0" />
                             <span>{f.status}</span>
                           </span>
                           <span className="text-[10px] text-gray-400 uppercase font-bold">
@@ -932,8 +967,9 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                         <p className="text-2xl font-black text-emerald-700">
                           ₹{f.currentBidLakhs.toFixed(2)} Lakhs
                         </p>
-                        <p className="text-[10px] font-bold text-red-600 mt-0.5">
-                          ⏳ {f.endTime}
+                        <p className="text-[10px] font-bold text-red-600 mt-0.5 flex items-center justify-end gap-1">
+                          <Clock className="w-3 h-3 text-red-600 shrink-0" />
+                          <span>{f.endTime}</span>
                         </p>
                       </div>
                     </div>
@@ -1040,7 +1076,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             <div className="space-y-4">
               {filteredCppp.length === 0 ? (
                 <div className="bg-white rounded-2xl p-12 text-center border border-gray-200 space-y-3">
-                  <span className="text-4xl">🌐</span>
+                  <Globe className="w-10 h-10 text-gray-300 mx-auto" />
                   <h3 className="text-base font-bold text-gray-800">No matching CPPP tenders found</h3>
                   <p className="text-xs text-gray-500 max-w-sm mx-auto">
                     Please try clearing your search query or switching the department filter to All.
@@ -1099,15 +1135,16 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between text-xs text-gray-500 font-semibold px-1 gap-2">
               <p>Showing {filteredOpportunities.length} High-Value Institutional Procurement Opportunities & Make in India Reserved Tenders</p>
-              <span className="text-orange-900 bg-orange-100 font-bold px-2 py-0.5 rounded border border-orange-200">
-                ⭐ Tier-1 Mega Opportunities (&gt; ₹500 Lakhs)
+              <span className="text-orange-900 bg-orange-100 font-bold px-2 py-0.5 rounded border border-orange-200 flex items-center gap-1">
+                <Award className="w-3.5 h-3.5 text-orange-700 shrink-0" />
+                <span>Tier-1 Mega Opportunities (&gt; ₹500 Lakhs)</span>
               </span>
             </div>
 
             <div className="space-y-4">
               {filteredOpportunities.length === 0 ? (
                 <div className="bg-white rounded-2xl p-12 text-center border border-orange-200 space-y-3">
-                  <span className="text-4xl">⭐</span>
+                  <Award className="w-10 h-10 text-orange-300 mx-auto" />
                   <h3 className="text-base font-bold text-gray-800">No matching business opportunities found</h3>
                   <p className="text-xs text-gray-500 max-w-sm mx-auto">
                     Please try clearing your search query or switching the department filter to All.
@@ -1177,77 +1214,145 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 
       {/* Tender Details & BOQ Modal */}
       {selectedTender && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl border max-w-3xl w-full my-8 overflow-hidden">
-            <div className="bg-[#082435] text-white p-5 flex items-center justify-between border-b-2 border-yellow-400">
-              <div>
-                <span className="text-[10px] font-black uppercase text-yellow-400 tracking-wider">
-                  Tender Information & Statutory Compliance Schedule
-                </span>
-                <h3 className="text-base font-extrabold">{selectedTender.title}</h3>
-                <p className="text-[11px] text-gray-300 font-mono">Ref: {selectedTender.ref_no}</p>
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedTender(null);
+          }}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl border border-gray-200 max-w-3xl w-full flex flex-col max-h-[92vh] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="bg-[#082435] text-white px-5 py-3.5 flex items-start justify-between border-b-2 border-yellow-400 shrink-0">
+              <div className="space-y-0.5 pr-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[10px] font-black uppercase text-yellow-400 tracking-wider">
+                    Tender Specification & Statutory Compliance Schedule
+                  </span>
+                  <span className="text-[10px] bg-white/15 px-2 py-0.5 rounded font-mono text-gray-200">
+                    Ref: {selectedTender.ref_no}
+                  </span>
+                </div>
+                <h3 className="text-sm sm:text-base font-extrabold text-white leading-snug">
+                  {selectedTender.title}
+                </h3>
+                <p className="text-[11px] text-gray-300 flex items-center gap-1.5 pt-0.5">
+                  <Building2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  <span>Procuring Entity: <strong className="text-gray-100">{selectedTender.department}</strong></span>
+                </p>
               </div>
               <button
                 onClick={() => setSelectedTender(null)}
-                className="text-gray-300 hover:text-white text-xl font-bold p-1 cursor-pointer"
+                className="text-gray-300 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition cursor-pointer shrink-0"
+                title="Close modal"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-6 space-y-5 text-xs">
-              <div className="space-y-2">
-                <h4 className="font-extrabold text-xs text-[#162c5b] uppercase tracking-wide">
-                  1. Statutory Eligibility Checklist (SIH26100 Verification Rules)
-                </h4>
-                <div className="bg-gray-50 rounded-xl p-4 border space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-600 font-bold">✓</span>
-                    <span><strong>GSTIN Requirement:</strong> Valid Regular GSTIN registered in India with up-to-date GSTR-3B filings.</span>
+            {/* Modal Body */}
+            <div className="p-4 sm:p-5 overflow-y-auto flex-1 space-y-4 text-xs">
+              {/* Section 1: Statutory Eligibility Checklist */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-xs text-[#162c5b] uppercase tracking-wide flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>1. Statutory Eligibility Checklist (SIH26100 Rules)</span>
+                  </h4>
+                  <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    Mandatory Verification
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-gray-50 rounded-xl p-3 border border-gray-200">
+                  <div className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-gray-900 block">GSTIN Requirement:</strong>
+                      <span className="text-gray-600 text-[11px]">Valid regular GSTIN in India with up-to-date GSTR-3B filings.</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-600 font-bold">✓</span>
-                    <span><strong>Income Tax PAN:</strong> Permanent Account Number linked with GSTIN entity.</span>
+
+                  <div className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-gray-900 block">Income Tax PAN:</strong>
+                      <span className="text-gray-600 text-[11px]">Permanent Account Number linked with GSTIN entity.</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-600 font-bold">✓</span>
-                    <span><strong>Udyam Registration:</strong> Required for EMD waiver and purchase preference under Public Procurement Policy.</span>
+
+                  <div className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-gray-900 block">Udyam Registration:</strong>
+                      <span className="text-gray-600 text-[11px]">Required for EMD waiver and MSE purchase preference.</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-600 font-bold">✓</span>
-                    <span><strong>Make in India:</strong> Minimum {selectedTender.min_mii_percentage}% local value addition verified through Self/CA certificate.</span>
+
+                  <div className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-gray-900 block">Make in India (MII):</strong>
+                      <span className="text-gray-600 text-[11px]">Minimum {selectedTender.min_mii_percentage}% local content verified via Self/CA certificate.</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-emerald-600 font-bold">✓</span>
-                    <span><strong>GFR Rule 144(xi):</strong> Full land border sharing compliance and non-debarment confirmation.</span>
+
+                  <div className="flex items-start gap-2 sm:col-span-2 pt-1.5 border-t border-gray-200/80">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-gray-900 inline mr-1">GFR Rule 144(xi):</strong>
+                      <span className="text-gray-600 text-[11px]">Full land border sharing compliance and non-debarment confirmation.</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <h4 className="font-extrabold text-xs text-[#162c5b] uppercase tracking-wide">
-                  2. Bill of Quantities (BOQ) & Financial Envelope
-                </h4>
-                <div className="bg-gray-50 rounded-xl p-3 border space-y-1">
-                  <div className="flex justify-between py-1 border-b">
-                    <span>Estimated Contract Value:</span>
-                    <span className="font-black text-gray-900">₹{selectedTender.estimated_value_lakhs} Lakhs</span>
+              {/* Section 2: Bill of Quantities (BOQ) & Financial Envelope */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-xs text-[#162c5b] uppercase tracking-wide flex items-center gap-1.5">
+                    <FileText className="w-4 h-4 text-blue-900 shrink-0" />
+                    <span>2. Bill of Quantities (BOQ) & Financial Envelope</span>
+                  </h4>
+                  <span className="text-[10px] text-gray-500 font-mono">
+                    Closing: {selectedTender.closing_date}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-200 text-center sm:text-left">
+                    <span className="text-[10px] text-gray-500 font-bold uppercase block">Estimated Contract Value</span>
+                    <span className="font-black text-gray-900 text-base block mt-0.5">₹{selectedTender.estimated_value_lakhs} Lakhs</span>
+                    <span className="text-[10px] text-gray-400 block">Total procurement estimate</span>
                   </div>
-                  <div className="flex justify-between py-1 border-b">
-                    <span>Earnest Money Deposit (EMD):</span>
-                    <span className="font-bold text-gray-900">₹{selectedTender.emd_amount_lakhs} Lakhs (Exempt for MSME)</span>
+
+                  <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-200 text-center sm:text-left">
+                    <span className="text-[10px] text-gray-500 font-bold uppercase block">Earnest Money (EMD)</span>
+                    <span className="font-black text-gray-900 text-base block mt-0.5">₹{selectedTender.emd_amount_lakhs} Lakhs</span>
+                    <span className="text-[10px] text-emerald-700 font-bold block">100% Exempt for MSME</span>
                   </div>
-                  <div className="flex justify-between py-1">
-                    <span>Minimum Turnover Requirement:</span>
-                    <span className="font-bold text-gray-900">₹{selectedTender.min_turnover_lakhs} Lakhs</span>
+
+                  <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-200 text-center sm:text-left">
+                    <span className="text-[10px] text-gray-500 font-bold uppercase block">Min Annual Turnover</span>
+                    <span className="font-black text-gray-900 text-base block mt-0.5">₹{selectedTender.min_turnover_lakhs} Lakhs</span>
+                    <span className="text-[10px] text-gray-400 block">Past 3 years average</span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div className="pt-2 flex items-center justify-end gap-3 border-t">
+            {/* Modal Footer */}
+            <div className="shrink-0 px-5 py-3 bg-gray-50 border-t border-gray-200 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                <Landmark className="w-3.5 h-3.5 text-blue-900 shrink-0" />
+                <span className="text-[11px]">GFR 2017 & Public Procurement Policy Compliant</span>
+              </div>
+              <div className="flex items-center gap-2.5">
                 <button
                   onClick={() => setSelectedTender(null)}
-                  className="px-4 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg cursor-pointer"
+                  className="px-4 py-1.5 text-xs text-gray-600 font-bold hover:bg-gray-200/70 rounded-lg cursor-pointer transition"
                 >
                   Close
                 </button>
@@ -1257,9 +1362,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                     setSelectedTender(null);
                     onOpenOfficerScrutiny(ref);
                   }}
-                  className="bg-blue-950 text-white px-5 py-2 rounded-lg font-bold shadow hover:bg-blue-900 transition cursor-pointer"
+                  className="bg-gradient-to-r from-blue-950 to-blue-900 hover:from-blue-900 hover:to-blue-850 text-white text-xs px-4 py-2 rounded-lg font-bold shadow hover:shadow-md transition cursor-pointer flex items-center gap-1.5"
                 >
-                  ⚡ Run Automated Scrutiny &gt;
+                  <ShieldCheck className="w-4 h-4 text-yellow-400 shrink-0" />
+                  <span>Run Automated Scrutiny &gt;</span>
                 </button>
               </div>
             </div>

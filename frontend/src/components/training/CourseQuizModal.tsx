@@ -1,4 +1,12 @@
 import React, { useState } from 'react';
+import {
+  X,
+  Award,
+  AlertTriangle,
+  Check,
+  RotateCw,
+  ArrowRight
+} from 'lucide-react';
 import type { TrainingCourse } from '../../data/gemTrainingData';
 import { GeMStarLogo } from '../common/GeMAssets';
 
@@ -58,9 +66,9 @@ export const CourseQuizModal: React.FC<CourseQuizModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="text-gray-300 hover:text-white p-1 text-lg font-bold cursor-pointer transition"
+            className="text-gray-300 hover:text-white p-1 text-lg font-bold cursor-pointer transition flex items-center justify-center"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -76,8 +84,10 @@ export const CourseQuizModal: React.FC<CourseQuizModalProps> = ({
               }`}
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">{isPassed ? '🏆' : '⚠️'}</span>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${isPassed ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                    {isPassed ? <Award className="w-6 h-6" /> : <AlertTriangle className="w-6 h-6" />}
+                  </div>
                   <div>
                     <h4 className="font-black text-sm sm:text-base">
                       {isPassed
@@ -97,7 +107,7 @@ export const CourseQuizModal: React.FC<CourseQuizModalProps> = ({
                     onClick={onClaimCertificate}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs px-4 py-2 rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer shrink-0"
                   >
-                    <span>🎓</span>
+                    <Award className="w-3.5 h-3.5" />
                     <span>Claim Certificate</span>
                   </button>
                 )}
@@ -158,7 +168,10 @@ export const CourseQuizModal: React.FC<CourseQuizModalProps> = ({
                           />
                           <span className="flex-1">{opt}</span>
                           {isSubmitted && optIdx === q.correctIndex && (
-                            <span className="text-emerald-600 font-bold text-xs">✓ Correct</span>
+                            <span className="text-emerald-600 font-bold text-xs flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5" />
+                              <span>Correct</span>
+                            </span>
                           )}
                         </label>
                       );
@@ -203,9 +216,10 @@ export const CourseQuizModal: React.FC<CourseQuizModalProps> = ({
                     setIsSubmitted(false);
                     setSelectedAnswers({});
                   }}
-                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl transition cursor-pointer"
+                  className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer"
                 >
-                  🔄 Retake Quiz
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>Retake Quiz</span>
                 </button>
               )}
               {isPassed && (
@@ -213,8 +227,9 @@ export const CourseQuizModal: React.FC<CourseQuizModalProps> = ({
                   onClick={onClaimCertificate}
                   className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>🎓 View Official Certificate</span>
-                  <span>→</span>
+                  <Award className="w-3.5 h-3.5" />
+                  <span>View Official Certificate</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>

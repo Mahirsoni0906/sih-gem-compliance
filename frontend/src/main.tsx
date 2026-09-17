@@ -32,7 +32,7 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div style={{ padding: '24px', fontFamily: 'sans-serif', background: '#fee2e2', color: '#991b1b', margin: '20px', borderRadius: '8px' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 'bold' }}>⚠️ UI Rendering Error</h2>
+          <h2 style={{ fontSize: '18px', fontWeight: 'bold' }}>System Error: UI Rendering Failure</h2>
           <p style={{ marginTop: '8px', fontSize: '14px' }}>{this.state.error?.message}</p>
           <pre style={{ marginTop: '12px', background: '#fff', padding: '12px', borderRadius: '4px', overflow: 'auto', fontSize: '12px' }}>
             {this.state.error?.stack}

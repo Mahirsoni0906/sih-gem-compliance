@@ -3,6 +3,7 @@ import { api } from '../../services/api';
 import type { Tender, Bidder, ComplianceReport } from '../../types';
 import { ExplainableScrutinyModal } from './ExplainableScrutinyModal';
 import { DecisionConsoleModal } from './DecisionConsoleModal';
+import { Search, Scale } from 'lucide-react';
 
 export const OfficerDashboard: React.FC = () => {
   const [tenders, setTenders] = useState<Tender[]>([]);
@@ -258,30 +259,37 @@ export const OfficerDashboard: React.FC = () => {
                       </td>
                       <td className="p-3.5">
                         <span
-                          className={`text-[10px] font-black px-2.5 py-1 rounded-full uppercase ${
+                          className={`inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
                             isLow
-                              ? 'bg-emerald-100 text-emerald-800'
+                              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                               : isMed
-                              ? 'bg-amber-100 text-amber-800'
-                              : 'bg-red-100 text-red-800'
+                              ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                              : 'bg-red-50 text-red-800 border border-red-200'
                           }`}
                         >
-                          {isLow ? '🟢 LOW' : isMed ? '🟡 MEDIUM' : '🔴 HIGH'}
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              isLow ? 'bg-emerald-600' : isMed ? 'bg-amber-500' : 'bg-red-600'
+                            }`}
+                          />
+                          <span>{isLow ? 'LOW RISK' : isMed ? 'MEDIUM RISK' : 'HIGH RISK'}</span>
                         </span>
                       </td>
                       <td className="p-3.5 text-right space-x-2">
                         <button
                           onClick={() => handleInspectBidder(b)}
                           disabled={evaluatingBidderId === b.id}
-                          className="bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200 font-bold px-3 py-1.5 rounded-lg transition disabled:opacity-50"
+                          className="bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200 font-bold px-3 py-1.5 rounded-lg transition disabled:opacity-50 inline-flex items-center gap-1.5"
                         >
-                          {evaluatingBidderId === b.id ? 'Analyzing...' : '🔍 Inspect & Evidence'}
+                          <Search className="w-3.5 h-3.5 shrink-0" />
+                          <span>{evaluatingBidderId === b.id ? 'Analyzing...' : 'Inspect & Evidence'}</span>
                         </button>
                         <button
                           onClick={() => setDecisionModalBidder(b)}
-                          className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white font-bold px-3 py-1.5 rounded-lg transition shadow-xs"
+                          className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white font-bold px-3 py-1.5 rounded-lg transition shadow-xs inline-flex items-center gap-1.5"
                         >
-                          ⚖️ Committee Action
+                          <Scale className="w-3.5 h-3.5 shrink-0" />
+                          <span>Committee Action</span>
                         </button>
                       </td>
                     </tr>

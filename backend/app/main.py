@@ -156,6 +156,7 @@ def get_bidder(bidder_id: str):
 # 4. Layer 1 & 2: Data Ingestion & AI OCR Service
 # ----------------------------------------------------
 @app.post("/api/ocr/extract", response_model=DocumentOCRResult)
+@app.post("/ocr/extract", response_model=DocumentOCRResult)
 async def extract_document_ocr(file: UploadFile = File(...)):
     contents = await file.read()
     result = await AIOCRService.process_document(file.filename, contents)

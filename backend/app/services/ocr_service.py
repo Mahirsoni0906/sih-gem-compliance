@@ -4,7 +4,10 @@ import io
 import hashlib
 from datetime import datetime, date
 from typing import Dict, Any, Optional, List
-import pypdf
+try:
+    import pypdf
+except ImportError:
+    pypdf = None  # type: ignore[assignment]
 from app.services.verification_engine import StatutoryVerificationEngine
 
 class AIOCRService:
@@ -43,7 +46,7 @@ class AIOCRService:
         fn_lower = filename.lower()
         
         # 1. Check if PDF
-        if fn_lower.endswith(".pdf") or content_bytes.startswith(b"%PDF"):
+        if (fn_lower.endswith(".pdf") or content_bytes.startswith(b"%PDF")) and pypdf is not None:
             try:
                 reader = pypdf.PdfReader(io.BytesIO(content_bytes))
                 pages_text = []

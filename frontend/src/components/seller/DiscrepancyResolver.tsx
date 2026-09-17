@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { AlertTriangle, CheckCircle2, Check, RotateCw, ArrowRight } from 'lucide-react';
 import { api } from '../../services/api';
 
 interface DiscrepancyResolverProps {
@@ -55,7 +56,7 @@ export const DiscrepancyResolver: React.FC<DiscrepancyResolverProps> = ({
       {!isResolved ? (
         <div className="bg-white rounded-xl border-2 border-amber-300 shadow-sm p-6 space-y-5">
           <div className="flex items-start gap-3 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
-            <span className="text-xl">⚠️</span>
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
               <h3 className="font-extrabold text-xs text-amber-900 uppercase">
                 Active Discrepancy Detected (Pre-Submission Check)
@@ -111,33 +112,45 @@ export const DiscrepancyResolver: React.FC<DiscrepancyResolverProps> = ({
             </div>
 
             <div className="flex items-center justify-between pt-2">
-              <span className="text-[11px] text-gray-500">
-                Current Readiness: <strong className="text-amber-600">87%</strong> ➔ Expected: <strong className="text-emerald-600">98%</strong>
+              <span className="text-[11px] text-gray-500 flex items-center gap-1.5">
+                <span>Current Readiness: <strong className="text-amber-600">87%</strong></span>
+                <ArrowRight className="w-3 h-3 text-gray-400 inline" />
+                <span>Expected: <strong className="text-emerald-600">98%</strong></span>
               </span>
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-6 py-2.5 rounded-lg shadow transition disabled:opacity-50"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-6 py-2.5 rounded-lg shadow transition disabled:opacity-50 cursor-pointer flex items-center gap-1.5"
               >
-                {loading ? 'Re-evaluating Rules Engine...' : '✓ Submit Rectification & Recalculate Score'}
+                {loading ? (
+                  <>
+                    <RotateCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Re-evaluating Rules Engine...</span>
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Submit Rectification & Recalculate Score</span>
+                  </>
+                )}
               </button>
             </div>
           </form>
         </div>
       ) : (
         <div className="bg-emerald-50 border-2 border-emerald-400 rounded-xl p-6 text-center space-y-3 shadow-sm">
-          <div className="text-4xl">🎉</div>
+          <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
           <h3 className="text-sm font-black text-emerald-900 uppercase tracking-wide">
             All Statutory Discrepancies Successfully Resolved!
           </h3>
           <p className="text-xs text-emerald-800 max-w-lg mx-auto">
             Updated turnover verified at <strong>₹125.0 Lakhs</strong> against CA UDIN database. 
-            Your tender readiness score is now <strong>98% (🟢 LOW RISK)</strong> and fully qualified for financial opening.
+            Your tender readiness score is now <strong>98%</strong> (<span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> LOW RISK</span>) and fully qualified for financial opening.
           </p>
           {successMsg && <p className="text-[11px] text-emerald-700 font-mono">{successMsg}</p>}
           <button
             onClick={() => onScoreUpdated(87, false)}
-            className="text-xs text-gray-500 hover:text-gray-700 underline font-semibold mt-2"
+            className="text-xs text-gray-500 hover:text-gray-700 underline font-semibold mt-2 cursor-pointer"
           >
             (Reset to demonstration state)
           </button>

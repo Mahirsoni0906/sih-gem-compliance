@@ -3,6 +3,31 @@ import type { UserRole } from '../types';
 import { AshokaEmblem, GeMStarLogo } from './common/GeMAssets';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import {
+  HelpCircle,
+  Bot,
+  GraduationCap,
+  Ticket,
+  Gavel,
+  ClipboardList,
+  Scale,
+  FileText,
+  BarChart3,
+  Package,
+  Zap,
+  Building2,
+  Landmark,
+  ShieldAlert,
+  LogOut,
+  Key,
+  Menu,
+  X,
+  CheckCircle2,
+  FileCheck,
+  Bell,
+  Leaf,
+} from 'lucide-react';
+import { EnterpriseIconBadge } from './common/ProfessionalIcon';
 
 export interface NavigationOptions {
   bidsTab?: 'ongoing' | 'results' | 'boq' | 'auctions' | 'notices' | 'cppp' | 'opportunities';
@@ -293,9 +318,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         if (onOpenChat) onOpenChat();
                         setHelpDropdownOpen(false);
                       }}
-                      className="block px-3 py-1.5 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                      className="px-3 py-1.5 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                     >
-                      ❓ Frequently Asked Questions (FAQs)
+                      <HelpCircle className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                      <span>Frequently Asked Questions (FAQs)</span>
                     </a>
                     <a
                       href="#gemmy"
@@ -304,9 +330,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         if (onOpenChat) onOpenChat();
                         setHelpDropdownOpen(false);
                       }}
-                      className="block px-3 py-1.5 hover:bg-purple-50 hover:text-purple-700 font-medium"
+                      className="px-3 py-1.5 hover:bg-purple-50 hover:text-purple-700 font-medium flex items-center gap-2"
                     >
-                      🤖 Ask GeMMy (AI Support Assistant)
+                      <Bot className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                      <span>Ask GeMMy (AI Support Assistant)</span>
                     </a>
                     <button
                       onClick={() => {
@@ -315,7 +342,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className="w-full text-left px-3 py-1.5 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center justify-between"
                     >
-                      <span>🎓 Interactive Training Courses & LMS</span>
+                      <span className="flex items-center gap-2">
+                        <GraduationCap className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                        <span>Interactive Training Courses & LMS</span>
+                      </span>
                       <span className="text-[10px] bg-orange-100 text-orange-800 font-bold px-1.5 py-0.5 rounded">Govt Cert</span>
                     </button>
                     <button
@@ -323,9 +353,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setTicketModalOpen(true);
                         setHelpDropdownOpen(false);
                       }}
-                      className="w-full text-left px-3 py-1.5 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                      className="w-full text-left px-3 py-1.5 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                     >
-                      🎫 Incident Management / Raise Ticket
+                      <Ticket className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                      <span>Incident Management / Raise Ticket</span>
                     </button>
                     <div className="mt-1 px-3 py-1.5 bg-blue-50/70 border-t text-[11px] text-blue-900">
                       <p className="font-bold">National Toll-Free Helpline:</p>
@@ -477,18 +508,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActivePage('bids-page', { bidsTab: 'auctions' });
                       setForwardAuctionOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    🔨 Live Forward Auctions
+                    <Gavel className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <span>Live Forward Auctions</span>
                   </button>
                   <button
                     onClick={() => {
                       setActivePage('bids-page', { bidsTab: 'notices' });
                       setForwardAuctionOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    📋 Auction Notices & Schedules
+                    <ClipboardList className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <span>Auction Notices & Schedules</span>
                   </button>
                   <button
                     onClick={() => {
@@ -496,9 +529,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActivePage('risk-page');
                       setForwardAuctionOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-900 font-medium border-t"
+                    className="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-900 font-medium border-t flex items-center gap-2"
                   >
-                    ⚖️ Auction Compliance Scrutiny
+                    <Scale className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                    <span>Auction Compliance Scrutiny</span>
                   </button>
                 </div>
               )}
@@ -528,27 +562,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActivePage('bids-page', { bidsTab: 'ongoing' });
                       setBidsDropdownOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    📑 Ongoing Bids / RA
+                    <FileText className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <span>Ongoing Bids / RA</span>
                   </button>
                   <button
                     onClick={() => {
                       setActivePage('bids-page', { bidsTab: 'results' });
                       setBidsDropdownOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    📊 Bid / RA Results
+                    <BarChart3 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Bid / RA Results</span>
                   </button>
                   <button
                     onClick={() => {
                       setActivePage('bids-page', { bidsTab: 'boq' });
                       setBidsDropdownOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    📦 Custom Bids & BOQ Items
+                    <Package className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                    <span>Custom Bids & BOQ Items</span>
                   </button>
                   <button
                     onClick={() => {
@@ -558,9 +595,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className="w-full text-left px-3 py-2 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 text-orange-950 font-bold border-t flex items-center justify-between"
                   >
-                    <span>⚡ Verify Bidder Compliance (SIH)</span>
+                    <span className="flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                      <span>Verify Bidder Compliance (SIH)</span>
+                    </span>
                     <span className="text-orange-600">→</span>
                   </button>
+
                 </div>
               )}
             </div>
@@ -589,7 +630,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    <span>🏢</span>
+                    <Building2 className="w-4 h-4 text-orange-600 shrink-0" />
                     <div>
                       <p className="font-bold">Seller Registration</p>
                       <p className="text-[10px] text-gray-500">MSME, Startup & OEM onboarding</p>
@@ -602,7 +643,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-900 font-medium border-t flex items-center gap-2"
                   >
-                    <span>🏛️</span>
+                    <Landmark className="w-4 h-4 text-blue-600 shrink-0" />
                     <div>
                       <p className="font-bold">Buyer Registration</p>
                       <p className="text-[10px] text-gray-500">Government Ministries & CPSEs</p>
@@ -631,7 +672,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-2.5 py-1 rounded text-xs flex items-center gap-1 shadow cursor-pointer transition"
                     title="Master ID: Toggle between Seller and Officer mode"
                   >
-                    <span>👑⇄</span>
+                    <ShieldAlert className="w-3.5 h-3.5 text-slate-900 shrink-0" />
                     <span className="hidden sm:inline">Switch to {user.role === 'seller' ? 'Officer' : 'Seller'}</span>
                   </button>
                 )}
@@ -651,7 +692,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         : 'bg-[#f37021] hover:bg-[#e05e10] text-white'
                     }`}
                   >
-                    <span>{user.isMaster ? '👑' : user.role === 'officer' ? '⚖️' : '🏢'}</span>
+                    <span>{user.isMaster ? <ShieldAlert className="w-3.5 h-3.5 inline" /> : user.role === 'officer' ? <Scale className="w-3.5 h-3.5 inline" /> : <Building2 className="w-3.5 h-3.5 inline" />}</span>
                     <span className="font-mono text-[11px] max-w-[120px] truncate">{user.userId}</span>
                     <span className="text-[10px]">▼</span>
                   </button>
@@ -661,7 +702,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       <div className="px-3.5 py-2.5 bg-gray-50/80">
                         <div className="flex items-center justify-between">
                           <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-500">
-                            {user.isMaster ? '👑 Master Session' : 'Active Account'}
+                            {user.isMaster ? 'Master Session' : 'Active Account'}
                           </span>
                           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                             user.role === 'officer' ? 'bg-purple-100 text-purple-800' : 'bg-orange-100 text-orange-800'
@@ -683,7 +724,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             }}
                             className="w-full text-left px-3.5 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                           >
-                            <span>🏢</span>
+                            <Building2 className="w-4 h-4 text-orange-600 shrink-0" />
                             <span>Open Seller Console</span>
                           </button>
                         ) : (
@@ -695,7 +736,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             }}
                             className="w-full text-left px-3.5 py-2 hover:bg-blue-50 hover:text-blue-900 font-medium flex items-center gap-2"
                           >
-                            <span>⚖️</span>
+                            <Scale className="w-4 h-4 text-blue-600 shrink-0" />
                             <span>Open Procurement Officer Desk</span>
                           </button>
                         )}
@@ -715,7 +756,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             }}
                             className="w-full text-left px-3.5 py-2 bg-amber-50/70 hover:bg-amber-100/70 text-amber-950 font-bold flex items-center gap-2"
                           >
-                            <span>👑⇄</span>
+                            <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0" />
                             <span>Switch to {user.role === 'seller' ? 'Legal Officer Mode' : 'Seller Mode'}</span>
                           </button>
                         )}
@@ -730,7 +771,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           }}
                           className="w-full text-left px-3.5 py-2 text-red-600 hover:bg-red-50 font-bold flex items-center gap-2"
                         >
-                          <span>🚪</span>
+                          <LogOut className="w-4 h-4 text-red-600 shrink-0" />
                           <span>Sign Out / Switch ID</span>
                         </button>
                       </div>
@@ -763,7 +804,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className="w-full text-left px-3 py-2 bg-yellow-50/70 hover:bg-yellow-100/70 text-blue-950 font-bold flex items-center gap-2 border-b"
                     >
-                      <span>🔑</span>
+                      <Key className="w-4 h-4 text-yellow-700 shrink-0" />
                       <div>
                         <p className="font-extrabold">GeM Master ID / SSO</p>
                         <p className="text-[10px] text-gray-600 font-normal">Login as Seller or Officer</p>
@@ -777,7 +818,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-bold flex items-center gap-2"
                     >
-                      <span>🏢</span>
+                      <Building2 className="w-4 h-4 text-orange-600 shrink-0" />
                       <span>Seller / Bidder Console</span>
                     </button>
                     <button
@@ -788,13 +829,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-900 font-bold flex items-center gap-2"
                     >
-                      <span>⚖️</span>
+                      <Scale className="w-4 h-4 text-blue-600 shrink-0" />
                       <span>Procurement Officer Desk</span>
                     </button>
                   </div>
                 )}
               </div>
             )}
+
           </div>
         </div>
       </div>
@@ -813,7 +855,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded hover:bg-[#0c3952] text-white font-bold cursor-pointer transition"
               >
-                <span>☰</span>
+                <Menu className="w-3.5 h-3.5 shrink-0" />
                 <span>{t('categories')}</span>
               </button>
               {categoriesDropdownOpen && (
@@ -822,18 +864,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <span className="font-extrabold text-[#062134] text-xs uppercase tracking-wider">
                       Product & Service Categories
                     </span>
-                    <button onClick={() => setCategoriesDropdownOpen(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+                    <button onClick={() => setCategoriesDropdownOpen(false)} className="text-gray-400 hover:text-gray-600">
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="space-y-1">
                       <p className="font-bold text-[10px] text-orange-600 uppercase">Products</p>
                       {[
-                        { title: 'Oxygen Gas & Accessories', icon: '🧪' },
-                        { title: 'Medical Equipment', icon: '🩺' },
-                        { title: 'Computers & IT', icon: '🖥️' },
-                        { title: 'Office Furniture', icon: '🪑' },
-                        { title: 'Fire Safety Systems', icon: '🧯' },
-                        { title: 'Industrial Valves', icon: '⚙️' },
+                        { title: 'Oxygen Gas & Accessories' },
+                        { title: 'Medical Equipment' },
+                        { title: 'Computers & IT' },
+                        { title: 'Office Furniture' },
+                        { title: 'Fire Safety Systems' },
+                        { title: 'Industrial Valves' },
                       ].map((p) => (
                         <button
                           key={p.title}
@@ -844,7 +888,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           }}
                           className="w-full text-left p-1 rounded hover:bg-orange-50 hover:text-orange-900 transition flex items-center gap-1.5 text-[11px]"
                         >
-                          <span>{p.icon}</span>
+                          <EnterpriseIconBadge type={p.title} className="w-3.5 h-3.5 text-orange-600 shrink-0" />
                           <span className="truncate">{p.title}</span>
                         </button>
                       ))}
@@ -852,14 +896,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="space-y-1 border-l pl-2">
                       <p className="font-bold text-[10px] text-blue-600 uppercase">Services (Official GeM)</p>
                       {[
-                        { title: 'Security Manpower (V2.0)', icon: '👮‍♂️' },
-                        { title: 'Cab & Taxi / Vehicle Hiring', icon: '🚗' },
-                        { title: 'Manpower Outsourcing (Min Wage)', icon: '👥' },
-                        { title: 'Catering Services (Event/Mess)', icon: '🍽️' },
-                        { title: 'Goods Transport (Per KM)', icon: '🚚' },
-                        { title: 'IT & Hardware AMC', icon: '🖥️' },
-                        { title: 'Drone as a Service (V2)', icon: '🚁' },
-                        { title: 'Facility Management (LumpSum)', icon: '🧹' },
+                        { title: 'Security Manpower (V2.0)' },
+                        { title: 'Cab & Taxi / Vehicle Hiring' },
+                        { title: 'Manpower Outsourcing (Min Wage)' },
+                        { title: 'Catering Services (Event/Mess)' },
+                        { title: 'Goods Transport (Per KM)' },
+                        { title: 'IT & Hardware AMC' },
+                        { title: 'Drone as a Service (V2)' },
+                        { title: 'Facility Management (LumpSum)' },
                       ].map((s) => (
                         <button
                           key={s.title}
@@ -869,7 +913,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           }}
                           className="w-full text-left p-1 rounded hover:bg-blue-50 hover:text-blue-900 transition flex items-center gap-1.5 text-[11px]"
                         >
-                          <span>{s.icon}</span>
+                          <EnterpriseIconBadge type={s.title} className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                           <span className="truncate">{s.title}</span>
                         </button>
                       ))}
@@ -918,12 +962,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </div>
                   <div className="p-2 space-y-2">
                     <div>
-                      <p className="font-bold text-blue-950">🏛️ For Government Buyers</p>
-                      <p className="text-[10px] text-gray-600">Rich listing, price reasonability tools, GFR Rule 144(xi) compliance.</p>
+                      <p className="font-bold text-blue-950 flex items-center gap-1.5">
+                        <Landmark className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+                        <span>For Government Buyers</span>
+                      </p>
+                      <p className="text-[10px] text-gray-600 mt-0.5">Rich listing, price reasonability tools, GFR Rule 144(xi) compliance.</p>
                     </div>
                     <div>
-                      <p className="font-bold text-orange-950">🏢 For Sellers & MSMEs</p>
-                      <p className="text-[10px] text-gray-600">Direct national market access, prompt TReDS bill discounting, EMD exemptions.</p>
+                      <p className="font-bold text-orange-950 flex items-center gap-1.5">
+                        <Building2 className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                        <span>For Sellers & MSMEs</span>
+                      </p>
+                      <p className="text-[10px] text-gray-600 mt-0.5">Direct national market access, prompt TReDS bill discounting, EMD exemptions.</p>
                     </div>
                   </div>
                 </div>
@@ -963,9 +1013,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActivePage('seller-page', { sellerTab: 'dashboard-view' });
                       setSellerOnGemOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    🏢 Seller Compliance Desk (SIH26100)
+                    <Building2 className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                    <span>Seller Compliance Desk (SIH26100)</span>
                   </button>
                   <button
                     onClick={() => {
@@ -975,7 +1026,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }}
                     className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center justify-between"
                   >
-                    <span>📄 🤖 DocScrutiny AI & OCR</span>
+                    <div className="flex items-center gap-2">
+                      <FileText className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                      <span>DocScrutiny AI & OCR</span>
+                    </div>
                     <span className="text-[10px] bg-purple-100 text-purple-800 font-bold px-1.5 py-0.5 rounded">Separate AI</span>
                   </button>
                   <button
@@ -984,18 +1038,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActivePage('seller-page', { sellerTab: 'checklist-view' });
                       setSellerOnGemOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium flex items-center gap-2"
                   >
-                    ✅ Pre-Bid Compliance Checklist
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Pre-Bid Compliance Checklist</span>
                   </button>
                   <button
                     onClick={() => {
                       setActivePage('registration-page', { registrationRole: 'seller' });
                       setSellerOnGemOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium border-t"
+                    className="w-full text-left px-3 py-2 hover:bg-orange-50 hover:text-orange-700 font-medium border-t flex items-center gap-2"
                   >
-                    📋 MSME & Startup Onboarding
+                    <ClipboardList className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <span>MSME & Startup Onboarding</span>
                   </button>
                 </div>
               )}
@@ -1020,18 +1076,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setActivePage('audit-page');
                       setContractsDropdownOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-emerald-50 hover:text-emerald-900 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-emerald-50 hover:text-emerald-900 font-medium flex items-center gap-2"
                   >
-                    📜 Immutable Audit Ledger
+                    <FileText className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>Immutable Audit Ledger</span>
                   </button>
                   <button
                     onClick={() => {
                       setActivePage('bids-page', { bidsTab: 'results' });
                       setContractsDropdownOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-900 font-medium"
+                    className="w-full text-left px-3 py-2 hover:bg-blue-50 hover:text-blue-900 font-medium flex items-center gap-2"
                   >
-                    📑 Active Contract Awards
+                    <FileCheck className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                    <span>Active Contract Awards</span>
                   </button>
                 </div>
               )}
@@ -1079,7 +1137,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
               title="GeM E-Learning & Training Portal (Courses, Webinars, Certifications)"
             >
-              <span>🎓</span>
+              <GraduationCap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span>Training Courses & LMS</span>
               <span className="bg-amber-400 text-blue-950 text-[9px] font-black px-1 rounded-xs ml-0.5">Govt Cert</span>
             </button>
@@ -1116,7 +1174,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className="w-full text-left p-2 rounded-lg hover:bg-orange-50 font-medium flex items-center justify-between"
                     >
                       <div>
-                        <p className="font-bold">🏢 Vendor Self-Service Desk</p>
+                        <p className="font-bold flex items-center gap-1.5">
+                          <Building2 className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                          <span>Vendor Self-Service Desk</span>
+                        </p>
                         <p className="text-[10px] text-gray-500">Readiness score, GST, PAN, Udyam</p>
                       </div>
                       <span className="text-orange-600">→</span>
@@ -1131,7 +1192,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     >
                       <div>
                         <p className="font-extrabold text-purple-950 flex items-center gap-1.5">
-                          <span>🤖 DocScrutiny AI Console</span>
+                          <Bot className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                          <span>DocScrutiny AI Console</span>
                           <span className="text-[9px] bg-purple-600 text-white px-1.5 py-0.2 rounded-full">Separate AI</span>
                         </p>
                         <p className="text-[10px] text-purple-800">Doc verification, expiry check & competitor bid comparison</p>
@@ -1147,7 +1209,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className="w-full text-left p-2 rounded-lg hover:bg-blue-50 font-medium flex items-center justify-between"
                     >
                       <div>
-                        <p className="font-bold">⚖️ Officer Scrutiny Desk</p>
+                        <p className="font-bold flex items-center gap-1.5">
+                          <Scale className="w-3.5 h-3.5 text-blue-700 shrink-0" />
+                          <span>Officer Scrutiny Desk</span>
+                        </p>
                         <p className="text-[10px] text-gray-500">Explainable AI Scoring & GFR 144(xi)</p>
                       </div>
                       <span className="text-blue-900">→</span>
@@ -1161,7 +1226,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className="w-full text-left p-2 rounded-lg hover:bg-emerald-50 font-medium flex items-center justify-between border-t"
                     >
                       <div>
-                        <p className="font-bold">📜 Immutable Audit Trail</p>
+                        <p className="font-bold flex items-center gap-1.5">
+                          <FileCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+                          <span>Immutable Audit Trail</span>
+                        </p>
                         <p className="text-[10px] text-gray-500">Cryptographic Verification Ledger</p>
                       </div>
                       <span className="text-emerald-700">→</span>
@@ -1193,7 +1261,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="relative cursor-pointer text-gray-300 hover:text-white p-1"
                 title="Notifications"
               >
-                <span className="text-sm">🔔</span>
+                <Bell className="w-4 h-4 text-gray-200 hover:text-white" />
                 <span className="absolute -top-1 -right-1 bg-[#e53935] text-white text-[9px] font-bold px-1 rounded-full">
                   03
                 </span>
@@ -1202,20 +1270,31 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <div className="absolute right-0 mt-2 w-72 bg-white text-gray-800 shadow-2xl rounded-xl p-3 z-50 text-xs border border-gray-200">
                   <div className="flex items-center justify-between border-b pb-1.5 mb-2">
                     <span className="font-extrabold text-[#062134]">GeM Portal Bulletins</span>
-                    <button onClick={() => setNotificationsOpen(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+                    <button onClick={() => setNotificationsOpen(false)} className="text-gray-400 hover:text-gray-600">
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
                   <div className="space-y-2 text-[11px]">
                     <div className="p-1.5 bg-blue-50 rounded border border-blue-100">
-                      <p className="font-bold text-blue-900">🔔 TReDS Integration Live</p>
-                      <p className="text-gray-600 text-[10px]">Instant MSME bill factoring across all CPSE orders.</p>
+                      <p className="font-bold text-blue-900 flex items-center gap-1.5">
+                        <Bell className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+                        <span>TReDS Integration Live</span>
+                      </p>
+                      <p className="text-gray-600 text-[10px] mt-0.5">Instant MSME bill factoring across all CPSE orders.</p>
                     </div>
                     <div className="p-1.5 bg-orange-50 rounded border border-orange-100">
-                      <p className="font-bold text-orange-900">⚡ SIH 2026 AI Statutory Verification</p>
-                      <p className="text-gray-600 text-[10px]">Active verification pipeline for Rule 144(xi) and Make-in-India.</p>
+                      <p className="font-bold text-orange-900 flex items-center gap-1.5">
+                        <Zap className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+                        <span>SIH 2026 AI Statutory Verification</span>
+                      </p>
+                      <p className="text-gray-600 text-[10px] mt-0.5">Active verification pipeline for Rule 144(xi) and Make-in-India.</p>
                     </div>
                     <div className="p-1.5 bg-green-50 rounded border border-green-100">
-                      <p className="font-bold text-green-900">🌿 EcoMark Standards</p>
-                      <p className="text-gray-600 text-[10px]">Preferential indexing for verified green goods.</p>
+                      <p className="font-bold text-green-900 flex items-center gap-1.5">
+                        <Leaf className="w-3.5 h-3.5 text-green-600 shrink-0" />
+                        <span>EcoMark Standards</span>
+                      </p>
+                      <p className="text-gray-600 text-[10px] mt-0.5">Preferential indexing for verified green goods.</p>
                     </div>
                   </div>
                 </div>
@@ -1229,8 +1308,9 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="bg-[#f0f6fc] border-b border-[#d0e1f9] py-1.5 px-4 overflow-hidden shadow-2xs">
         <div className="max-w-[1400px] mx-auto flex items-center">
           <div className="overflow-hidden whitespace-nowrap w-full">
-            <p className="text-xs font-semibold text-[#0056b3] inline-block animate-pulse">
-              🔔 GeM is linked with TReDS Exchanges for sharing CPSE purchases from MSMEs with financiers, encouraging cheaper and quicker financing... • Smart India Hackathon 2026: AI Statutory Compliance Verification Engine (SIH26100) Active!
+            <p className="text-xs font-semibold text-[#0056b3] inline-flex items-center gap-1.5 animate-pulse">
+              <Bell className="w-3.5 h-3.5 text-blue-600 shrink-0 inline" />
+              <span>GeM is linked with TReDS Exchanges for sharing CPSE purchases from MSMEs with financiers, encouraging cheaper and quicker financing... • Smart India Hackathon 2026: AI Statutory Compliance Verification Engine (SIH26100) Active!</span>
             </p>
           </div>
         </div>
@@ -1242,13 +1322,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="bg-white text-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-5 space-y-4 border border-gray-200">
             <div className="flex items-center justify-between border-b pb-2">
               <div className="flex items-center gap-2">
-                <span className="text-xl">🎫</span>
+                <Ticket className="w-5 h-5 text-orange-600 shrink-0" />
                 <div>
                   <h4 className="font-bold text-sm text-[#062134]">Raise a Support Ticket</h4>
                   <p className="text-[10px] text-gray-500">Government e Marketplace Helpdesk</p>
                 </div>
               </div>
-              <button onClick={() => setTicketModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+              <button onClick={() => setTicketModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold">
+                <X className="w-4 h-4" />
+              </button>
             </div>
             <div className="space-y-3 text-xs">
               <div>
@@ -1295,13 +1377,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="bg-white text-gray-800 rounded-2xl shadow-2xl max-w-xl w-full p-6 space-y-4 border border-gray-200">
             <div className="flex items-center justify-between border-b pb-2">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">🎓</span>
+                <GraduationCap className="w-6 h-6 text-amber-500 shrink-0" />
                 <div>
                   <h4 className="font-extrabold text-sm text-[#062134]">GeM Interactive LMS & Training Courses</h4>
                   <p className="text-[10px] text-gray-500">Free Online Learning Modules for Buyers & Sellers</p>
                 </div>
               </div>
-              <button onClick={() => setTrainingModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold cursor-pointer">✕</button>
+              <button onClick={() => setTrainingModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold cursor-pointer">
+                <X className="w-4 h-4" />
+              </button>
             </div>
             <div className="space-y-2.5 text-xs">
               {[
@@ -1367,10 +1451,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setActivePage('training-page');
                     setTrainingModalOpen(false);
                   }}
-                  className="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg cursor-pointer flex items-center gap-1 shadow-xs"
+                  className="px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg cursor-pointer flex items-center gap-1.5 shadow-xs"
                 >
-                  <span>🎓 Open Full Interactive Portal</span>
-                  <span>→</span>
+                  <GraduationCap className="w-4 h-4 shrink-0" />
+                  <span>Open Full Interactive Portal →</span>
                 </button>
                 <button
                   onClick={() => setTrainingModalOpen(false)}

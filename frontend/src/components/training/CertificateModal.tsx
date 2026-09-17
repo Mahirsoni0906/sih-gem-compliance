@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Award, Printer, X, Pencil, Check } from 'lucide-react';
 import type { TrainingCourse } from '../../data/gemTrainingData';
 import { AshokaEmblem, GeMStarLogo } from '../common/GeMAssets';
 
@@ -34,7 +35,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         {/* Top Control Bar */}
         <div className="bg-[#062134] text-white px-5 py-3 flex items-center justify-between border-b border-yellow-500">
           <div className="flex items-center space-x-2">
-            <span className="text-xl">🎓</span>
+            <Award className="w-5 h-5 text-yellow-400 shrink-0" />
             <span className="font-extrabold text-sm text-yellow-400">
               Official Government e Marketplace Certificate
             </span>
@@ -44,14 +45,14 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               onClick={handlePrint}
               className="bg-[#f37021] hover:bg-[#e05e10] text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer"
             >
-              <span>🖨️</span>
+              <Printer className="w-3.5 h-3.5" />
               <span>Print / Save PDF</span>
             </button>
             <button
               onClick={onClose}
-              className="text-gray-300 hover:text-white p-1 text-base font-bold cursor-pointer transition"
+              className="text-gray-300 hover:text-white p-1 text-base font-bold cursor-pointer transition flex items-center justify-center"
             >
-              ✕
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -110,9 +111,10 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                     />
                     <button
                       onClick={() => setIsEditingName(false)}
-                      className="text-xs bg-emerald-600 text-white font-bold px-2 py-1 rounded"
+                      className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1 rounded-md transition flex items-center gap-1 cursor-pointer"
                     >
-                      Save
+                      <Check className="w-3 h-3" />
+                      <span>Save</span>
                     </button>
                   </div>
                 ) : (
@@ -120,8 +122,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                     <span className="font-serif text-xl sm:text-2xl font-black text-[#062134] border-b border-gray-300 pb-0.5">
                       {learnerName}
                     </span>
-                    <span className="text-xs text-gray-400 group-hover:text-blue-600" title="Click to edit name">
-                      ✏️
+                    <span className="text-gray-400 group-hover:text-blue-600 transition" title="Click to edit name">
+                      <Pencil className="w-3.5 h-3.5 inline" />
                     </span>
                   </div>
                 )}

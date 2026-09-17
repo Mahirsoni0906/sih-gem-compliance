@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { api } from '../../services/api';
+import { CheckCircle2, ShieldCheck, MessageSquare, Ban, X } from 'lucide-react';
 
 interface DecisionConsoleModalProps {
   tenderRef: string;
@@ -66,15 +67,15 @@ export const DecisionConsoleModal: React.FC<DecisionConsoleModalProps> = ({
             </h2>
             <p className="text-[11px] text-gray-300 font-mono">Tender: {tenderRef}</p>
           </div>
-          <button onClick={onClose} className="text-gray-300 hover:text-white text-xl font-bold">
-            ✕
+          <button onClick={onClose} className="text-gray-300 hover:text-white p-1 cursor-pointer">
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
         {confirmed ? (
           <div className="p-10 text-center space-y-3">
-            <div className="text-4xl">✅</div>
+            <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
             <h3 className="text-base font-bold text-gray-900">Decision Recorded to Audit Trail</h3>
             <p className="text-xs text-gray-500">
               Official action <strong>{decision}</strong> and committee remarks have been immutably logged.
@@ -97,7 +98,7 @@ export const DecisionConsoleModal: React.FC<DecisionConsoleModalProps> = ({
                       : 'border-gray-200 hover:border-gray-300 text-gray-700'
                   }`}
                 >
-                  <span className="text-lg block mb-1">⭐</span>
+                  <ShieldCheck className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
                   <span className="font-extrabold block">Approve & Qualify</span>
                   <span className="text-[10px] text-emerald-700">Financial Opening</span>
                 </button>
@@ -111,7 +112,7 @@ export const DecisionConsoleModal: React.FC<DecisionConsoleModalProps> = ({
                       : 'border-gray-200 hover:border-gray-300 text-gray-700'
                   }`}
                 >
-                  <span className="text-lg block mb-1">💬</span>
+                  <MessageSquare className="w-5 h-5 text-amber-600 mx-auto mb-1" />
                   <span className="font-extrabold block">Seek Clarification</span>
                   <span className="text-[10px] text-amber-700">72-Hour Notice</span>
                 </button>
@@ -125,7 +126,7 @@ export const DecisionConsoleModal: React.FC<DecisionConsoleModalProps> = ({
                       : 'border-gray-200 hover:border-gray-300 text-gray-700'
                   }`}
                 >
-                  <span className="text-lg block mb-1">🚫</span>
+                  <Ban className="w-5 h-5 text-red-600 mx-auto mb-1" />
                   <span className="font-extrabold block">Reject & Disqualify</span>
                   <span className="text-[10px] text-red-700">Non-Compliant</span>
                 </button>

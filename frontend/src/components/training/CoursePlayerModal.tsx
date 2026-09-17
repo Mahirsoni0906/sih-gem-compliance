@@ -1,4 +1,14 @@
 import React, { useState } from 'react';
+import {
+  X,
+  FileCheck,
+  Clock,
+  CheckCircle2,
+  Check,
+  Zap,
+  ArrowRight,
+  ArrowLeft
+} from 'lucide-react';
 import type { TrainingCourse } from '../../data/gemTrainingData';
 import { GeMStarLogo } from '../common/GeMAssets';
 
@@ -62,9 +72,9 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="text-gray-300 hover:text-white p-1 rounded hover:bg-white/10 text-lg font-bold cursor-pointer transition"
+            className="text-gray-300 hover:text-white p-1 rounded hover:bg-white/10 text-lg font-bold cursor-pointer transition flex items-center justify-center"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -111,7 +121,7 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
                         : 'bg-gray-200 text-gray-600'
                     }`}
                   >
-                    {isDone && !isActive ? '✓' : idx + 1}
+                    {isDone && !isActive ? <Check className="w-3 h-3" /> : idx + 1}
                   </span>
                   <div className="flex-1 leading-snug">
                     <p className="line-clamp-2">{mod.title}</p>
@@ -132,7 +142,7 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
                 onClick={onStartQuiz}
                 className="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <span>✍️</span>
+                <FileCheck className="w-3.5 h-3.5" />
                 <span>Take Knowledge Quiz</span>
               </button>
             </div>
@@ -146,7 +156,10 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
                   Module {activeModuleIndex + 1} of {course.modules.length}
                 </span>
                 <span className="text-gray-300">•</span>
-                <span className="text-xs text-gray-500 font-medium">⏱️ {activeModule.duration}</span>
+                <span className="text-xs text-gray-500 font-medium flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-gray-400" />
+                  <span>{activeModule.duration}</span>
+                </span>
               </div>
               <h2 className="text-lg sm:text-xl font-black text-gray-900">{activeModule.title}</h2>
             </div>
@@ -162,13 +175,13 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
             {/* Key Takeaways */}
             <div className="space-y-2.5">
               <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
-                <span>📌</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-900 shrink-0" />
                 <span>Critical Compliance Checkpoints & Key Takeaways</span>
               </h4>
               <ul className="space-y-2 text-xs text-gray-700">
                 {activeModule.keyTakeaways.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 bg-emerald-50/70 border border-emerald-200/80 rounded-lg p-2.5">
-                    <span className="text-emerald-700 font-black">✓</span>
+                    <Check className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
                     <span className="leading-normal font-medium">{item}</span>
                   </li>
                 ))}
@@ -179,7 +192,7 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
             {activeModule.simulationStep && (
               <div className="bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-200 rounded-2xl p-4 space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-base">⚡</span>
+                  <Zap className="w-4 h-4 text-orange-600 shrink-0" />
                   <h4 className="font-extrabold text-xs text-orange-950 uppercase">
                     Interactive Hands-On Simulator: {activeModule.simulationStep.screenTitle}
                   </h4>
@@ -196,7 +209,7 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
                     className="bg-[#f37021] hover:bg-[#e05e10] text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer w-fit"
                   >
                     <span>Try In Live Simulator</span>
-                    <span>→</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 )}
               </div>
@@ -209,9 +222,10 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
           <button
             onClick={handlePrev}
             disabled={activeModuleIndex === 0}
-            className="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-40 transition cursor-pointer"
+            className="px-4 py-2 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 disabled:opacity-40 transition flex items-center gap-1.5 cursor-pointer"
           >
-            ← Previous Module
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Previous Module</span>
           </button>
 
           <div className="flex items-center gap-2">
@@ -222,11 +236,17 @@ export const CoursePlayerModal: React.FC<CoursePlayerModalProps> = ({
               onClick={handleNext}
               className="px-5 py-2 bg-[#062134] hover:bg-[#0c3952] text-white rounded-xl text-xs font-black shadow-sm transition flex items-center gap-1.5 cursor-pointer"
             >
-              <span>
-                {activeModuleIndex < course.modules.length - 1
-                  ? 'Next Module →'
-                  : 'Proceed to Assessment Quiz ✍️'}
-              </span>
+              {activeModuleIndex < course.modules.length - 1 ? (
+                <>
+                  <span>Next Module</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </>
+              ) : (
+                <>
+                  <span>Proceed to Assessment Quiz</span>
+                  <FileCheck className="w-3.5 h-3.5" />
+                </>
+              )}
             </button>
           </div>
         </div>

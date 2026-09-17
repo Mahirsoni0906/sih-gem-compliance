@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../../services/api';
 import type { Product } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
+import { Search, ArrowLeft, ShieldCheck, Award, Package, Star, X } from 'lucide-react';
+import { EnterpriseIconBadge } from '../common/ProfessionalIcon';
 
 interface ProductCatalogProps {
   initialCategory?: string;
@@ -125,9 +127,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
             {onClose && (
               <button
                 onClick={onClose}
-                className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-lg border border-white/20 transition flex items-center gap-1 cursor-pointer"
+                className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 transition flex items-center gap-1.5 cursor-pointer"
               >
-                <span>✕</span>
+                <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to Home</span>
               </button>
             )}
@@ -145,7 +147,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
           {/* Search Input */}
           <form onSubmit={handleSearchSubmit} className="flex-1 min-w-[280px]">
             <div className="relative flex items-center bg-gray-50 dark:bg-[#132842] rounded-xl border border-gray-300 dark:border-slate-700 px-3 py-2 focus-within:border-blue-600 focus-within:bg-white dark:focus-within:bg-[#0f243c] transition">
-              <span className="text-gray-400 mr-2">🔍</span>
+              <Search className="w-4 h-4 text-gray-400 mr-2 shrink-0" />
               <input
                 type="text"
                 value={searchQuery}
@@ -171,8 +173,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 onChange={(e) => setMiiOnly(e.target.checked)}
                 className="rounded text-orange-600 focus:ring-orange-500"
               />
-              <span className="font-extrabold text-orange-900 dark:text-orange-200">
-                🇮🇳 Class-I MII (&gt;50%)
+              <span className="font-extrabold text-orange-900 dark:text-orange-200 flex items-center gap-1">
+                <ShieldCheck className="w-3.5 h-3.5 text-orange-700 dark:text-orange-300" />
+                <span>Class-I MII (&gt;50%)</span>
               </span>
             </label>
 
@@ -183,8 +186,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 onChange={(e) => setMsmeOnly(e.target.checked)}
                 className="rounded text-emerald-600 focus:ring-emerald-500"
               />
-              <span className="font-extrabold text-emerald-900 dark:text-emerald-200">
-                🏭 MSME Udyam Verified
+              <span className="font-extrabold text-emerald-900 dark:text-emerald-200 flex items-center gap-1">
+                <Award className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-300" />
+                <span>MSME Udyam Verified</span>
               </span>
             </label>
           </div>
@@ -210,7 +214,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         {/* Product Cards Grid with Smooth Tab & Category Transition */}
         {filteredProducts.length === 0 ? (
           <div key="empty" className="bg-white dark:bg-[#0c1e33] rounded-2xl p-12 text-center border border-gray-200 dark:border-slate-800 space-y-3 transition-colors tab-content-enter">
-            <span className="text-4xl">📦</span>
+            <Package className="w-12 h-12 text-gray-400 dark:text-slate-500 mx-auto" />
             <h3 className="text-base font-bold text-gray-800 dark:text-slate-100">No matching products found</h3>
             <p className="text-xs text-gray-500 dark:text-slate-400 max-w-sm mx-auto">
               Try adjusting your category filter, clearing Make-in-India filters, or searching for general procurement equipment.
@@ -265,8 +269,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
                     {/* Image & Title */}
                     <div className="flex items-start gap-3">
-                      <div className="w-14 h-14 rounded-xl bg-gray-50 dark:bg-[#132842] border border-gray-200 dark:border-slate-700 flex items-center justify-center text-3xl shrink-0 group-hover:scale-105 transition">
-                        {p.image_icon}
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-50 to-slate-100 dark:from-[#132842] dark:to-[#0f1f33] border border-gray-200 dark:border-slate-700 flex items-center justify-center shrink-0 group-hover:scale-105 transition text-blue-900 dark:text-blue-300">
+                        <EnterpriseIconBadge type={p.category || p.title} className="w-7 h-7" />
                       </div>
                       <div>
                         <h3 className="font-extrabold text-sm text-[#162c5b] dark:text-slate-100 leading-snug group-hover:text-blue-900 dark:group-hover:text-blue-400 transition">
@@ -298,7 +302,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                         </p>
                       </div>
                       <div className="text-right">
-                        <span className="text-xs font-bold text-amber-500">★ {p.rating}</span>
+                        <span className="text-xs font-bold text-amber-500 flex items-center gap-1 justify-end">
+                          <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                          <span>{p.rating}</span>
+                        </span>
                         <span className="text-[10px] text-gray-400 dark:text-slate-400 ml-1">({p.reviews_count} reviews)</span>
                       </div>
                     </div>
@@ -316,9 +323,10 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                     {p.tender_eligible ? (
                       <button
                         onClick={() => onOpenTenderScrutiny('GEM/2026/B/9012481')}
-                        className="bg-[#e67e22] hover:bg-[#d35400] text-white font-extrabold text-xs px-3.5 py-1.5 rounded-lg shadow transition cursor-pointer"
+                        className="bg-[#e67e22] hover:bg-[#d35400] text-white font-extrabold text-xs px-3.5 py-1.5 rounded-lg shadow transition cursor-pointer flex items-center gap-1"
                       >
-                        ⚡ Verify in Tender &gt;
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>Verify in Tender →</span>
                       </button>
                     ) : (
                       <button
@@ -350,11 +358,12 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
               </div>
               <button
                 onClick={() => setSelectedProduct(null)}
-                className="text-gray-300 hover:text-white text-xl font-bold p-1 cursor-pointer"
+                className="text-gray-300 hover:text-white p-1 cursor-pointer"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
+
 
             <div className="p-6 space-y-6 text-xs">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">

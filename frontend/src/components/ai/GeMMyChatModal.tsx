@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { ShieldCheck, X } from 'lucide-react';
 import { api } from '../../services/api';
 import type { AIChatAction } from '../../types';
 import { GeMMyAvatar } from '../common/GeMAssets';
@@ -78,13 +79,13 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
     {
       id: 'welcome',
       sender: 'gemmy',
-      text: "Namaste! 🙏 I am **GeMMy**, your official AI Compliance & Procurement Assistant for the Government e-Marketplace.\n\nI provide authoritative guidance on public procurement policies, GFR 2017 compliance, Make-in-India (MII) criteria, seller profile creation, and latest gazette notifications.\n\n*(🛡️ **Data Privacy**: Under DPDP Act 2023, GeMMy is strictly air-gapped from uploaded vendor files. For document verification, please use the DocScrutiny AI Desk.)*",
+      text: "Welcome to **GeMMy**, your official AI Compliance & Procurement Assistant for the Government e-Marketplace.\n\nI provide authoritative guidance on public procurement policies, GFR 2017 compliance, Make-in-India (MII) criteria, seller profile creation, and latest gazette notifications.\n\n*(**Data Privacy (DPDP Act 2023)**: GeMMy is strictly air-gapped from uploaded vendor files. For document verification and OCR cross-matching, please use the DocScrutiny AI Desk.)*",
       actions: [
-        { label: "🌐 Latest GeM Updates & OMs", action: "query_latest_updates" },
-        { label: "❌ Profile Rejection Causes", action: "query_profile_rejection" },
-        { label: "🏛️ Explain GFR Rule 144(xi)", action: "query_rule144" },
-        { label: "🇮🇳 Make in India (MII) Rules", action: "query_mii" },
-        { label: "📄 Open DocScrutiny AI Desk", action: "open_ocr_desk" },
+        { label: "Latest GeM Updates & OMs", action: "query_latest_updates" },
+        { label: "Profile Rejection Causes", action: "query_profile_rejection" },
+        { label: "Explain GFR Rule 144(xi)", action: "query_rule144" },
+        { label: "Make in India (MII) Rules", action: "query_mii" },
+        { label: "Open DocScrutiny AI Desk", action: "open_ocr_desk" },
       ],
       model: "GeMMy Live Assistant",
       is_local_ai: false,
@@ -247,8 +248,9 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
                 <p className="text-[10px] text-gray-300">
                   Official GeM Advisory Assistant
                 </p>
-                <span className="text-[9px] text-cyan-300 bg-cyan-950/70 border border-cyan-500/30 px-1.5 py-0.2 rounded font-semibold tracking-wide" title="Under DPDP Act 2023, GeMMy is air-gapped from vendor uploaded files. Use DocScrutiny AI for document analysis.">
-                  🛡️ Air-Gapped
+                <span className="text-[9px] text-cyan-300 bg-cyan-950/70 border border-cyan-500/30 px-1.5 py-0.5 rounded font-semibold tracking-wide flex items-center gap-1" title="Under DPDP Act 2023, GeMMy is air-gapped from vendor uploaded files. Use DocScrutiny AI for document analysis.">
+                  <ShieldCheck className="w-3 h-3 text-cyan-400" />
+                  <span>Air-Gapped</span>
                 </span>
               </div>
             </div>
@@ -260,7 +262,7 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
               className="text-gray-300 hover:text-white p-1 rounded-md hover:bg-white/10 transition text-sm font-bold cursor-pointer"
               title="Close chat"
             >
-              ✕
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -302,7 +304,7 @@ export const GeMMyChatModal: React.FC<GeMMyChatModalProps> = ({
                 <span className="text-[9px] text-gray-400 dark:text-slate-400 font-mono">{m.timestamp}</span>
                 {m.sender === 'gemmy' && m.model && (
                   <span className="text-[9px] text-gray-400 dark:text-slate-500 font-medium">
-                    • {m.model.includes('Air-Gap') ? '🛡️ Air-Gap Guard' : m.model.includes('Gemini') ? '✨ Connected Statutory AI' : '🏛️ Statutory Rules Engine'}
+                    • {m.model.includes('Air-Gap') ? 'Air-Gap Protected' : m.model.includes('Gemini') ? 'Statutory AI Engine' : 'Statutory Rules Gateway'}
                   </span>
                 )}
               </div>

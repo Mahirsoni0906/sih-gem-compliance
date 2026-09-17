@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ComplianceReport } from '../../types';
+import { X, CheckCircle2 } from 'lucide-react';
 
 interface ExplainableScrutinyModalProps {
   report: ComplianceReport | null;
@@ -33,9 +34,9 @@ export const ExplainableScrutinyModal: React.FC<ExplainableScrutinyModalProps> =
           </div>
           <button
             onClick={onClose}
-            className="text-gray-300 hover:text-white text-xl font-bold p-1 rounded"
+            className="text-gray-300 hover:text-white p-1 rounded cursor-pointer"
           >
-            ✕
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -118,8 +119,9 @@ export const ExplainableScrutinyModal: React.FC<ExplainableScrutinyModalProps> =
               </ul>
             </div>
           ) : (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-green-800 font-medium">
-              ✓ No statutory discrepancies or disqualifying criteria detected.
+            <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-green-800 font-medium flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>No statutory discrepancies or disqualifying criteria detected.</span>
             </div>
           )}
         </div>

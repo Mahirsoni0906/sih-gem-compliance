@@ -1,4 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {
+  Building2,
+  Scale,
+  Zap,
+  ShieldCheck,
+  CheckCircle2,
+  AlertTriangle,
+  Clock,
+  Check,
+  Send,
+  Download,
+  Mail,
+  X,
+  Lock,
+  Key,
+  Search,
+  ArrowUpDown,
+  FileText,
+  SlidersHorizontal,
+  Award,
+} from 'lucide-react';
+
 import { useLanguage } from '../../context/LanguageContext';
 import { DocumentIntakeOCR } from '../seller/DocumentIntakeOCR';
 import { useAuth } from '../../context/AuthContext';
@@ -131,8 +153,11 @@ export const GeMPrototypeView: React.FC<GeMPrototypeViewProps> = ({
   const [tenderFilter, setTenderFilter] = useState<'ALL' | 'SCRUTINY' | 'DISCREPANCIES'>('ALL');
   const [tenderSearch, setTenderSearch] = useState<string>('');
 
-  // O2 Bidder search
+  // O2 Bidder search and table sorting
   const [bidderSearch, setBidderSearch] = useState<string>('');
+  const [bidderSortField, setBidderSortField] = useState<'rank' | 'score' | 'risk' | 'mii'>('rank');
+  const [bidderSortAsc, setBidderSortAsc] = useState<boolean>(true);
+  const [showParityMatrix, setShowParityMatrix] = useState<boolean>(true);
 
   // S3 Upload file state
   const [uploadedFileName, setUploadedFileName] = useState<string>('gst_certificate_24AAACB.pdf');
@@ -290,7 +315,7 @@ export const GeMPrototypeView: React.FC<GeMPrototypeViewProps> = ({
     setTimeout(() => {
       setIsPingingGateway(false);
       setGatewayPingResult(
-        `✓ 200 OK — Direct encrypted handshake with ${sourceName} successful (Latency: 38ms). Record authenticity confirmed.`
+        `200 OK — Direct encrypted handshake with ${sourceName} successful (Latency: 38ms). Record authenticity confirmed.`
       );
     }, 700);
   };
@@ -452,12 +477,12 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
               className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-2.5 py-1 rounded shadow-xs cursor-pointer flex items-center gap-1.5 transition text-xs"
               title="Master ID: Switch to Seller Console on the fly"
             >
-              <span>👑⇄</span>
+              <ShieldCheck className="w-3.5 h-3.5" />
               <span>Switch to Seller Console</span>
             </button>
           )}
           <span className="hidden sm:inline text-xs text-yellow-300 font-mono bg-blue-900/80 px-2 py-1 rounded border border-blue-400/40">
-            {user?.isMaster ? '👑 ' : ''}{user?.userId || 'GOV-OFF-9012'}
+            {user?.isMaster ? '★ ' : ''}{user?.userId || 'GOV-OFF-9012'}
           </span>
           <button
             onClick={() => navigatePage('landing-page')}
@@ -509,7 +534,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 : 'text-gray-300 hover:text-white hover:bg-white/5'
             }`}
           >
-            O3. {t('deepAudit')} ({selectedBidderKey}) ⭐
+            O3. {t('deepAudit')} ({selectedBidderKey})
           </button>
           <button
             onClick={() => navigatePage('risk-page')}
@@ -529,7 +554,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 : 'text-gray-300 hover:text-white hover:bg-white/5'
             }`}
           >
-            O5. {t('auditSignOff')} ⭐
+            O5. {t('auditSignOff')}
           </button>
         </div>
       </div>
@@ -581,7 +606,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
               <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-purple-600 p-3.5 text-white text-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-xl">👑</span>
+                    <ShieldCheck className="w-5 h-5 text-amber-200" />
                     <div>
                       <span className="font-black tracking-wide uppercase text-[11px] block">Unified Master ID Enabled</span>
                       <span className="text-[10px] text-amber-100">Single Master ID to test both Seller and Officer views & DocAI scrutiny</span>
@@ -604,7 +629,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       : 'text-gray-500 hover:text-[#162c5b]'
                   }`}
                 >
-                  <span>🏢</span>
+                  <Building2 className="w-4 h-4" />
                   <span>{t('sellerDesk')} (Seller Mode)</span>
                 </button>
                 <button
@@ -616,7 +641,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       : 'text-gray-500 hover:text-[#162c5b]'
                   }`}
                 >
-                  <span>⚖️</span>
+                  <Scale className="w-4 h-4" />
                   <span>{t('officerPortal')} (Legal Officer Mode)</span>
                 </button>
               </div>
@@ -625,7 +650,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 {/* One-Click Quick Login Section */}
                 <div className="space-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <div className="flex items-center justify-between text-[10px] text-gray-500 font-bold uppercase tracking-wider">
-                    <span>⚡ Quick One-Click Sign In:</span>
+                    <span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5 text-blue-600" /> Quick One-Click Sign In:</span>
                     <span className="text-blue-600 font-normal lowercase">click to test</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -634,7 +659,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       onClick={() => handleQuickLogin('master', 'master', 'seller')}
                       className="text-left p-2.5 rounded-xl border border-amber-300 bg-amber-50 hover:bg-amber-100 transition text-[11px] cursor-pointer flex items-center gap-2"
                     >
-                      <span className="text-base">👑</span>
+                      <ShieldCheck className="w-4 h-4 text-amber-700" />
                       <div>
                         <span className="font-bold text-amber-900 block">Master ID as Seller</span>
                         <span className="text-[10px] text-amber-700">ABC Industries (SELLER-GJ-8841)</span>
@@ -645,7 +670,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       onClick={() => handleQuickLogin('master', 'master', 'officer')}
                       className="text-left p-2.5 rounded-xl border border-purple-300 bg-purple-50 hover:bg-purple-100 transition text-[11px] cursor-pointer flex items-center gap-2"
                     >
-                      <span className="text-base">⚖️</span>
+                      <Scale className="w-4 h-4 text-purple-700" />
                       <div>
                         <span className="font-bold text-purple-950 block">Master ID as Officer</span>
                         <span className="text-[10px] text-purple-700">Legal Officer (GOV-OFF-9012)</span>
@@ -662,14 +687,14 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
 
                 {loginSuccessMsg && (
                   <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-800 rounded-xl text-xs flex items-center gap-2">
-                    <span className="text-base">✅</span>
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                     <span className="font-medium">{loginSuccessMsg}</span>
                   </div>
                 )}
 
                 {loginError && (
                   <div className="p-3 bg-red-50 border border-red-300 text-red-800 rounded-xl text-xs flex items-center gap-2">
-                    <span className="text-base">⚠️</span>
+                    <AlertTriangle className="w-4 h-4 text-red-600" />
                     <span className="font-medium">{loginError}</span>
                   </div>
                 )}
@@ -767,12 +792,12 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-2.5 py-1 rounded shadow-xs cursor-pointer flex items-center gap-1.5 transition text-xs"
                       title="Master ID: Switch to Legal Officer Portal on the fly"
                     >
-                      <span>👑⇄</span>
+                      <ShieldCheck className="w-3.5 h-3.5" />
                       <span>Switch to Legal Officer Portal</span>
                     </button>
                   )}
                   <span className="hidden sm:inline font-bold text-gray-700 font-mono bg-gray-100 px-2 py-1 rounded border border-gray-300">
-                    {user?.isMaster ? '👑 ' : ''}{user?.organization || 'ABC Industries Pvt. Ltd.'} ({user?.userId || 'SELLER-GJ-8841'})
+                    {user?.isMaster ? '★ ' : ''}{user?.organization || 'ABC Industries Pvt. Ltd.'} ({user?.userId || 'SELLER-GJ-8841'})
                   </span>
                   <button
                     onClick={() => navigatePage('landing-page')}
@@ -821,7 +846,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       : 'border-transparent text-gray-500 hover:text-[#162c5b]'
                   }`}
                 >
-                  S3. 🤖 DocScrutiny AI & OCR
+                  S3. DocScrutiny AI & OCR
                 </button>
                 <button
                   onClick={() => setActiveSellerTab('issues-view')}
@@ -877,11 +902,11 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       </p>
                       {isIssueResolved ? (
                         <span className="text-xs text-green-600 font-bold">
-                          ✓ {t('ready')}
+                          <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('ready')}</span>
                         </span>
                       ) : (
                         <span className="text-xs text-amber-600 font-semibold">
-                          ⚠ {t('attentionReq')}
+                          <span className="flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> {t('attentionReq')}</span>
                         </span>
                       )}
                     </div>
@@ -902,14 +927,14 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                   >
                     <div>
                       <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
-                        🟢 {t('verified')}
+                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>{t('verified')}</span>
                       </span>
                       <p className="text-2xl font-black text-green-600 mt-1">
                         {isIssueResolved ? '13' : '12'}
                       </p>
                     </div>
-                    <div className="h-10 w-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-lg font-bold">
-                      ✓
+                    <div className="h-10 w-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center font-bold">
+                      <Check className="w-5 h-5" />
                     </div>
                   </div>
 
@@ -919,14 +944,14 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                   >
                     <div>
                       <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
-                        🟡 {t('pending')}
+                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>{t('pending')}</span>
                       </span>
                       <p className="text-2xl font-black text-amber-500 mt-1">
                         {isIssueResolved ? '1' : '2'}
                       </p>
                     </div>
-                    <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center text-lg font-bold">
-                      ⏳
+                    <div className="h-10 w-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                      <Clock className="w-5 h-5" />
                     </div>
                   </div>
 
@@ -936,7 +961,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                   >
                     <div>
                       <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
-                        🔴 {t('issues')}
+                        <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500 inline-block"></span>{t('issues')}</span>
                       </span>
                       <p className="text-2xl font-black text-red-600 mt-1">
                         {isIssueResolved ? '0' : '1'}
@@ -949,7 +974,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                           : 'bg-red-50 text-red-600 animate-pulse'
                       }`}
                     >
-                      {isIssueResolved ? '✓' : '⚠'}
+                      {isIssueResolved ? <Check className="w-5 h-5 text-green-600" /> : <AlertTriangle className="w-5 h-5 text-red-600" />}
                     </div>
                   </div>
                 </div>
@@ -965,35 +990,35 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       className="p-3 bg-gray-50 border rounded text-center cursor-pointer hover:border-green-400 transition"
                     >
                       <p className="text-[10px] text-gray-400 font-bold mb-1">GSTN Gateway</p>
-                      <span className="font-bold text-green-700">✓ Live Synced</span>
+                      <span className="font-bold text-green-700 flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Live Synced</span>
                     </div>
                     <div
                       onClick={() => openDocDetails('Income Tax Portal Gateway', 'AAACB1234F', 'Pending FY2023-24 Re-auth', 'ITR e-Filing API')}
                       className="p-3 bg-gray-50 border rounded text-center cursor-pointer hover:border-amber-400 transition"
                     >
                       <p className="text-[10px] text-gray-400 font-bold mb-1">Income Tax ITR</p>
-                      <span className="font-bold text-amber-600">⚠ Pending Re-auth</span>
+                      <span className="font-bold text-amber-600 flex items-center justify-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> Pending Re-auth</span>
                     </div>
                     <div
                       onClick={() => openDocDetails('Udyam MSME Registry', 'UDYAM-GJ-01-008291', 'Valid Lifetime (Medium Enterprise)', 'Ministry of MSME API')}
                       className="p-3 bg-gray-50 border rounded text-center cursor-pointer hover:border-green-400 transition"
                     >
                       <p className="text-[10px] text-gray-400 font-bold mb-1">Udyam MSME</p>
-                      <span className="font-bold text-green-700">✓ Verified</span>
+                      <span className="font-bold text-green-700 flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> Verified</span>
                     </div>
                     <div
                       onClick={() => openDocDetails('ICAI UDIN Verification Gateway', '24AAACB90182E1CA', 'CA Attestation Validated', 'ICAI Central Database')}
                       className="p-3 bg-gray-50 border rounded text-center cursor-pointer hover:border-green-400 transition"
                     >
                       <p className="text-[10px] text-gray-400 font-bold mb-1">ICAI UDIN</p>
-                      <span className="font-bold text-green-700">✓ CA Attested</span>
+                      <span className="font-bold text-green-700 flex items-center justify-center gap-1"><Check className="w-3.5 h-3.5" /> CA Attested</span>
                     </div>
                     <div
                       onClick={() => openDocDetails('Shram Suvidha EPFO/ESIC Gateway', 'GJ-EPF-10928-2025', 'Querying Monthly ECR File', 'Shram Suvidha Portal')}
                       className="p-3 bg-gray-50 border rounded text-center cursor-pointer hover:border-amber-400 transition"
                     >
                       <p className="text-[10px] text-gray-400 font-bold mb-1">EPFO / ESIC</p>
-                      <span className="font-bold text-amber-600">⏳ Querying</span>
+                      <span className="font-bold text-amber-600 flex items-center justify-center gap-1"><Clock className="w-3.5 h-3.5" /> Querying</span>
                     </div>
                     <div className="p-3 bg-gray-50 border rounded text-center">
                       <p className="text-[10px] text-gray-400 font-bold mb-1">DPIIT Startup</p>
@@ -1036,7 +1061,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     <tbody className="divide-y divide-gray-200">
                       <tr>
                         <td className="p-3 font-bold">Udyam / MSME</td>
-                        <td className="p-3 text-green-700 font-bold">✓ {t('verified')}</td>
+                        <td className="p-3 text-green-700 font-bold"><span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('verified')}</span></td>
                         <td className="p-3 text-right">
                           <button
                             onClick={() =>
@@ -1055,7 +1080,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       </tr>
                       <tr>
                         <td className="p-3 font-bold">GST Registration</td>
-                        <td className="p-3 text-green-700 font-bold">✓ {t('verified')}</td>
+                        <td className="p-3 text-green-700 font-bold"><span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('verified')}</span></td>
                         <td className="p-3 text-right">
                           <button
                             onClick={() =>
@@ -1077,7 +1102,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                           GST Returns (GSTR-3B)
                         </td>
                         <td className={`p-3 font-bold ${isIssueResolved ? 'text-green-700' : 'text-red-700'}`}>
-                          {isIssueResolved ? `✓ ${t('verified')}` : `⚠ ${t('pending')}`}
+                          {isIssueResolved ? <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('verified')}</span> : <span className="flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> {t('pending')}</span>}
                         </td>
                         <td className="p-3 text-right">
                           {isIssueResolved ? (
@@ -1106,7 +1131,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       </tr>
                       <tr>
                         <td className="p-3 font-bold">PAN Card</td>
-                        <td className="p-3 text-green-700 font-bold">✓ {t('verified')}</td>
+                        <td className="p-3 text-green-700 font-bold"><span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('verified')}</span></td>
                         <td className="p-3 text-right">
                           <button
                             onClick={() =>
@@ -1125,7 +1150,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       </tr>
                       <tr className="bg-amber-50/40">
                         <td className="p-3 font-bold">Income Tax Returns (ITR-6)</td>
-                        <td className="p-3 text-amber-700 font-bold">⚠ {t('pending')}</td>
+                        <td className="p-3 text-amber-700 font-bold"><span className="flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> {t('pending')}</span></td>
                         <td className="p-3 text-right">
                           <button
                             onClick={() => setActiveSellerTab('upload-view')}
@@ -1137,7 +1162,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       </tr>
                       <tr>
                         <td className="p-3 font-bold">Make in India (MII) Undertaking</td>
-                        <td className="p-3 text-green-700 font-bold">✓ {t('verified')}</td>
+                        <td className="p-3 text-green-700 font-bold"><span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('verified')}</span></td>
                         <td className="p-3 text-right">
                           <button
                             onClick={() =>
@@ -1156,7 +1181,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       </tr>
                       <tr className="bg-amber-50/40">
                         <td className="p-3 font-bold">EPFO / ESIC Challans</td>
-                        <td className="p-3 text-amber-700 font-bold">⚠ {t('pending')}</td>
+                        <td className="p-3 text-amber-700 font-bold"><span className="flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> {t('pending')}</span></td>
                         <td className="p-3 text-right">
                           <button
                             onClick={() => setActiveSellerTab('upload-view')}
@@ -1168,7 +1193,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       </tr>
                       <tr>
                         <td className="p-3 font-bold">OEM Authorization Form (MAF)</td>
-                        <td className="p-3 text-green-700 font-bold">✓ {t('verified')}</td>
+                        <td className="p-3 text-green-700 font-bold"><span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('verified')}</span></td>
                         <td className="p-3 text-right">
                           <button
                             onClick={() =>
@@ -1202,8 +1227,8 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
             {activeSellerTab === 'issues-view' && (
               <section id="issues-view" className="space-y-6">
                 <div className="border-b pb-3">
-                  <h1 className="text-xl font-black text-red-600 flex items-center space-x-2">
-                    <span>⚠</span>
+                  <h1 className="text-xl font-black text-red-600 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-red-600" />
                     <span>S4. Issue Resolution / Bid Readiness</span>
                   </h1>
                   <p className="text-xs text-gray-500">
@@ -1214,7 +1239,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 {!isIssueResolved ? (
                   <div className="bg-white rounded-lg border-2 border-red-300 p-5 space-y-4 shadow-xs">
                     <div className="p-3 bg-amber-50 border-l-4 border-amber-500 text-xs text-amber-900 space-y-1">
-                      <p className="font-bold">⚠ Latest filing information could not be verified.</p>
+                      <p className="font-bold flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Latest filing information could not be verified.</p>
                       <p>
                         <strong>Reason:</strong> Data mismatch / missing GSTR-3B ARN reference
                       </p>
@@ -1246,17 +1271,17 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                   </div>
                 ) : (
                   <div className="bg-green-50 border-2 border-green-400 p-6 rounded-lg text-center space-y-3">
-                    <span className="text-4xl block text-green-600">✓</span>
+                    <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto block" />
                     <h3 className="text-base font-bold text-green-900">{t('readiness')}: 98%</h3>
                     <p className="text-xs text-green-700">
-                      ✓ All mandatory documents uploaded | ✓ Registrations verified | ✓ Zero detected inconsistencies
+                      All mandatory documents uploaded | Registrations verified | Zero detected inconsistencies
                     </p>
                     <div className="pt-2">
                       <button
                         onClick={() => setBidModalOpen(true)}
                         className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2.5 rounded text-xs font-bold shadow-md cursor-pointer transition"
                       >
-                        🚀 {t('signSubmitBid')}
+                        <span className="flex items-center justify-center gap-1.5"><Send className="w-3.5 h-3.5" /> {t('signSubmitBid')}</span>
                       </button>
                     </div>
                   </div>
@@ -1445,171 +1470,699 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
       {/* ========================================================
            PAGE 5: O2. BIDDER COMPARISON
            ======================================================== */}
-      {activePage === 'officer-compare-page' && (
-        <div id="officer-compare-page" className="flex-1 flex flex-col page-enter">
-          {renderOfficerHeader('officer-compare-page')}
+      {activePage === 'officer-compare-page' && (() => {
+        const BIDDER_KEYS: Array<'ABC' | 'GLOBAL' | 'VERTEX'> = ['ABC', 'GLOBAL', 'VERTEX'];
+        const BIDDER_RANKS: Record<'ABC' | 'GLOBAL' | 'VERTEX', number> = {
+          ABC: 1,
+          GLOBAL: 2,
+          VERTEX: 3,
+        };
 
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
-            <div className="flex justify-between items-center border-b pb-3">
-              <div>
-                <h1 className="text-xl font-black text-[#162c5b]">{t('comparativeScrutiny')}</h1>
-                <p className="text-xs text-gray-500">
-                  Tender: GEM/2026/B/9012481 • Compare bidders by statutory parity, risk score & local content
-                </p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => navigatePage('officer-dash-page')}
-                  className="border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded cursor-pointer"
-                >
-                  {t('backToTenders')}
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedBidderKey('ABC');
-                    navigatePage('officer-page');
-                  }}
-                  className="bg-green-700 hover:bg-green-800 text-white text-xs font-bold px-3 py-1.5 rounded shadow cursor-pointer transition"
-                >
-                  Inspect ABC Industries (O3 Detail) ⭐ &gt;
-                </button>
-              </div>
-            </div>
+        // Filter and sort evaluated bidders in real-time
+        const filteredBidderKeys = BIDDER_KEYS.filter((key) => {
+          if (!bidderSearch.trim()) return true;
+          const q = bidderSearch.toLowerCase().trim();
+          const b = BIDDER_PROFILES[key];
+          return (
+            b.name.toLowerCase().includes(q) ||
+            b.regId.toLowerCase().includes(q) ||
+            b.risk.toLowerCase().includes(q) ||
+            b.localContent.toLowerCase().includes(q) ||
+            b.score.toString().includes(q) ||
+            `#${BIDDER_RANKS[key]}`.includes(q)
+          );
+        }).sort((a, b) => {
+          const pA = BIDDER_PROFILES[a];
+          const pB = BIDDER_PROFILES[b];
+          if (bidderSortField === 'rank') {
+            return bidderSortAsc ? BIDDER_RANKS[a] - BIDDER_RANKS[b] : BIDDER_RANKS[b] - BIDDER_RANKS[a];
+          }
+          if (bidderSortField === 'score') {
+            return bidderSortAsc ? pA.score - pB.score : pB.score - pA.score;
+          }
+          if (bidderSortField === 'risk') {
+            const riskWeight = { LOW: 1, MEDIUM: 2, HIGH: 3 };
+            return bidderSortAsc ? riskWeight[pA.risk] - riskWeight[pB.risk] : riskWeight[pB.risk] - riskWeight[pA.risk];
+          }
+          if (bidderSortField === 'mii') {
+            const miiA = parseFloat(pA.localContent);
+            const miiB = parseFloat(pB.localContent);
+            return bidderSortAsc ? miiA - miiB : miiB - miiA;
+          }
+          return 0;
+        });
 
-            {/* Quick Filter */}
-            <div className="flex justify-between items-center bg-white p-3 rounded-lg border shadow-xs text-xs">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-gray-600">Select Evaluated Bidder:</span>
-                <button
-                  onClick={() => setSelectedBidderKey('ABC')}
-                  className={`px-2.5 py-1 rounded font-bold cursor-pointer transition ${
-                    selectedBidderKey === 'ABC' ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-700'
+        return (
+          <div id="officer-compare-page" className="flex-1 flex flex-col page-enter">
+            {renderOfficerHeader('officer-compare-page')}
+
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+              {/* Header Title and Navigation Bar */}
+              <div className="flex flex-wrap justify-between items-center gap-3 border-b pb-3">
+                <div>
+                  <h1 className="text-xl font-black text-[#162c5b]">{t('comparativeScrutiny')}</h1>
+                  <p className="text-xs text-gray-500">
+                    Tender: GEM/2026/B/9012481 • Compare bidders by statutory parity, risk score & local content
+                  </p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => navigatePage('officer-dash-page')}
+                    className="border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer transition"
+                  >
+                    {t('backToTenders')}
+                  </button>
+                  <button
+                    onClick={() => navigatePage('officer-page')}
+                    className="bg-gradient-to-r from-emerald-700 to-teal-800 hover:from-emerald-800 hover:to-teal-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-sm cursor-pointer transition flex items-center gap-1.5"
+                  >
+                    <span>Inspect {currentBidder.name.split(' ')[0]} (O3 Detail) ★ &gt;</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Filter & Real-Time Search Bar */}
+              <div className="flex flex-wrap justify-between items-center gap-3 bg-white p-3 rounded-xl border border-gray-200 shadow-xs text-xs">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-bold text-gray-600">Select Evaluated Bidder:</span>
+                  <button
+                    onClick={() => setSelectedBidderKey('ABC')}
+                    className={`px-3 py-1 rounded-lg font-bold cursor-pointer transition flex items-center gap-1.5 ${
+                      selectedBidderKey === 'ABC' 
+                        ? 'bg-emerald-700 text-white shadow-xs' 
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>#1 ABC Industries (94%)</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedBidderKey('GLOBAL')}
+                    className={`px-3 py-1 rounded-lg font-bold cursor-pointer transition flex items-center gap-1.5 ${
+                      selectedBidderKey === 'GLOBAL' 
+                        ? 'bg-amber-600 text-white shadow-xs' 
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-300"></span>
+                    <span>#2 Global Valves (72%)</span>
+                  </button>
+                  <button
+                    onClick={() => setSelectedBidderKey('VERTEX')}
+                    className={`px-3 py-1 rounded-lg font-bold cursor-pointer transition flex items-center gap-1.5 ${
+                      selectedBidderKey === 'VERTEX' 
+                        ? 'bg-red-700 text-white shadow-xs' 
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-300"></span>
+                    <span>#3 Vertex Fluid (46%)</span>
+                  </button>
+                </div>
+
+                {/* Filter Search Input */}
+                <div className="relative flex items-center">
+                  <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="Filter bidders by name, ID, risk..."
+                    value={bidderSearch}
+                    onChange={(e) => setBidderSearch(e.target.value)}
+                    className="pl-8 pr-7 py-1.5 border border-gray-300 rounded-lg text-xs w-60 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 focus:bg-white"
+                  />
+                  {bidderSearch && (
+                    <button
+                      onClick={() => setBidderSearch('')}
+                      className="absolute right-2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                      title="Clear search"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Main Comparative Scrutiny Table */}
+              <div className="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden text-xs">
+                <table className="w-full text-left">
+                  <thead className="bg-gray-100 border-b font-bold text-gray-600 uppercase text-[11px]">
+                    <tr>
+                      <th
+                        className="p-3 cursor-pointer hover:bg-gray-200/70 select-none transition"
+                        onClick={() => {
+                          if (bidderSortField === 'rank') setBidderSortAsc(!bidderSortAsc);
+                          else { setBidderSortField('rank'); setBidderSortAsc(true); }
+                        }}
+                        title="Sort by Rank"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>{t('rankBidderName')}</span>
+                          <ArrowUpDown className="w-3 h-3 text-gray-400" />
+                        </div>
+                      </th>
+                      <th
+                        className="p-3 cursor-pointer hover:bg-gray-200/70 select-none transition"
+                        onClick={() => {
+                          if (bidderSortField === 'score') setBidderSortAsc(!bidderSortAsc);
+                          else { setBidderSortField('score'); setBidderSortAsc(false); }
+                        }}
+                        title="Sort by Compliance Score"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>{t('complianceScore')}</span>
+                          <ArrowUpDown className="w-3 h-3 text-gray-400" />
+                        </div>
+                      </th>
+                      <th
+                        className="p-3 cursor-pointer hover:bg-gray-200/70 select-none transition"
+                        onClick={() => {
+                          if (bidderSortField === 'risk') setBidderSortAsc(!bidderSortAsc);
+                          else { setBidderSortField('risk'); setBidderSortAsc(true); }
+                        }}
+                        title="Sort by Risk Tier"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>{t('riskLevel')}</span>
+                          <ArrowUpDown className="w-3 h-3 text-gray-400" />
+                        </div>
+                      </th>
+                      <th className="p-3">{t('statutoryParity')}</th>
+                      <th
+                        className="p-3 cursor-pointer hover:bg-gray-200/70 select-none transition"
+                        onClick={() => {
+                          if (bidderSortField === 'mii') setBidderSortAsc(!bidderSortAsc);
+                          else { setBidderSortField('mii'); setBidderSortAsc(false); }
+                        }}
+                        title="Sort by MII Local Content"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>{t('localContent')}</span>
+                          <ArrowUpDown className="w-3 h-3 text-gray-400" />
+                        </div>
+                      </th>
+                      <th className="p-3 text-right">{t('detailAudit')}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {filteredBidderKeys.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="p-8 text-center text-gray-500 italic">
+                          No bidders match filter criteria "{bidderSearch}".{' '}
+                          <button
+                            onClick={() => setBidderSearch('')}
+                            className="text-blue-900 underline font-bold ml-1 cursor-pointer"
+                          >
+                            Clear search
+                          </button>
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredBidderKeys.map((key) => {
+                        const bidder = BIDDER_PROFILES[key];
+                        const isSelected = selectedBidderKey === key;
+                        const rank = BIDDER_RANKS[key];
+
+                        return (
+                          <tr
+                            key={key}
+                            onClick={() => setSelectedBidderKey(key)}
+                            className={`cursor-pointer transition duration-150 ${
+                              isSelected
+                                ? key === 'ABC'
+                                  ? 'bg-emerald-50/80 ring-2 ring-emerald-400'
+                                  : key === 'GLOBAL'
+                                  ? 'bg-amber-50/80 ring-2 ring-amber-400'
+                                  : 'bg-red-50/80 ring-2 ring-red-400'
+                                : 'hover:bg-gray-50'
+                            }`}
+                          >
+                            <td className="p-3 font-bold text-gray-900">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className={`font-black px-1.5 py-0.5 rounded text-xs shrink-0 ${
+                                    rank === 1
+                                      ? 'text-emerald-800 bg-emerald-100'
+                                      : rank === 2
+                                      ? 'text-amber-800 bg-amber-100'
+                                      : 'text-red-800 bg-red-100'
+                                  }`}
+                                >
+                                  #{rank}
+                                </span>
+                                <div>
+                                  <span className="font-extrabold text-gray-900 block">{bidder.name}</span>
+                                  <span className="text-gray-500 font-mono text-[11px] block">
+                                    {bidder.regId}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+                            <td
+                              className={`p-3 font-black text-sm ${
+                                bidder.score >= 90
+                                  ? 'text-emerald-700'
+                                  : bidder.score >= 70
+                                  ? 'text-amber-700'
+                                  : 'text-red-700'
+                              }`}
+                            >
+                              {bidder.score} / 100
+                            </td>
+                            <td className="p-3">
+                              <span
+                                className={`font-bold px-2 py-0.5 rounded text-[10px] inline-flex items-center gap-1.5 border ${
+                                  bidder.risk === 'LOW'
+                                    ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                    : bidder.risk === 'MEDIUM'
+                                    ? 'bg-amber-100 text-amber-800 border-amber-300'
+                                    : 'bg-red-100 text-red-800 border-red-300'
+                                }`}
+                              >
+                                <span
+                                  className={`w-1.5 h-1.5 rounded-full ${
+                                    bidder.risk === 'LOW'
+                                      ? 'bg-emerald-600'
+                                      : bidder.risk === 'MEDIUM'
+                                      ? 'bg-amber-600'
+                                      : 'bg-red-600'
+                                  }`}
+                                ></span>
+                                <span>{bidder.risk}</span>
+                              </span>
+                            </td>
+                            <td
+                              className={`p-3 font-bold ${
+                                bidder.statutoryPassed.startsWith('6')
+                                  ? 'text-emerald-700'
+                                  : bidder.statutoryPassed.startsWith('5')
+                                  ? 'text-amber-700'
+                                  : 'text-red-700'
+                              }`}
+                            >
+                              {bidder.statutoryPassed} Passed
+                            </td>
+                            <td className="p-3">
+                              <span
+                                className={`font-mono font-bold text-xs ${
+                                  parseFloat(bidder.localContent) >= 50
+                                    ? 'text-emerald-800'
+                                    : 'text-red-700 font-black'
+                                }`}
+                              >
+                                {bidder.localContent}
+                              </span>
+                              <span className="text-[10px] text-gray-500 block">
+                                {parseFloat(bidder.localContent) >= 50 ? '(Class-I)' : '(Failed < 50%)'}
+                              </span>
+                            </td>
+                            <td className="p-3 text-right">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedBidderKey(key);
+                                  navigatePage('officer-page');
+                                }}
+                                className={`px-3 py-1.5 rounded-lg font-bold text-xs cursor-pointer shadow-xs transition inline-flex items-center gap-1 ${
+                                  key === 'ABC'
+                                    ? 'bg-[#162c5b] hover:bg-blue-900 text-white'
+                                    : 'border border-gray-300 hover:bg-gray-100 text-gray-800'
+                                }`}
+                              >
+                                <span>{key === 'ABC' ? '03. Deep Audit ★' : 'Inspect Audit >'}</span>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Selected Bidder Insight & Action Card */}
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 sm:p-5 space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm text-white ${
+                        selectedBidderKey === 'ABC'
+                          ? 'bg-emerald-600'
+                          : selectedBidderKey === 'GLOBAL'
+                          ? 'bg-amber-600'
+                          : 'bg-red-600'
+                      }`}
+                    >
+                      #{BIDDER_RANKS[selectedBidderKey]}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-sm sm:text-base font-extrabold text-gray-900">
+                          {currentBidder.name}
+                        </h3>
+                        <span className="font-mono text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                          {currentBidder.regId}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        {currentBidder.supplierClass} • Local Value Content:{' '}
+                        <strong
+                          className={
+                            parseFloat(currentBidder.localContent) >= 50
+                              ? 'text-emerald-700'
+                              : 'text-red-600'
+                          }
+                        >
+                          {currentBidder.localContent}
+                        </strong>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => navigatePage('officer-page')}
+                      className="bg-[#162c5b] hover:bg-blue-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-xs transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <FileText className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
+                      <span>Open O3 Deep Scrutiny &gt;</span>
+                    </button>
+                    <button
+                      onClick={() => navigatePage('risk-page')}
+                      className="bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-lg shadow-xs transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <AlertTriangle className="w-3.5 h-3.5 text-yellow-300 shrink-0" />
+                      <span>O4 Risk Attribution &gt;</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 4 Metric Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                      Composite Score
+                    </span>
+                    <span className="text-xl font-black text-[#162c5b] mt-0.5 block">
+                      {currentBidder.score} / 100
+                    </span>
+                    <span className="text-[10px] text-gray-500">Weighted Statutory Index</span>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                      Risk Classification
+                    </span>
+                    <span
+                      className={`text-xl font-black mt-0.5 block ${
+                        currentBidder.risk === 'LOW'
+                          ? 'text-emerald-700'
+                          : currentBidder.risk === 'MEDIUM'
+                          ? 'text-amber-600'
+                          : 'text-red-600'
+                      }`}
+                    >
+                      {currentBidder.risk} RISK
+                    </span>
+                    <span className="text-[10px] text-gray-500">Zero-Trust Heuristics</span>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                      Statutory Parity
+                    </span>
+                    <span className="text-xl font-black text-gray-900 mt-0.5 block">
+                      {currentBidder.statutoryPassed} Passed
+                    </span>
+                    <span className="text-[10px] text-gray-500">CBDT, GSTN, MSME, EPFO</span>
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 block">
+                      Tender Requirements
+                    </span>
+                    <span className="text-xl font-black text-gray-900 mt-0.5 block">
+                      {currentBidder.tenderPassed} Met
+                    </span>
+                    <span className="text-[10px] text-gray-500">MII, MAF, Experience</span>
+                  </div>
+                </div>
+
+                {/* Explainable Statutory Note */}
+                <div
+                  className={`p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
+                    selectedBidderKey === 'ABC'
+                      ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900'
+                      : selectedBidderKey === 'GLOBAL'
+                      ? 'bg-amber-50/70 border-amber-200 text-amber-900'
+                      : 'bg-red-50/70 border-red-200 text-red-900'
                   }`}
                 >
-                  #1 ABC Industries (94%)
-                </button>
-                <button
-                  onClick={() => setSelectedBidderKey('GLOBAL')}
-                  className={`px-2.5 py-1 rounded font-bold cursor-pointer transition ${
-                    selectedBidderKey === 'GLOBAL' ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-700'
-                  }`}
-                >
-                  #2 Global Valves (72%)
-                </button>
-                <button
-                  onClick={() => setSelectedBidderKey('VERTEX')}
-                  className={`px-2.5 py-1 rounded font-bold cursor-pointer transition ${
-                    selectedBidderKey === 'VERTEX' ? 'bg-red-700 text-white' : 'bg-gray-100 text-gray-700'
-                  }`}
-                >
-                  #3 Vertex Fluid (46%)
-                </button>
+                  <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
+                  <div className="space-y-0.5">
+                    <strong className="block font-bold">
+                      {selectedBidderKey === 'ABC' && 'L1 Optimal Candidate: 100% Statutory Clearance'}
+                      {selectedBidderKey === 'GLOBAL' &&
+                        'Minor Remediation Flag: FY 2021-22 ITR Confirmation Pending'}
+                      {selectedBidderKey === 'VERTEX' &&
+                        'Statutory Rejection Ground: Make-in-India Sub-50% & Expired OEM MAF'}
+                    </strong>
+                    <p className="text-[11px] leading-relaxed">
+                      {selectedBidderKey === 'ABC' &&
+                        'All 6 statutory registries validated in real-time. Full GFR 153(iii) & Class-I 58.4% local value addition verified. Recommended for technical qualification.'}
+                      {selectedBidderKey === 'GLOBAL' &&
+                        '5 of 6 statutory registries verified. FY 2021-22 ITR filing record pending confirmation with e-Filing portal. Class-I 51.2% local value addition verified.'}
+                      {selectedBidderKey === 'VERTEX' &&
+                        'Critical Discrepancies: Make-in-India content (34.0%) falls below 50% GFR threshold. OEM Authorization expired 31-Dec-2025. EPFO registration pending and ESIC default notice flagged.'}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <input
-                type="text"
-                placeholder="Filter bidders..."
-                value={bidderSearch}
-                onChange={(e) => setBidderSearch(e.target.value)}
-                className="p-1 border border-gray-300 rounded text-xs w-48"
-              />
-            </div>
 
-            <div className="bg-white rounded-lg border shadow-xs overflow-hidden text-xs">
-              <table className="w-full text-left">
-                <thead className="bg-gray-100 border-b font-bold text-gray-600 uppercase">
-                  <tr>
-                    <th className="p-3">{t('rankBidderName')}</th>
-                    <th className="p-3">{t('complianceScore')}</th>
-                    <th className="p-3">{t('riskLevel')}</th>
-                    <th className="p-3">{t('statutoryParity')}</th>
-                    <th className="p-3">{t('localContent')}</th>
-                    <th className="p-3 text-right">{t('detailAudit')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr className={selectedBidderKey === 'ABC' ? 'bg-emerald-50/60 ring-1 ring-emerald-300' : 'bg-emerald-50/20'}>
-                    <td className="p-3 font-bold text-gray-900">
-                      <span className="text-emerald-700 font-extrabold mr-1">#1</span>
-                      ABC Industries Pvt. Ltd. (SELLER-GJ-8841)
-                    </td>
-                    <td className="p-3 font-bold text-green-700">94 / 100</td>
-                    <td className="p-3">
-                      <span className="bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                        🟢 {t('lowRisk')}
-                      </span>
-                    </td>
-                    <td className="p-3 font-bold text-green-700">6 / 6 Passed</td>
-                    <td className="p-3 font-mono">58.4% (Class-I)</td>
-                    <td className="p-3 text-right">
-                      <button
-                        onClick={() => {
-                          setSelectedBidderKey('ABC');
-                          navigatePage('officer-page');
-                        }}
-                        className="bg-[#162c5b] hover:bg-blue-900 text-white px-2.5 py-1 rounded font-bold cursor-pointer transition"
-                      >
-                        O3. Deep Audit ⭐
-                      </button>
-                    </td>
-                  </tr>
+              {/* Side-by-Side Clause-by-Clause Statutory Parity Matrix */}
+              <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden text-xs">
+                <div className="bg-[#082435] text-white p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Scale className="w-4 h-4 text-yellow-400 shrink-0" />
+                    <h3 className="font-extrabold text-sm uppercase tracking-wider">
+                      Comparative Statutory Clause Parity Matrix (Side-by-Side)
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setShowParityMatrix(!showParityMatrix)}
+                    className="text-xs text-yellow-300 hover:text-white underline cursor-pointer"
+                  >
+                    {showParityMatrix ? 'Collapse Matrix' : 'Expand Matrix'}
+                  </button>
+                </div>
 
-                  <tr className={selectedBidderKey === 'GLOBAL' ? 'bg-amber-50/60 ring-1 ring-amber-300' : ''}>
-                    <td className="p-3 font-bold text-gray-900">
-                      <span className="text-amber-700 font-extrabold mr-1">#2</span>
-                      Global Industrial Valves Ltd. (SELLER-MH-4019)
-                    </td>
-                    <td className="p-3 font-bold text-amber-700">72 / 100</td>
-                    <td className="p-3">
-                      <span className="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                        🟡 {t('mediumRisk')}
-                      </span>
-                    </td>
-                    <td className="p-3 font-bold text-amber-700">5 / 6 Passed</td>
-                    <td className="p-3 font-mono">51.2% (Class-I)</td>
-                    <td className="p-3 text-right">
-                      <button
-                        onClick={() => {
-                          setSelectedBidderKey('GLOBAL');
-                          navigatePage('officer-page');
-                        }}
-                        className="border border-gray-300 hover:bg-gray-100 px-2.5 py-1 rounded font-bold text-gray-700 cursor-pointer transition"
-                      >
-                        Inspect Audit &gt;
-                      </button>
-                    </td>
-                  </tr>
+                {showParityMatrix && (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="bg-gray-100 border-b text-[11px] font-bold text-gray-600 uppercase">
+                        <tr>
+                          <th className="p-3 w-1/4">Statutory & Tender Clause</th>
+                          <th className="p-3 text-center border-l bg-emerald-50/50">
+                            #1 ABC Industries (94%)
+                          </th>
+                          <th className="p-3 text-center border-l bg-amber-50/50">
+                            #2 Global Valves (72%)
+                          </th>
+                          <th className="p-3 text-center border-l bg-red-50/50">
+                            #3 Vertex Fluid (46%)
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 text-xs">
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            1. GSTIN Active Regular Taxpayer
+                            <span className="text-[10px] text-gray-500 block">GSTN Common Portal Sync</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-emerald-50/20">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Active Regular
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-amber-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Active Regular
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-red-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Active Regular
+                            </span>
+                          </td>
+                        </tr>
 
-                  <tr className={selectedBidderKey === 'VERTEX' ? 'bg-red-50/60 ring-1 ring-red-300' : ''}>
-                    <td className="p-3 font-bold text-gray-900">
-                      <span className="text-red-700 font-extrabold mr-1">#3</span>
-                      Vertex Fluid Systems (SELLER-DL-1102)
-                    </td>
-                    <td className="p-3 font-bold text-red-700">46 / 100</td>
-                    <td className="p-3">
-                      <span className="bg-red-100 text-red-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                        🔴 {t('highRisk')}
-                      </span>
-                    </td>
-                    <td className="p-3 font-bold text-red-700">3 / 6 Passed</td>
-                    <td className="p-3 font-mono">34.0% (Failed &lt; 50%)</td>
-                    <td className="p-3 text-right">
-                      <button
-                        onClick={() => {
-                          setSelectedBidderKey('VERTEX');
-                          navigatePage('officer-page');
-                        }}
-                        className="border border-gray-300 hover:bg-gray-100 px-2.5 py-1 rounded font-bold text-gray-700 cursor-pointer transition"
-                      >
-                        Inspect Audit &gt;
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </main>
-        </div>
-      )}
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            2. Income Tax PAN Entity Linkage
+                            <span className="text-[10px] text-gray-500 block">CBDT Database Validation</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-emerald-50/20">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Verified (AAACB)
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-amber-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Verified (AAACG)
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-red-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Verified (AAACV)
+                            </span>
+                          </td>
+                        </tr>
+
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            3. Udyam MSME Registration
+                            <span className="text-[10px] text-gray-500 block">National MSME Portal API</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-emerald-50/20">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Active Lifetime
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-amber-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Active Lifetime
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-red-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Active Lifetime
+                            </span>
+                          </td>
+                        </tr>
+
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            4. Income Tax Returns (Past 3 FY)
+                            <span className="text-[10px] text-gray-500 block">ITD e-Filing Verification</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-emerald-50/20">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> 3 FY Verified
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-amber-700 bg-amber-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> FY21-22 Pending
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-red-700 bg-red-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <X className="w-3.5 h-3.5 text-red-600" /> Discrepancy Flag
+                            </span>
+                          </td>
+                        </tr>
+
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            5. EPFO Labour Compliance
+                            <span className="text-[10px] text-gray-500 block">Shram Suvidha Gateway</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-emerald-50/20">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> ECR Lodged
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-amber-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> ECR Lodged
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-amber-700 bg-red-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Pending Verify
+                            </span>
+                          </td>
+                        </tr>
+
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            6. ESIC Social Security Status
+                            <span className="text-[10px] text-gray-500 block">ESIC Portal Handshake</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-emerald-50/20">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Cleared
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-amber-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Cleared
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-red-700 bg-red-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <X className="w-3.5 h-3.5 text-red-600" /> Default Notice
+                            </span>
+                          </td>
+                        </tr>
+
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            7. OEM Authorization Form (MAF)
+                            <span className="text-[10px] text-gray-500 block">Clause 14.2 Manufacturer Link</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-emerald-50/20">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Valid ONGC Form
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-emerald-700 bg-amber-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5 text-emerald-600" /> Valid Global Form
+                            </span>
+                          </td>
+                          <td className="p-3 text-center border-l font-bold text-red-700 bg-red-50/10">
+                            <span className="inline-flex items-center gap-1">
+                              <X className="w-3.5 h-3.5 text-red-600" /> Expired 31-Dec
+                            </span>
+                          </td>
+                        </tr>
+
+                        <tr className="hover:bg-gray-50">
+                          <td className="p-3 font-semibold text-gray-800">
+                            8. Make in India (MII) Local Content
+                            <span className="text-[10px] text-gray-500 block">Minimum 50% Threshold</span>
+                          </td>
+                          <td className="p-3 text-center border-l font-black text-emerald-700 bg-emerald-50/20">
+                            58.4% (Class-I)
+                          </td>
+                          <td className="p-3 text-center border-l font-black text-emerald-700 bg-amber-50/10">
+                            51.2% (Class-I)
+                          </td>
+                          <td className="p-3 text-center border-l font-black text-red-600 bg-red-50/10">
+                            34.0% (Disqualified)
+                          </td>
+                        </tr>
+
+                        <tr className="bg-gray-50 font-extrabold">
+                          <td className="p-3 uppercase tracking-wider text-[#162c5b]">
+                            Final Technical Verdict
+                          </td>
+                          <td className="p-3 text-center border-l text-emerald-700 bg-emerald-100/60 font-black">
+                            QUALIFIED (L1)
+                          </td>
+                          <td className="p-3 text-center border-l text-amber-700 bg-amber-100/60 font-black">
+                            CONDITIONAL (L2)
+                          </td>
+                          <td className="p-3 text-center border-l text-red-700 bg-red-100/60 font-black">
+                            REJECTED
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </main>
+          </div>
+        );
+      })()}
 
       {/* ========================================================
            PAGE 6: O3. BIDDER VERIFICATION DETAIL ⭐ (HERO SCREEN)
@@ -1733,7 +2286,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1750,7 +2303,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1767,7 +2320,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1784,7 +2337,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1801,7 +2354,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1818,7 +2371,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1842,7 +2395,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1859,7 +2412,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1876,7 +2429,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1893,7 +2446,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     }
                     className="font-bold text-green-700 hover:underline cursor-pointer flex items-center gap-1"
                   >
-                    <span>✓ {t('verified')}</span>
+                    <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5 text-emerald-700" /> {t('verified')}</span>
                     <span className="text-[10px] text-blue-600">({t('inspect')})</span>
                   </button>
                 </div>
@@ -1931,7 +2484,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                   onClick={() => navigatePage('audit-page')}
                   className="bg-blue-900 hover:bg-blue-950 text-white text-xs font-bold px-3 py-1.5 rounded shadow cursor-pointer transition"
                 >
-                  O5. {t('auditSignOff')} ⭐ &gt;
+                  O5. {t('auditSignOff')} &gt;
                 </button>
               </div>
             </div>
@@ -1952,7 +2505,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       : 'text-red-600'
                   }`}
                 >
-                  {currentBidder.risk === 'LOW' ? '🟢 LOW' : currentBidder.risk === 'MEDIUM' ? '🟡 MEDIUM' : '🔴 HIGH'}
+                  {currentBidder.risk === 'LOW' ? 'LOW RISK' : currentBidder.risk === 'MEDIUM' ? 'MEDIUM RISK' : 'HIGH RISK'}
                 </p>
               </div>
               <div className="bg-white p-5 rounded-lg border shadow-xs">
@@ -1964,7 +2517,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       currentBidder.risk === 'LOW' ? 'bg-green-600 text-white font-extrabold shadow' : 'bg-gray-100 text-gray-500'
                     }`}
                   >
-                    🟢 Low
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block mr-1.5"></span>Low
                   </button>
                   <button
                     onClick={() => setSelectedRiskTier('MEDIUM')}
@@ -1972,7 +2525,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       currentBidder.risk === 'MEDIUM' ? 'bg-amber-500 text-white font-extrabold shadow' : 'bg-gray-100 text-gray-500'
                     }`}
                   >
-                    🟡 Medium
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block mr-1.5"></span>Medium
                   </button>
                   <button
                     onClick={() => setSelectedRiskTier('HIGH')}
@@ -1980,7 +2533,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       currentBidder.risk === 'HIGH' ? 'bg-red-600 text-white font-extrabold shadow' : 'bg-gray-100 text-gray-500'
                     }`}
                   >
-                    🔴 High
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-600 inline-block mr-1.5"></span>High
                   </button>
                 </div>
               </div>
@@ -2004,7 +2557,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     <td className="p-3 font-bold">Document Validity</td>
                     <td className="p-3 font-mono">20%</td>
                     <td className="p-3 font-bold">100%</td>
-                    <td className="p-3 text-right text-green-700 font-bold">✓ Full Score</td>
+                    <td className="p-3 text-right text-green-700 font-bold"><span className="flex items-center justify-end gap-1"><Check className="w-3.5 h-3.5" /> Full Score</span></td>
                   </tr>
                   <tr
                     onClick={() => openDocDetails('Government Verification Attribution', '98% Parity', 'Live synced across GSTN/CBDT/EPFO', 'Central Gateways')}
@@ -2013,7 +2566,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     <td className="p-3 font-bold">Government Verification</td>
                     <td className="p-3 font-mono">30%</td>
                     <td className="p-3 font-bold">{currentBidder.score > 80 ? '98%' : '72%'}</td>
-                    <td className="p-3 text-right text-green-700 font-bold">✓ API Synced</td>
+                    <td className="p-3 text-right text-green-700 font-bold"><span className="flex items-center justify-end gap-1"><Check className="w-3.5 h-3.5" /> API Synced</span></td>
                   </tr>
                   <tr
                     onClick={() => openDocDetails('Tender Compliance Attribution', 'Criteria Evaluation', 'Clauses 14.1 to 14.8 checked', 'Procurement Engine')}
@@ -2022,7 +2575,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     <td className="p-3 font-bold">Tender Compliance</td>
                     <td className="p-3 font-mono">25%</td>
                     <td className="p-3 font-bold">{currentBidder.score > 80 ? '95%' : '60%'}</td>
-                    <td className="p-3 text-right text-green-700 font-bold">✓ Criteria Met</td>
+                    <td className="p-3 text-right text-green-700 font-bold"><span className="flex items-center justify-end gap-1"><Check className="w-3.5 h-3.5" /> Criteria Met</span></td>
                   </tr>
                   <tr
                     onClick={() => openDocDetails('Data Consistency Model', 'Entity Cross-Verification', 'PAN, GST, MAF legal name match', 'NLP Core')}
@@ -2031,7 +2584,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                     <td className="p-3 font-bold">Data Consistency</td>
                     <td className="p-3 font-mono">15%</td>
                     <td className="p-3 font-bold">{currentBidder.score > 80 ? '92%' : '58%'}</td>
-                    <td className="p-3 text-right text-green-700 font-bold">✓ High Parity</td>
+                    <td className="p-3 text-right text-green-700 font-bold"><span className="flex items-center justify-end gap-1"><Check className="w-3.5 h-3.5" /> High Parity</span></td>
                   </tr>
                   <tr
                     onClick={() => openDocDetails('Risk Indicators Analysis', 'Zero Adverse Red Flags', 'No statutory blacklists', 'GeM Watchlist')}
@@ -2043,7 +2596,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       {currentBidder.risk === 'LOW' ? 'Low (Zero Negative Flags)' : 'Adverse Indicators Present'}
                     </td>
                     <td className="p-3 text-right text-green-700 font-bold">
-                      {currentBidder.risk === 'LOW' ? '✓ Clean Record' : '⚠ Caution'}
+                      {currentBidder.risk === 'LOW' ? <span className="flex items-center gap-1 text-emerald-700"><Check className="w-3.5 h-3.5" /> Clean Record</span> : <span className="flex items-center gap-1 text-amber-700"><AlertTriangle className="w-3.5 h-3.5" /> Caution</span>}
                     </td>
                   </tr>
                 </tbody>
@@ -2079,9 +2632,9 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 </button>
                 <button
                   onClick={handleExportDossier}
-                  className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded shadow cursor-pointer transition flex items-center gap-1"
+                  className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold px-3 py-1.5 rounded shadow cursor-pointer transition flex items-center gap-1.5"
                 >
-                  <span>📥</span>
+                  <Download className="w-3.5 h-3.5" />
                   <span>{t('exportDossier')}</span>
                 </button>
               </div>
@@ -2166,7 +2719,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono">10:42 AM</td>
                       <td>Upload Scan</td>
                       <td>GeM Gateway</td>
-                      <td>✓ Clean</td>
+                      <td><span className="flex items-center gap-1 text-emerald-700 font-medium"><Check className="w-3.5 h-3.5" /> Clean</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('Upload Checksum', 'SHA256: 8f4a29d81b45c6a0', 'Verified Match', 'GeM Gateway')}
@@ -2181,7 +2734,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono">10:43 AM</td>
                       <td>OCR Extraction</td>
                       <td>Vision Engine</td>
-                      <td>✓ 99.4% Clarity</td>
+                      <td><span className="flex items-center gap-1 text-emerald-700 font-medium"><Check className="w-3.5 h-3.5" /> 99.4% Clarity</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('Vision OCR Mapping', 'Token-Map #901', 'High Confidence Bounding Boxes', 'Vision Engine')}
@@ -2196,7 +2749,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono">10:43 AM</td>
                       <td>GST Status</td>
                       <td>GSTN API</td>
-                      <td>✓ Active</td>
+                      <td><span className="flex items-center gap-1 text-emerald-700 font-medium"><Check className="w-3.5 h-3.5" /> Active</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('GSTN Gateway Response', 'Receipt #88192', 'Active Regular Taxpayer Confirmed', 'GSTN Portal')}
@@ -2211,7 +2764,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono">10:44 AM</td>
                       <td>PAN Verification</td>
                       <td>CBDT / NSDL</td>
-                      <td>✓ Matched</td>
+                      <td><span className="flex items-center gap-1 text-emerald-700 font-medium"><Check className="w-3.5 h-3.5" /> Matched</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('CBDT Database Match', 'CBDT-TX #40192', 'Entity PAN Valid and Operational', 'CBDT Database')}
@@ -2226,7 +2779,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono">10:45 AM</td>
                       <td>Cross-Verification</td>
                       <td>ProcureAI Core</td>
-                      <td>✓ 11/12 Parity</td>
+                      <td><span className="flex items-center gap-1 text-emerald-700 font-medium"><Check className="w-3.5 h-3.5" /> 11/12 Parity</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('AI Cross-Check Matrix', 'Matrix #9012481', 'Statutory Clause Parity Verified', 'ProcureAI')}
@@ -2241,7 +2794,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono text-amber-900 font-bold">10:45 AM</td>
                       <td>Discrepancy Flag</td>
                       <td>NLP Matcher</td>
-                      <td>⚠ Name Var</td>
+                      <td><span className="flex items-center gap-1 text-amber-700 font-medium"><AlertTriangle className="w-3.5 h-3.5" /> Name Var</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('NLP Discrepancy Flag', 'Flag #DISC-1', 'Name string matched with 96% semantic distance', 'NLP Matcher')}
@@ -2256,7 +2809,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono">11:02 AM</td>
                       <td>Officer Review</td>
                       <td>Evaluation Desk</td>
-                      <td>✓ Accepted</td>
+                      <td><span className="flex items-center gap-1 text-emerald-700 font-medium"><Check className="w-3.5 h-3.5" /> Accepted</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('Human Officer Scrutiny', 'Review #OFF-092', 'Discrepancy resolved with Certificate of Incorporation', 'Officer Desk')}
@@ -2271,7 +2824,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       <td className="p-3 font-mono text-green-900 font-bold">11:05 AM</td>
                       <td>Final Adjudication</td>
                       <td>DSC Token Gate</td>
-                      <td>✓ Qualified</td>
+                      <td><span className="flex items-center gap-1 text-emerald-700 font-medium"><Check className="w-3.5 h-3.5" /> Qualified</span></td>
                       <td className="p-3">
                         <button
                           onClick={() => openDocDetails('DSC Signature Gate', 'DSC-Sign #2026', 'Signed with Class-3 Government DSC', 'Token Gate')}
@@ -2339,19 +2892,19 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                   onClick={() => handleExecuteDecision('Approve / Qualify')}
                   className="p-3 bg-green-700 hover:bg-green-800 text-white rounded font-bold shadow text-center cursor-pointer transition"
                 >
-                  ✓ {t('approveQualify')}
+                  <span className="flex items-center gap-1"><Check className="w-3.5 h-3.5" /> {t('approveQualify')}</span>
                 </button>
                 <button
                   onClick={() => handleExecuteDecision('Send for Clarification')}
                   className="p-3 bg-amber-500 hover:bg-amber-600 text-white rounded font-bold shadow text-center cursor-pointer transition"
                 >
-                  ✉ {t('sendClarification')}
+                  <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {t('sendClarification')}</span>
                 </button>
                 <button
                   onClick={() => handleExecuteDecision('Reject / Disqualify')}
                   className="p-3 bg-red-700 hover:bg-red-800 text-white rounded font-bold shadow text-center cursor-pointer transition"
                 >
-                  ✕ {t('rejectDisqualify')}
+                  <span className="flex items-center gap-1"><X className="w-3.5 h-3.5" /> {t('rejectDisqualify')}</span>
                 </button>
               </div>
 
@@ -2365,7 +2918,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                       onClick={handleDownloadSignedDecision}
                       className="bg-green-800 hover:bg-green-900 text-white text-[11px] font-bold px-2.5 py-1 rounded cursor-pointer transition"
                     >
-                      📥 Download Decision Certificate (.txt)
+                      <span className="flex items-center gap-1.5"><Download className="w-3.5 h-3.5" /> Download Decision Certificate (.txt)</span>
                     </button>
                   </div>
                   <p className="text-[11px] text-gray-700">Remarks: &ldquo;{decisionReceipt.notes}&rdquo;</p>
@@ -2387,9 +2940,9 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
               <h3 className="font-bold text-sm text-[#162c5b]">{docModalData.title}</h3>
               <button
                 onClick={() => setDocModalData((prev) => ({ ...prev, isOpen: false }))}
-                className="text-gray-400 hover:text-gray-600 cursor-pointer font-bold"
+                className="text-gray-400 hover:text-gray-600 cursor-pointer font-bold flex items-center justify-center p-1"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-2 text-xs">
@@ -2418,7 +2971,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
                 disabled={isPingingGateway}
                 className="px-2.5 py-1 bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200 rounded font-bold cursor-pointer transition disabled:opacity-50"
               >
-                {isPingingGateway ? 'Pinging Gateway...' : '⚡ Ping Govt Gateway Live'}
+                {isPingingGateway ? 'Pinging Gateway...' : <span className="flex items-center justify-center gap-1.5"><Zap className="w-3.5 h-3.5" /> Ping Govt Gateway Live</span>}
               </button>
               <button
                 onClick={() => setDocModalData((prev) => ({ ...prev, isOpen: false }))}
@@ -2437,13 +2990,13 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
           <div className="bg-white rounded-lg max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 duration-150 text-xs">
             <div className="flex justify-between items-center border-b pb-2">
               <h3 className="font-bold text-sm text-[#162c5b]">
-                🔐 Digital Signature Certificate (DSC) Submission
+                <span className="flex items-center gap-2"><Lock className="w-4 h-4 text-orange-400 shrink-0" /> Digital Signature Certificate (DSC) Submission</span>
               </h3>
               <button
                 onClick={() => setBidModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 cursor-pointer font-bold"
+                className="text-gray-400 hover:text-gray-600 cursor-pointer font-bold flex items-center justify-center p-1"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -2485,7 +3038,7 @@ Submission Status: SUCCESSFUL - LODGED IN TENDER BOX
               </div>
             ) : (
               <div className="text-center space-y-3 py-2">
-                <span className="text-4xl block text-green-600">✓</span>
+                <CheckCircle2 className="w-10 h-10 text-green-600 mx-auto block" />
                 <h4 className="font-bold text-sm text-green-900">Bid Successfully Submitted!</h4>
                 <p className="text-gray-600 text-[11px]">
                   Your bid has been cryptographically locked in the GeM Tender Box. The official submission receipt has been downloaded to your computer.

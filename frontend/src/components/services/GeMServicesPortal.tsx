@@ -1,5 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { OFFICIAL_GEM_SERVICES, CORE_SERVICE_DOMAINS, type GeMService } from '../../data/gemServicesData';
+import {
+  ArrowLeft,
+  Search,
+  Landmark,
+  TrendingUp,
+  Sparkles,
+  CreditCard,
+  Scale,
+  CheckCircle2,
+  Check,
+  ShieldCheck,
+  X,
+} from 'lucide-react';
+import { EnterpriseIconBadge } from '../common/ProfessionalIcon';
 
 interface GeMServicesPortalProps {
   initialQuery?: string;
@@ -78,7 +92,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                 onClick={onClose}
                 className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded transition cursor-pointer flex items-center gap-1.5 border border-white/20"
               >
-                <span>✕</span>
+                <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
                 <span>Back to Home</span>
               </button>
             )}
@@ -124,7 +138,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
           {/* Search Bar inside Hero */}
           <div>
             <div className="relative max-w-2xl bg-white rounded-full shadow-md flex items-center p-1 border border-white/40 focus-within:border-[#f37021]">
-              <span className="text-gray-400 pl-3 pr-2 text-sm">🔍</span>
+              <Search className="w-4 h-4 text-gray-400 ml-2.5 mr-1 shrink-0" />
               <input
                 type="text"
                 value={searchQuery}
@@ -161,7 +175,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
-              <span>🏛️</span>
+              <Landmark className="w-3.5 h-3.5 shrink-0" />
               <span>All Official Services ({OFFICIAL_GEM_SERVICES.length})</span>
             </button>
             <button
@@ -172,7 +186,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
-              <span>🔥</span>
+              <TrendingUp className="w-3.5 h-3.5 shrink-0" />
               <span>Trending Services (20)</span>
             </button>
             <button
@@ -183,7 +197,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                   : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               }`}
             >
-              <span>✨</span>
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
               <span>Emerging Services (10)</span>
             </button>
           </div>
@@ -205,7 +219,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                   : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 hover:border-gray-300'
               }`}
             >
-              <span>{dom.icon}</span>
+              <EnterpriseIconBadge type={dom.name} className="w-3.5 h-3.5 shrink-0" />
               <span>{dom.name}</span>
             </button>
           ))}
@@ -214,7 +228,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
         {/* 3. Services Grid with Smooth Tab & Filter Transition */}
         {filteredServices.length === 0 ? (
           <div key="empty" className="bg-white rounded-xl p-12 text-center border border-gray-200 space-y-3 tab-content-enter">
-            <span className="text-4xl">🔍</span>
+            <Search className="w-10 h-10 text-gray-300 mx-auto" />
             <h3 className="text-base font-bold text-gray-800">No Services Found</h3>
             <p className="text-xs text-gray-500 max-w-md mx-auto">
               No official GeM service matched your search for "{searchQuery}". Try selecting "All Services" or clear your search term.
@@ -245,7 +259,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center space-x-2.5">
                       <div className="w-10 h-10 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center text-xl group-hover:scale-105 transition-transform">
-                        {service.domainIcon}
+                        <EnterpriseIconBadge type={service.domain} className="w-5 h-5 text-orange-600" />
                       </div>
                       <div>
                         <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">
@@ -258,7 +272,14 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                               : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                           }`}
                         >
-                          {service.category === 'Trending' ? '🔥 Trending GeM' : '✨ Emerging GeM'}
+                          <span className="inline-flex items-center gap-1">
+                            {service.category === 'Trending' ? (
+                              <TrendingUp className="w-3 h-3 text-amber-700 shrink-0" />
+                            ) : (
+                              <Sparkles className="w-3 h-3 text-emerald-700 shrink-0" />
+                            )}
+                            <span>{service.category === 'Trending' ? 'Trending GeM' : 'Emerging GeM'}</span>
+                          </span>
                         </span>
                       </div>
                     </div>
@@ -280,7 +301,10 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
 
                   {/* Billing Model Badge */}
                   <div className="bg-blue-50/70 border border-blue-100 rounded-md p-2 text-xs flex items-center gap-1.5">
-                    <span className="text-blue-700 font-bold">💳 Billing Basis:</span>
+                    <span className="text-blue-700 font-bold flex items-center gap-1">
+                      <CreditCard className="w-3.5 h-3.5 shrink-0" />
+                      <span>Billing Basis:</span>
+                    </span>
                     <span className="text-blue-900 font-semibold text-[11px] truncate">
                       {service.billingModel}
                     </span>
@@ -288,14 +312,14 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
 
                   {/* Statutory Requirements Preview */}
                   <div className="space-y-1.5 pt-1">
-                    <p className="text-[10px] font-bold uppercase text-gray-400 tracking-wider flex items-center gap-1">
-                      <span>⚖️</span>
+                    <p className="text-[10px] font-bold uppercase text-gray-400 tracking-wider flex items-center gap-1.5">
+                      <Scale className="w-3.5 h-3.5 text-gray-400 shrink-0" />
                       <span>Statutory Compliance Gates ({service.statutoryRequirements.length})</span>
                     </p>
                     <ul className="space-y-1 text-[11px] text-gray-600">
                       {service.statutoryRequirements.slice(0, 2).map((req, idx) => (
                         <li key={idx} className="flex items-start gap-1.5">
-                          <span className="text-emerald-600 font-bold text-xs">✓</span>
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
                           <span className="truncate">{req}</span>
                         </li>
                       ))}
@@ -334,7 +358,8 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                         className="bg-[#f37021] hover:bg-orange-600 text-white px-2.5 py-1 rounded text-xs font-bold shadow-xs transition cursor-pointer flex items-center gap-1"
                         title="Run AI Statutory Verification for this Service"
                       >
-                        <span>⚡ Verify</span>
+                        <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+                        <span>Verify</span>
                       </button>
                     )}
                   </div>
@@ -353,7 +378,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
             <div className="bg-[#0c2340] text-white p-6 flex items-start justify-between gap-4">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl border border-white/20">
-                  {inspectedService.domainIcon}
+                  <EnterpriseIconBadge type={inspectedService.domain} className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-400 text-blue-950 inline-block mb-1">
@@ -370,9 +395,9 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
 
               <button
                 onClick={() => setInspectedService(null)}
-                className="text-gray-300 hover:text-white text-xl font-bold p-1 transition cursor-pointer"
+                className="text-gray-300 hover:text-white p-1 transition cursor-pointer"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -403,14 +428,14 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
               {/* Statutory Checklist */}
               <div>
                 <h4 className="font-bold text-gray-900 uppercase tracking-wider text-[10px] text-gray-500 mb-2 flex items-center gap-1.5">
-                  <span>⚖️</span>
+                  <Scale className="w-4 h-4 text-blue-700 shrink-0" />
                   <span>Mandatory Statutory Compliance Verification Checklist</span>
                 </h4>
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-2.5">
                   {inspectedService.statutoryRequirements.map((req, idx) => (
                     <div key={idx} className="flex items-start gap-2.5 bg-white p-2.5 rounded-lg border border-gray-100 shadow-2xs">
-                      <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
-                        ✓
+                      <div className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-700" />
                       </div>
                       <div>
                         <p className="font-bold text-gray-900">{req}</p>
@@ -455,7 +480,8 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
                     }}
                     className="px-4 py-2 bg-[#f37021] hover:bg-orange-600 text-white rounded-lg font-bold text-xs cursor-pointer transition shadow-xs flex items-center gap-1.5"
                   >
-                    <span>⚡ Run AI Statutory Check</span>
+                    <ShieldCheck className="w-4 h-4 shrink-0" />
+                    <span>Run AI Statutory Check</span>
                   </button>
                 )}
               </div>

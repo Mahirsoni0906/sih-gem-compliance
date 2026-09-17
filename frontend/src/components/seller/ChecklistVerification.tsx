@@ -1,4 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Zap,
+  ShieldCheck,
+  Key,
+  Building2,
+  CheckCircle2,
+  AlertTriangle,
+  Landmark,
+  Search,
+  RotateCw,
+  CreditCard,
+  Award,
+  Scale,
+  Activity,
+  Clock,
+  Check,
+  X,
+  Lock
+} from 'lucide-react';
 import { api } from '../../services/api';
 
 export const ChecklistVerification: React.FC = () => {
@@ -99,14 +118,24 @@ export const ChecklistVerification: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] bg-slate-800 text-slate-300 px-3 py-1 rounded-md border border-slate-600 font-mono">
-              {gatewayStatus?.has_api_keys ? '⚡ LIVE_API MODE' : '🛡️ STATUTORY SANDBOX (Free)'}
+            <span className="text-[11px] bg-slate-800 text-slate-300 px-3 py-1 rounded-md border border-slate-600 font-mono flex items-center gap-1.5">
+              {gatewayStatus?.has_api_keys ? (
+                <>
+                  <Zap className="w-3 h-3 text-amber-400" />
+                  <span>LIVE_API MODE</span>
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="w-3 h-3 text-blue-400" />
+                  <span>STATUTORY SANDBOX (Free)</span>
+                </>
+              )}
             </span>
             <button
               onClick={() => setShowKeyModal(true)}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-md shadow transition flex items-center gap-1.5"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-md shadow transition flex items-center gap-1.5 cursor-pointer"
             >
-              <span>🔑</span>
+              <Key className="w-3.5 h-3.5 text-white" />
               <span>{gatewayStatus?.has_api_keys ? 'API Key Active' : 'Connect Live API Key'}</span>
             </button>
           </div>
@@ -133,39 +162,45 @@ export const ChecklistVerification: React.FC = () => {
       {/* Quick Test Preset Buttons for Live Demonstrations */}
       <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-          <span>⚡ Quick Test Live Entities:</span>
+          <Zap className="w-3.5 h-3.5 text-slate-700" />
+          <span>Quick Test Live Entities:</span>
           <span className="text-[10px] text-slate-500 font-normal">(Click any company to test real data)</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
           <button
             onClick={() => handlePresetSelect('27AAACT2727Q1ZW', 'AAACT2727Q', 'UDYAM-MH-01-001248', 'L72200MH1995PLC095651')}
-            className="text-[11px] bg-white hover:bg-blue-50 border border-slate-300 hover:border-blue-400 text-slate-800 font-semibold px-2.5 py-1 rounded shadow-sm transition"
+            className="text-[11px] bg-white hover:bg-blue-50 border border-slate-300 hover:border-blue-400 text-slate-800 font-semibold px-2.5 py-1 rounded shadow-sm transition flex items-center gap-1 cursor-pointer"
           >
-            🏢 Tata Consultancy (TCS)
+            <Building2 className="w-3 h-3 text-slate-600" />
+            <span>Tata Consultancy (TCS)</span>
           </button>
           <button
             onClick={() => handlePresetSelect('29AAACI1681G1ZM', 'AAACI1681G', 'UDYAM-KR-02-009812', 'L85110KA1981PLC013115')}
-            className="text-[11px] bg-white hover:bg-blue-50 border border-slate-300 hover:border-blue-400 text-slate-800 font-semibold px-2.5 py-1 rounded shadow-sm transition"
+            className="text-[11px] bg-white hover:bg-blue-50 border border-slate-300 hover:border-blue-400 text-slate-800 font-semibold px-2.5 py-1 rounded shadow-sm transition flex items-center gap-1 cursor-pointer"
           >
-            💻 Infosys Ltd.
+            <Building2 className="w-3 h-3 text-slate-600" />
+            <span>Infosys Ltd.</span>
           </button>
           <button
             onClick={() => handlePresetSelect('24AAACR4533K1ZG', 'AAACR4533K', 'UDYAM-GJ-04-004412', 'L17110GJ1973PLC002242')}
-            className="text-[11px] bg-white hover:bg-blue-50 border border-slate-300 hover:border-blue-400 text-slate-800 font-semibold px-2.5 py-1 rounded shadow-sm transition"
+            className="text-[11px] bg-white hover:bg-blue-50 border border-slate-300 hover:border-blue-400 text-slate-800 font-semibold px-2.5 py-1 rounded shadow-sm transition flex items-center gap-1 cursor-pointer"
           >
-            🏭 Reliance Industries
+            <Building2 className="w-3 h-3 text-slate-600" />
+            <span>Reliance Industries</span>
           </button>
           <button
             onClick={() => handlePresetSelect('24AAACB1234F1Z5', 'AAACB1234F', 'UDYAM-GJ-01-008291', 'U28132GJ2017PTC097812')}
-            className="text-[11px] bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold px-2.5 py-1 rounded shadow-sm transition"
+            className="text-[11px] bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold px-2.5 py-1 rounded shadow-sm transition flex items-center gap-1 cursor-pointer"
           >
-            ✅ ABC Industries (Default)
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+            <span>ABC Industries (Default)</span>
           </button>
           <button
             onClick={() => handlePresetSelect('07AAACB0000A1Z9', 'AAACB0000A', 'UDYAM-DL-01-000000', 'U28132DL2010PTC000000')}
-            className="text-[11px] bg-red-50 hover:bg-red-100 border border-red-300 text-red-800 font-bold px-2.5 py-1 rounded shadow-sm transition"
+            className="text-[11px] bg-red-50 hover:bg-red-100 border border-red-300 text-red-800 font-bold px-2.5 py-1 rounded shadow-sm transition flex items-center gap-1 cursor-pointer"
           >
-            ⚠️ Suspended Entity (Tax Default)
+            <AlertTriangle className="w-3 h-3 text-red-600" />
+            <span>Suspended Entity (Tax Default)</span>
           </button>
         </div>
       </div>
@@ -177,7 +212,7 @@ export const ChecklistVerification: React.FC = () => {
           <div className="bg-white p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-3 hover:border-slate-300 transition">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-base">🏛️</span>
+                <Landmark className="w-4 h-4 text-blue-900 shrink-0" />
                 <h4 className="font-bold text-xs text-gray-800">GSTIN Registration & Filing Status</h4>
                 <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">
                   GSTN Common Portal
@@ -199,16 +234,16 @@ export const ChecklistVerification: React.FC = () => {
             <button
               onClick={() => handleVerify('gst')}
               disabled={loadingKey === 'gst'}
-              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5"
+              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
             >
               {loadingKey === 'gst' ? (
                 <>
-                  <span className="animate-spin text-xs">⏳</span>
+                  <RotateCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Querying GSTN...</span>
                 </>
               ) : (
                 <>
-                  <span>🔍</span>
+                  <Search className="w-3.5 h-3.5" />
                   <span>Verify GSTIN</span>
                 </>
               )}
@@ -219,7 +254,7 @@ export const ChecklistVerification: React.FC = () => {
           <div className="bg-white p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-3 hover:border-slate-300 transition">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-base">💳</span>
+                <CreditCard className="w-4 h-4 text-blue-900 shrink-0" />
                 <h4 className="font-bold text-xs text-gray-800">Income Tax PAN Verification</h4>
                 <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">
                   CBDT / Protean
@@ -241,16 +276,16 @@ export const ChecklistVerification: React.FC = () => {
             <button
               onClick={() => handleVerify('pan')}
               disabled={loadingKey === 'pan'}
-              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5"
+              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
             >
               {loadingKey === 'pan' ? (
                 <>
-                  <span className="animate-spin text-xs">⏳</span>
+                  <RotateCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Querying ITD...</span>
                 </>
               ) : (
                 <>
-                  <span>🔍</span>
+                  <Search className="w-3.5 h-3.5" />
                   <span>Verify PAN</span>
                 </>
               )}
@@ -261,7 +296,7 @@ export const ChecklistVerification: React.FC = () => {
           <div className="bg-white p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-3 hover:border-slate-300 transition">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-base">🏭</span>
+                <Award className="w-4 h-4 text-emerald-800 shrink-0" />
                 <h4 className="font-bold text-xs text-gray-800">MSME Udyam Certificate Verification</h4>
                 <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">
                   Ministry of MSME
@@ -283,16 +318,16 @@ export const ChecklistVerification: React.FC = () => {
             <button
               onClick={() => handleVerify('udyam')}
               disabled={loadingKey === 'udyam'}
-              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5"
+              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
             >
               {loadingKey === 'udyam' ? (
                 <>
-                  <span className="animate-spin text-xs">⏳</span>
+                  <RotateCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Querying Udyam...</span>
                 </>
               ) : (
                 <>
-                  <span>🔍</span>
+                  <Search className="w-3.5 h-3.5" />
                   <span>Verify Udyam</span>
                 </>
               )}
@@ -303,7 +338,7 @@ export const ChecklistVerification: React.FC = () => {
           <div className="bg-white p-4 rounded-xl border shadow-sm flex flex-wrap items-center justify-between gap-3 hover:border-slate-300 transition">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="text-base">⚖️</span>
+                <Scale className="w-4 h-4 text-blue-900 shrink-0" />
                 <h4 className="font-bold text-xs text-gray-800">MCA-21 Company Registry Verification</h4>
                 <span className="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">
                   Ministry of Corporate Affairs
@@ -325,16 +360,16 @@ export const ChecklistVerification: React.FC = () => {
             <button
               onClick={() => handleVerify('mca')}
               disabled={loadingKey === 'mca'}
-              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5"
+              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow transition disabled:opacity-50 flex items-center gap-1.5 cursor-pointer"
             >
               {loadingKey === 'mca' ? (
                 <>
-                  <span className="animate-spin text-xs">⏳</span>
+                  <RotateCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Querying MCA-21...</span>
                 </>
               ) : (
                 <>
-                  <span>🔍</span>
+                  <Search className="w-3.5 h-3.5" />
                   <span>Verify MCA-21</span>
                 </>
               )}
@@ -347,13 +382,15 @@ export const ChecklistVerification: React.FC = () => {
           <div className="flex items-center justify-between border-b border-gray-800 pb-2 mb-3">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span className="text-emerald-400 font-bold text-[11px]">
-                📡 Live Gateway JSON Inspector
+              <span className="text-emerald-400 font-bold text-[11px] flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Live Gateway JSON Inspector</span>
               </span>
             </div>
             {latency !== null && (
-              <span className="text-[10px] bg-slate-800 text-emerald-300 px-2 py-0.5 rounded border border-slate-700">
-                ⏱️ {latency}ms
+              <span className="text-[10px] bg-slate-800 text-emerald-300 px-2 py-0.5 rounded border border-slate-700 flex items-center gap-1">
+                <Clock className="w-3 h-3 text-emerald-300" />
+                <span>{latency}ms</span>
               </span>
             )}
           </div>
@@ -368,7 +405,17 @@ export const ChecklistVerification: React.FC = () => {
                   <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
                     apiResponse.verified ? 'bg-emerald-950 text-emerald-300 border border-emerald-700' : 'bg-red-950 text-red-300 border border-red-700'
                   }`}>
-                    {apiResponse.verified ? '✓ VERIFIED' : '✗ FLAGGED'}
+                    {apiResponse.verified ? (
+                      <span className="flex items-center gap-1">
+                        <Check className="w-3 h-3" />
+                        <span>VERIFIED</span>
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1">
+                        <X className="w-3 h-3" />
+                        <span>FLAGGED</span>
+                      </span>
+                    )}
                   </span>
                 </div>
                 <pre className="text-[11px] text-emerald-300 leading-relaxed overflow-x-auto bg-black/40 p-2.5 rounded-lg border border-slate-800">
@@ -377,7 +424,7 @@ export const ChecklistVerification: React.FC = () => {
               </div>
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center text-gray-500 py-20 space-y-3">
-                <span className="text-3xl">⚡</span>
+                <Activity className="w-8 h-8 text-slate-500" />
                 <p className="text-xs text-slate-400 font-sans">
                   Click any <strong>"Verify"</strong> button or select a quick-test company above to execute live sovereign verification.
                 </p>
@@ -396,16 +443,16 @@ export const ChecklistVerification: React.FC = () => {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border space-y-4 animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
-                <span className="text-xl">🔑</span>
+                <Key className="w-5 h-5 text-emerald-600" />
                 <h3 className="font-extrabold text-sm text-gray-900">
                   Connect Live Sovereign Gateway API Key
                 </h3>
               </div>
               <button
                 onClick={() => setShowKeyModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-lg"
+                className="text-gray-400 hover:text-gray-600 cursor-pointer"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -442,8 +489,9 @@ export const ChecklistVerification: React.FC = () => {
                 />
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 text-blue-900 p-2.5 rounded-lg text-[11px]">
-                🔒 <strong>DPDP Act 2023 Compliant:</strong> Your token is stored securely in your browser's private environment and never exposed publicly.
+              <div className="bg-blue-50 border border-blue-200 text-blue-900 p-2.5 rounded-lg text-[11px] flex items-center gap-1.5">
+                <Lock className="w-4 h-4 text-blue-900 shrink-0" />
+                <span><strong>DPDP Act 2023 Compliant:</strong> Your token is stored securely in your browser's private environment and never exposed publicly.</span>
               </div>
             </div>
 

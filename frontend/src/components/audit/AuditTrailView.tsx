@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ShieldCheck, RotateCw } from 'lucide-react';
 import { api } from '../../services/api';
 import type { AuditLogEntry } from '../../types';
 
@@ -40,7 +41,8 @@ export const AuditTrailView: React.FC = () => {
               Immutable Traceability & Governance Log
             </span>
             <h1 className="text-xl font-black text-[#162c5b] flex items-center gap-2">
-              📜 Public Procurement Scrutiny Audit Trail
+              <ShieldCheck className="w-5 h-5 text-[#162c5b]" />
+              <span>Public Procurement Scrutiny Audit Trail</span>
             </h1>
             <p className="text-xs text-gray-500">
               Complete chronological ledger of AI extractions, statutory API calls, and committee decisions.
@@ -86,9 +88,10 @@ export const AuditTrailView: React.FC = () => {
 
             <button
               onClick={fetchLogs}
-              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-xs transition flex items-center gap-1.5"
+              className="bg-[#162c5b] hover:bg-[#0d1d3d] text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-xs transition flex items-center gap-1.5 cursor-pointer"
             >
-              🔄 Refresh
+              <RotateCw className="w-3.5 h-3.5" />
+              <span>Refresh</span>
             </button>
           </div>
         </div>
