@@ -398,7 +398,96 @@ function filterFallbackProducts(category?: string, query?: string): Product[] {
   return list;
 }
 
+const FALLBACK_TENDERS: Tender[] = [
+  {
+    id: "tnd-001",
+    ref_no: "GEM/2026/B/9012481",
+    title: "Supply and Commissioning of High-Pressure Industrial Flow Control Valves",
+    department: "Oil and Natural Gas Corporation (ONGC)",
+    category: "Mechanical & Industrial Equipment",
+    estimated_value_lakhs: 240.0,
+    emd_amount_lakhs: 4.8,
+    min_turnover_lakhs: 80.0,
+    min_mii_percentage: 50.0,
+    closing_date: "28-Mar-2026",
+    status: "Technical Evaluation Stage"
+  },
+  {
+    id: "tnd-002",
+    ref_no: "GEM/2026/B/9012482",
+    title: "Turnkey SCADA Automation Panel and Dual-Redundant RTU Units",
+    department: "Bharat Heavy Electricals Limited (BHEL)",
+    category: "Electrical & Control Systems",
+    estimated_value_lakhs: 450.0,
+    emd_amount_lakhs: 9.0,
+    min_turnover_lakhs: 150.0,
+    min_mii_percentage: 60.0,
+    closing_date: "05-Apr-2026",
+    status: "Technical Evaluation Stage"
+  },
+  {
+    id: "tnd-003",
+    ref_no: "GEM/2026/B/8920192",
+    title: "High Pressure Medical Grade Type-D Oxygen Cylinders and Flow Regulators",
+    department: "Department of Health & Family Welfare",
+    category: "Medical Equipment & Gases",
+    estimated_value_lakhs: 185.0,
+    emd_amount_lakhs: 3.7,
+    min_turnover_lakhs: 60.0,
+    min_mii_percentage: 65.0,
+    closing_date: "12-Apr-2026",
+    status: "Technical Evaluation Stage"
+  },
+  {
+    id: "tnd-004",
+    ref_no: "GEM/2026/B/8771920",
+    title: "Forged Steel Brake Disc Assemblies and Bogie Suspension Castings",
+    department: "Ministry of Railways",
+    category: "Railway Rolling Stock",
+    estimated_value_lakhs: 320.0,
+    emd_amount_lakhs: 6.4,
+    min_turnover_lakhs: 110.0,
+    min_mii_percentage: 75.0,
+    closing_date: "18-Apr-2026",
+    status: "Active Bidding"
+  },
+  {
+    id: "tnd-005",
+    ref_no: "GEM/2026/B/8441029",
+    title: "Autonomous Border Surveillance Micro-UAV Drone Squadrons & Ground Stations",
+    department: "Ministry of Defence",
+    category: "Defence & Aerospace",
+    estimated_value_lakhs: 580.0,
+    emd_amount_lakhs: 11.6,
+    min_turnover_lakhs: 200.0,
+    min_mii_percentage: 70.0,
+    closing_date: "22-Apr-2026",
+    status: "Active Bidding"
+  },
+  {
+    id: "tnd-006",
+    ref_no: "GEM/2026/B/8102914",
+    title: "Solar Powered Handloom Weaving Looms & Spun Khadi Equipment",
+    department: "Khadi and Village Industries Commission",
+    category: "Textiles & Village Industries",
+    estimated_value_lakhs: 95.0,
+    emd_amount_lakhs: 1.9,
+    min_turnover_lakhs: 30.0,
+    min_mii_percentage: 100.0,
+    closing_date: "30-Apr-2026",
+    status: "Active Bidding"
+  }
+];
+
 export const api = {
+  getInitialProducts(category?: string, query?: string): Product[] {
+    return filterFallbackProducts(category, query);
+  },
+
+  getInitialTenders(): Tender[] {
+    return FALLBACK_TENDERS;
+  },
+
   async login(username: string, password: string, role: UserRole): Promise<User> {
     try {
       const res = await client.post<any>('/api/auth/login', { username, password, role });
@@ -437,37 +526,12 @@ export const api = {
   async getTenders(): Promise<Tender[]> {
     try {
       const res = await client.get<Tender[]>('/api/tenders');
-      return res.data;
-    } catch (err) {
-      console.warn("Using fallback tenders data:", err);
-      return [
-        {
-          id: "tnd-001",
-          ref_no: "GEM/2026/B/9012481",
-          title: "Supply and Commissioning of High-Pressure Industrial Valves",
-          department: "Oil and Natural Gas Corporation (ONGC)",
-          category: "Mechanical & Industrial Equipment",
-          estimated_value_lakhs: 240.0,
-          emd_amount_lakhs: 4.8,
-          min_turnover_lakhs: 80.0,
-          min_mii_percentage: 50.0,
-          closing_date: "28-Mar-2026",
-          status: "Technical Evaluation Stage"
-        },
-        {
-          id: "tnd-002",
-          ref_no: "GEM/2026/B/9012482",
-          title: "Turnkey SCADA Automation Panel and RTU Units",
-          department: "Bharat Heavy Electricals Limited (BHEL)",
-          category: "Electrical & Control Systems",
-          estimated_value_lakhs: 450.0,
-          emd_amount_lakhs: 9.0,
-          min_turnover_lakhs: 150.0,
-          min_mii_percentage: 60.0,
-          closing_date: "05-Apr-2026",
-          status: "Technical Evaluation Stage"
-        }
-      ];
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        return res.data;
+      }
+      return FALLBACK_TENDERS;
+    } catch {
+      return FALLBACK_TENDERS;
     }
   },
 
@@ -844,6 +908,7 @@ export const api = {
   },
 
   async getProducts(category?: string, query?: string): Promise<Product[]> {
+    const fallback = filterFallbackProducts(category, query);
     try {
       const params = new URLSearchParams();
       if (category && category !== 'All') params.append('category', category);
@@ -852,13 +917,9 @@ export const api = {
       if (Array.isArray(res.data) && res.data.length > 0) {
         return res.data;
       }
-      if (Array.isArray(res.data) && res.data.length === 0) {
-        return filterFallbackProducts(category, query);
-      }
-      throw new Error("Invalid API response format: expected array");
-    } catch (err) {
-      console.warn("Fallback to client products catalog:", err);
-      return filterFallbackProducts(category, query);
+      return fallback;
+    } catch {
+      return fallback;
     }
   },
 

@@ -22,7 +22,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
   const [inspectedService, setInspectedService] = useState<GeMService | null>(null);
   const servicesSectionRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll directly to services items on screen
+  // Auto-scroll directly to services items on screen on initial navigation
   useEffect(() => {
     const timer = setTimeout(() => {
       if (servicesSectionRef.current) {
@@ -30,7 +30,7 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
       }
     }, 60);
     return () => clearTimeout(timer);
-  }, [initialQuery, activeTab, selectedDomain]);
+  }, [initialQuery, initialDomain]);
 
   // Filter services based on activeTab, selectedDomain, and searchQuery
   const filteredServices = OFFICIAL_GEM_SERVICES.filter((serv) => {

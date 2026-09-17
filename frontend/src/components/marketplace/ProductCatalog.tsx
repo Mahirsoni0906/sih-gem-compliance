@@ -17,10 +17,9 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   onOpenTenderScrutiny,
 }) => {
   const { t } = useLanguage();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [category, setCategory] = useState<string>(initialCategory);
   const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
+  const [products, setProducts] = useState<Product[]>(() => api.getInitialProducts(initialCategory, initialQuery));
   const [miiOnly, setMiiOnly] = useState<boolean>(false);
   const [msmeOnly, setMsmeOnly] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -46,14 +45,24 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   useEffect(() => {
     if (initialCategory) {
       setCategory(initialCategory);
+      setProducts(api.getInitialProducts(initialCategory, searchQuery));
     }
   }, [initialCategory]);
 
   useEffect(() => {
-    fetchProducts();
+    // Instantly filter products synchronously from memory with zero buffering delay
+    const instant = api.getInitialProducts(category, searchQuery);
+    setProducts(instant);
+
+    // Silent background refresh if backend API is reachable
+    api.getProducts(category, searchQuery).then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setProducts(data);
+      }
+    }).catch(() => {});
   }, [category]);
 
-  // Ensure items section opens directly on the screen without requiring manual scroll down
+  // Ensure items section opens directly on the screen when navigating from external link/banner
   useEffect(() => {
     const timer = setTimeout(() => {
       if (itemsContainerRef.current) {
@@ -61,29 +70,17 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       }
     }, 60);
     return () => clearTimeout(timer);
-  }, [category, initialCategory]);
-
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const data = await api.getProducts(category, searchQuery);
-      setProducts(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error loading products:", err);
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [initialCategory]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetchProducts();
-    setTimeout(() => {
-      if (itemsContainerRef.current) {
-        itemsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const instant = api.getInitialProducts(category, searchQuery);
+    setProducts(instant);
+    api.getProducts(category, searchQuery).then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setProducts(data);
       }
-    }, 50);
+    }).catch(() => {});
   };
 
   const safeProducts = Array.isArray(products) ? products : [];
@@ -211,12 +208,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
         </div>
 
         {/* Product Cards Grid with Smooth Tab & Category Transition */}
-        {loading ? (
-          <div key="loading" className="py-20 text-center space-y-3 tab-content-enter">
-            <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p className="text-xs text-gray-500 dark:text-slate-400 font-bold">Querying GeM Statutory Product Catalog...</p>
-          </div>
-        ) : filteredProducts.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <div key="empty" className="bg-white dark:bg-[#0c1e33] rounded-2xl p-12 text-center border border-gray-200 dark:border-slate-800 space-y-3 transition-colors tab-content-enter">
             <span className="text-4xl">📦</span>
             <h3 className="text-base font-bold text-gray-800 dark:text-slate-100">No matching products found</h3>

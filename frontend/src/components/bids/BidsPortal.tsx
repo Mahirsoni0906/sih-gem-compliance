@@ -60,8 +60,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
 }) => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<BidsPortalTab>(initialTab);
-  const [tenders, setTenders] = useState<Tender[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [tenders, setTenders] = useState<Tender[]>(() => api.getInitialTenders());
   const [departmentFilter, setDepartmentFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
@@ -74,7 +73,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
     }
   }, [initialTab]);
 
-  // Auto-scroll directly to bids/tenders on screen
+  // Auto-scroll directly to bids/tenders on screen on initial navigation
   useEffect(() => {
     const timer = setTimeout(() => {
       if (bidsSectionRef.current) {
@@ -82,23 +81,15 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
       }
     }, 60);
     return () => clearTimeout(timer);
-  }, [activeTab, initialTab]);
+  }, [initialTab]);
 
   useEffect(() => {
-    fetchTenders();
+    api.getTenders().then((data) => {
+      if (Array.isArray(data) && data.length > 0) {
+        setTenders(data);
+      }
+    }).catch(() => {});
   }, []);
-
-  const fetchTenders = async () => {
-    setLoading(true);
-    try {
-      const data = await api.getTenders();
-      setTenders(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const departments = [
     'All',
@@ -488,12 +479,7 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
               </span>
             </div>
 
-            {loading ? (
-              <div className="py-20 text-center space-y-3">
-                <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                <p className="text-xs text-gray-500 font-bold">Loading GeM Tenders...</p>
-              </div>
-            ) : filteredTenders.length === 0 ? (
+            {filteredTenders.length === 0 ? (
               <div className="bg-white rounded-2xl p-12 text-center border space-y-3">
                 <span className="text-4xl">📋</span>
                 <h3 className="text-base font-bold text-gray-800">No matching tenders found</h3>
