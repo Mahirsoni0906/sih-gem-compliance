@@ -185,9 +185,9 @@ export const DocumentIntakeOCR: React.FC = () => {
     try {
       const res = await api.uploadDocumentOCR(fileToUpload);
       setOcrResult(res);
-      // Auto-open floating AI assistant on successful extraction
+      // Make floating AI available in minimized badge without blocking document fields
       setIsFloatingAiOpen(true);
-      setIsAiMinimized(false);
+      setIsAiMinimized(true);
     } catch (err: any) {
       console.error('OCR Extraction error:', err);
       setErrorMessage(err.message || 'Failed to extract text from the uploaded document. Please check the file and try again.');
@@ -230,7 +230,7 @@ export const DocumentIntakeOCR: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative pb-32">
       {/* Title & Statutory Overview Banner */}
       <div className="bg-gradient-to-r from-[#062134] to-[#0c3952] text-white p-5 rounded-2xl shadow-md border border-[#1b4360] flex flex-wrap items-center justify-between gap-4">
         <div>
@@ -872,35 +872,37 @@ export const DocumentIntakeOCR: React.FC = () => {
                 </div>
               </div>
 
-              {/* Floating Dock Status Banner */}
-              <div className="bg-gradient-to-r from-cyan-900/10 via-blue-900/10 to-slate-900/10 dark:bg-slate-900/60 p-4 rounded-2xl border border-cyan-500/30 flex items-center justify-between gap-3">
+              {/* DocScrutiny AI Consultation Banner */}
+              <div className="bg-gradient-to-r from-[#062134] to-[#0c3952] text-white p-4 sm:p-5 rounded-2xl border border-cyan-500/30 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center shrink-0">
-                    <Bot className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+                    <Bot className="w-5 h-5 text-cyan-300" />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-xs text-cyan-950 dark:text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
-                      <span>DocScrutiny AI Floating Console</span>
-                      <span className="text-[9px] bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold px-1.5 py-0.5 rounded">
-                        Window Active
+                    <h4 className="font-extrabold text-xs text-cyan-300 uppercase tracking-wider flex items-center gap-2">
+                      <span>DocScrutiny AI Legal Audit Assistant</span>
+                      <span className="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 font-bold px-2 py-0.5 rounded-full">
+                        Ready
                       </span>
                     </h4>
-                    <p className="text-[11px] text-gray-600 dark:text-gray-400">
-                      Chat with DocScrutiny AI in the floating assistant window on the bottom right.
+                    <p className="text-[11px] text-gray-300 mt-0.5">
+                      Need clarification on document discrepancies or statutory compliance? Launch the legal audit assistant.
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsFloatingAiOpen(true);
-                    setIsAiMinimized(false);
-                  }}
-                  className="bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-sm transition cursor-pointer flex items-center gap-1.5 shrink-0"
-                >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>{isFloatingAiOpen && !isAiMinimized ? 'Bring AI to Front' : 'Open Floating AI'}</span>
-                </button>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsFloatingAiOpen(true);
+                      setIsAiMinimized(false);
+                    }}
+                    className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-sm transition cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    <span>Launch DocScrutiny AI</span>
+                  </button>
+                </div>
               </div>
             </div>
           ) : (
@@ -938,42 +940,43 @@ export const DocumentIntakeOCR: React.FC = () => {
       {/* =========================================================================
           FLOATING DOCSCRUTINY AI ASSISTANT (Exclusive to this S3 / Document Scrutiny Window)
           ========================================================================= */}
-      <div className="fixed bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end gap-2">
+      <div className="fixed bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end gap-2 pointer-events-none">
         {/* Closed or Minimized Floating Button */}
-        {(!isFloatingAiOpen || isAiMinimized) && (
-          <button
-            type="button"
-            onClick={() => {
-              setIsFloatingAiOpen(true);
-              setIsAiMinimized(false);
-            }}
-            className="group relative flex items-center gap-2.5 bg-gradient-to-r from-[#062134] to-[#0c3952] hover:from-[#092e47] hover:to-[#12496b] text-white font-extrabold text-xs py-2.5 px-4 rounded-full shadow-2xl border-2 border-cyan-400/80 hover:border-cyan-300 transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
-            title="Open DocScrutiny AI Floating Console"
-          >
-            {/* Animated Radar Pulse Ring */}
-            <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-cyan-500 border-2 border-white"></span>
-            </span>
-
-            <Bot className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
-            <div className="text-left">
-              <p className="text-xs font-black text-cyan-300 flex items-center gap-1">
-                DocScrutiny AI
-              </p>
-              <p className="text-[10px] text-gray-300 font-medium hidden sm:block">
-                {ocrResult ? `Auditing ${ocrResult.filename}` : 'Document Scrutiny Window'}
-              </p>
-            </div>
-            <span className="bg-cyan-500/30 text-cyan-200 text-[9px] font-bold px-2 py-0.5 rounded-full border border-cyan-400/40 ml-1">
-              Active
-            </span>
-          </button>
+        {isFloatingAiOpen && isAiMinimized && (
+          <div className="pointer-events-auto flex items-center gap-1.5 shadow-2xl rounded-full bg-[#062134]/95 backdrop-blur-md p-1 border-2 border-cyan-400/80 hover:border-cyan-300 transition-all">
+            <button
+              type="button"
+              onClick={() => setIsAiMinimized(false)}
+              className="flex items-center gap-2 text-white font-extrabold text-xs py-1.5 px-3 rounded-full hover:bg-white/10 transition cursor-pointer"
+              title="Expand DocScrutiny AI Assistant"
+            >
+              <Bot className="w-4 h-4 text-cyan-400" />
+              <div className="text-left">
+                <span className="text-xs font-black text-cyan-300">DocScrutiny AI</span>
+                {ocrResult && (
+                  <span className="text-[10px] text-gray-300 ml-1.5 hidden sm:inline">
+                    • {ocrResult.filename.length > 20 ? `${ocrResult.filename.slice(0, 17)}...` : ocrResult.filename}
+                  </span>
+                )}
+              </div>
+              <span className="bg-cyan-500/30 text-cyan-200 text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-cyan-400/40">
+                Active
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsFloatingAiOpen(false)}
+              className="w-6 h-6 rounded-full hover:bg-red-500/30 text-gray-400 hover:text-red-300 flex items-center justify-center transition cursor-pointer"
+              title="Close DocScrutiny AI"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
         )}
 
         {/* Expanded Floating DocScrutiny AI Modal / Window */}
         {isFloatingAiOpen && !isAiMinimized && (
-          <div className="w-[94vw] sm:w-[560px] md:w-[620px] h-[600px] max-h-[82vh] flex flex-col rounded-2xl shadow-2xl border-2 border-cyan-500/60 bg-white dark:bg-[#0c1e33] text-slate-900 dark:text-slate-100 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-5 duration-300 ring-4 ring-black/10">
+          <div className="pointer-events-auto w-[94vw] sm:w-[500px] md:w-[540px] h-[540px] max-h-[75vh] flex flex-col rounded-2xl shadow-2xl border-2 border-cyan-500/60 bg-white dark:bg-[#0c1e33] text-slate-900 dark:text-slate-100 overflow-hidden backdrop-blur-2xl animate-in fade-in slide-in-from-bottom-5 duration-300 ring-4 ring-black/10">
             {/* Top Window Header Bar */}
             <div className="bg-gradient-to-r from-[#062134] via-[#092b45] to-[#0d3b5c] text-white p-3.5 px-4 flex items-center justify-between gap-2 border-b border-cyan-500/30 shrink-0">
               <div className="flex items-center gap-2.5 min-w-0">
