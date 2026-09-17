@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../../services/api';
 import type { Tender } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -66,12 +66,23 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedTender, setSelectedTender] = useState<Tender | null>(null);
   const [selectedBoqTender, setSelectedBoqTender] = useState<BoqItemTender | null>(null);
+  const bidsSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (initialTab) {
       setActiveTab(initialTab);
     }
   }, [initialTab]);
+
+  // Auto-scroll directly to bids/tenders on screen
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (bidsSectionRef.current) {
+        bidsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [activeTab, initialTab]);
 
   useEffect(() => {
     fetchTenders();
@@ -284,8 +295,8 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
   return (
     <div className="flex-1 flex flex-col bg-[#f4f6f9]">
       {/* Top Banner with GeM Bid Plus Branding */}
-      <div className="bg-[#061a26] text-white py-6 px-4 sm:px-6 shadow-sm border-b-2 border-yellow-400">
-        <div className="max-w-7xl mx-auto space-y-2">
+      <div className="bg-[#061a26] text-white py-3 px-4 sm:px-6 shadow-sm border-b-2 border-yellow-400">
+        <div className="max-w-7xl mx-auto space-y-1.5">
           <div className="flex items-center space-x-2 text-xs text-gray-400">
             <span>GeM Portal</span>
             <span>&gt;</span>
@@ -302,10 +313,10 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                <h1 className="text-lg sm:text-xl font-black tracking-tight text-white">
                   GeM Bid Plus — {activeTab === 'ongoing' && 'Active Tenders & RA'}
                   {activeTab === 'results' && 'Contract Awards & L1 Results'}
                   {activeTab === 'boq' && 'Custom Bids & BOQ Packages'}
@@ -318,13 +329,13 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
                   OFFICIAL
                 </span>
               </div>
-              <p className="text-xs text-gray-300 mt-1">
+              <p className="text-[11px] text-gray-300 mt-0.5">
                 Central & State Government Public Procurement Tenders with integrated automated statutory scrutiny.
               </p>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="bg-emerald-900/80 text-emerald-300 border border-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5">
+              <span className="bg-emerald-900/80 text-emerald-300 border border-emerald-700 px-2.5 py-1 rounded-full text-[11px] font-bold flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                 AI Statutory Scrutiny Engine Active
               </span>
@@ -333,8 +344,11 @@ export const BidsPortal: React.FC<BidsPortalProps> = ({
         </div>
       </div>
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-6">
+      {/* Main Container - Auto-scrolled to open bids directly on screen */}
+      <div
+        ref={bidsSectionRef}
+        className="max-w-7xl mx-auto px-4 sm:px-6 pt-3 pb-6 flex-1 w-full space-y-4 scroll-mt-14"
+      >
         {/* Dedicated 7-Tab Navigation Bar */}
         <div className="bg-white rounded-2xl p-2 shadow-xs border border-gray-200 overflow-x-auto">
           <div className="flex items-center space-x-1.5 min-w-max">

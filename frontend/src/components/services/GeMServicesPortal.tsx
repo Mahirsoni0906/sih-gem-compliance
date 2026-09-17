@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { OFFICIAL_GEM_SERVICES, CORE_SERVICE_DOMAINS, type GeMService } from '../../data/gemServicesData';
 
 interface GeMServicesPortalProps {
@@ -20,6 +20,17 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
   const [selectedDomain, setSelectedDomain] = useState<string>(initialDomain);
   const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
   const [inspectedService, setInspectedService] = useState<GeMService | null>(null);
+  const servicesSectionRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll directly to services items on screen
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (servicesSectionRef.current) {
+        servicesSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [initialQuery, activeTab, selectedDomain]);
 
   // Filter services based on activeTab, selectedDomain, and searchQuery
   const filteredServices = OFFICIAL_GEM_SERVICES.filter((serv) => {
@@ -42,20 +53,20 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
   return (
     <div className="bg-[#f4f6f9] min-h-screen flex flex-col font-sans antialiased text-gray-800">
       {/* Top Breadcrumb & Actions Bar */}
-      <header className="bg-[#0c2340] text-white px-4 sm:px-8 py-4 border-b border-blue-900/60 z-10 shadow-xs">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <header className="bg-[#0c2340] text-white px-4 sm:px-8 py-3 border-b border-blue-900/60 z-10 shadow-xs">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center space-x-3">
-            <span className="bg-[#f37021] text-white font-black text-lg px-2.5 py-1 rounded shadow-xs">
+            <span className="bg-[#f37021] text-white font-black text-base px-2 py-0.5 rounded shadow-xs">
               GeM
             </span>
             <div>
-              <h1 className="text-lg sm:text-xl font-black tracking-tight flex items-center gap-2">
+              <h1 className="text-base sm:text-lg font-black tracking-tight flex items-center gap-2">
                 <span>Official Services Catalog & Directory</span>
                 <span className="text-xs bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-500/30">
                   Live gem.gov.in Directory
                 </span>
               </h1>
-              <p className="text-xs text-blue-200">
+              <p className="text-[11px] text-blue-200">
                 National Public Procurement Portal • All 30 Statutory Regulated Services
               </p>
             </div>
@@ -76,50 +87,50 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
       </header>
 
       {/* Hero Banner with Official GeM Context */}
-      <section className="bg-gradient-to-r from-[#155998] via-[#104374] to-[#0c2340] text-white py-8 px-4 sm:px-8 border-b border-blue-900 shadow-inner">
-        <div className="max-w-7xl mx-auto space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <section className="bg-gradient-to-r from-[#155998] via-[#104374] to-[#0c2340] text-white py-4 px-4 sm:px-8 border-b border-blue-900 shadow-inner">
+        <div className="max-w-7xl mx-auto space-y-3">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <span className="text-[11px] font-black uppercase tracking-widest text-[#f37021] bg-white/10 px-2.5 py-1 rounded-full inline-block mb-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#f37021] bg-white/10 px-2 py-0.5 rounded-full inline-block mb-1">
                 Department of Commerce • Ministry of Commerce and Industry
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black leading-tight">
+              <h2 className="text-xl sm:text-2xl font-black leading-tight">
                 Statutory Service Procurement Directory
               </h2>
-              <p className="text-xs sm:text-sm text-blue-100 max-w-3xl mt-1">
-                Browse official service specifications, standardized billing models, and statutory compliance criteria (Minimum Wages, PSARA, FSSAI, DGCA, Motor Vehicles Act) integrated directly with the AI Compliance Engine.
+              <p className="text-xs text-blue-100 max-w-2xl mt-0.5">
+                Browse official service specifications, standardized billing models, and statutory compliance criteria (Minimum Wages, PSARA, FSSAI, DGCA).
               </p>
             </div>
 
             {/* Quick KPI stats */}
-            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md p-3 rounded-xl border border-white/15">
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md p-2 rounded-xl border border-white/15 text-xs">
               <div className="text-center px-2">
-                <span className="text-xl font-black text-amber-400">20</span>
-                <p className="text-[10px] text-blue-200 font-semibold uppercase">Trending</p>
+                <span className="text-lg font-black text-amber-400">20</span>
+                <p className="text-[9px] text-blue-200 font-semibold uppercase">Trending</p>
               </div>
-              <div className="h-8 w-px bg-white/20"></div>
+              <div className="h-6 w-px bg-white/20"></div>
               <div className="text-center px-2">
-                <span className="text-xl font-black text-emerald-400">10</span>
-                <p className="text-[10px] text-blue-200 font-semibold uppercase">Emerging</p>
+                <span className="text-lg font-black text-emerald-400">10</span>
+                <p className="text-[9px] text-blue-200 font-semibold uppercase">Emerging</p>
               </div>
-              <div className="h-8 w-px bg-white/20"></div>
+              <div className="h-6 w-px bg-white/20"></div>
               <div className="text-center px-2">
-                <span className="text-xl font-black text-cyan-300">100%</span>
-                <p className="text-[10px] text-blue-200 font-semibold uppercase">GFR Compliant</p>
+                <span className="text-lg font-black text-cyan-300">100%</span>
+                <p className="text-[9px] text-blue-200 font-semibold uppercase">GFR Compliant</p>
               </div>
             </div>
           </div>
 
           {/* Search Bar inside Hero */}
-          <div className="pt-2">
-            <div className="relative max-w-2xl bg-white rounded-full shadow-xl flex items-center p-1.5 border-2 border-white/40 focus-within:border-[#f37021]">
-              <span className="text-gray-400 pl-3 pr-2 text-base">🔍</span>
+          <div>
+            <div className="relative max-w-2xl bg-white rounded-full shadow-md flex items-center p-1 border border-white/40 focus-within:border-[#f37021]">
+              <span className="text-gray-400 pl-3 pr-2 text-sm">🔍</span>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search services by title, billing model (e.g. Per KM, Monthly, DGCA, FSSAI, Minimum Wage)..."
-                className="w-full text-xs sm:text-sm text-gray-800 placeholder-gray-400 outline-none pr-3 py-1.5"
+                className="w-full text-xs sm:text-sm text-gray-800 placeholder-gray-400 outline-none pr-3 py-1"
               />
               {searchQuery && (
                 <button
@@ -134,8 +145,11 @@ export const GeMServicesPortal: React.FC<GeMServicesPortalProps> = ({
         </div>
       </section>
 
-      {/* Filter and Tab Section */}
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 space-y-5">
+      {/* Filter and Tab Section - Auto-scrolled to open items directly on screen */}
+      <div
+        ref={servicesSectionRef}
+        className="max-w-7xl mx-auto w-full px-4 sm:px-8 pt-4 pb-6 space-y-4 scroll-mt-14"
+      >
         {/* 1. Main Classification Tabs (All / Trending / Emerging) */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-3">
           <div className="flex items-center space-x-2">

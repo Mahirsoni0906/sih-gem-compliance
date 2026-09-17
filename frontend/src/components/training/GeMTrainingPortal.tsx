@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   GEM_TRAINING_COURSES,
   GEM_LIVE_WEBINARS,
@@ -30,6 +30,17 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
   const [activeCourseForCert, setActiveCourseForCert] = useState<TrainingCourse | null>(null);
   const [registeredWebinar, setRegisteredWebinar] = useState<WebinarSession | null>(null);
   const [downloadedResourceMsg, setDownloadedResourceMsg] = useState<string | null>(null);
+  const trainingSectionRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll directly to training courses / materials on screen
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (trainingSectionRef.current) {
+        trainingSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [activeTab]);
 
   // Filtered Courses
   const filteredCourses = GEM_TRAINING_COURSES.filter((course) => {
@@ -70,22 +81,22 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
   return (
     <div className="flex-1 flex flex-col bg-[#f4f6f9] min-h-screen text-gray-800">
       {/* Official Government Strip */}
-      <div className="bg-[#062134] text-white py-6 px-4 sm:px-8 border-b-2 border-yellow-400 shadow-md">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center space-x-3.5">
-            <AshokaEmblem className="w-8 h-11 text-gray-200" />
-            <div className="flex items-center space-x-2.5">
-              <GeMStarLogo className="w-8 h-8" />
+      <div className="bg-[#062134] text-white py-3 px-4 sm:px-8 border-b-2 border-yellow-400 shadow-md">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center space-x-3">
+            <AshokaEmblem className="w-7 h-9 text-gray-200" />
+            <div className="flex items-center space-x-2">
+              <GeMStarLogo className="w-7 h-7" />
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-black tracking-tight">
+                  <h1 className="text-lg sm:text-xl font-black tracking-tight">
                     GeM Interactive LMS & Training Courses
                   </h1>
                   <span className="bg-yellow-400 text-[#062134] text-[10px] font-black px-2 py-0.5 rounded uppercase">
                     eLearning Portal
                   </span>
                 </div>
-                <p className="text-xs text-gray-300">
+                <p className="text-[11px] text-gray-300">
                   Capacity Building & Training Wing • Department of Commerce, Ministry of Commerce & Industry
                 </p>
               </div>
@@ -95,7 +106,7 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
           <div className="flex items-center space-x-3">
             <button
               onClick={onGoHome}
-              className="text-xs font-bold text-gray-300 hover:text-white bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer"
+              className="text-xs font-bold text-gray-300 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer"
             >
               <span>← Back to GeM Home</span>
             </button>
@@ -104,46 +115,46 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
       </div>
 
       {/* Hero Overview & Metrics Banner */}
-      <div className="bg-gradient-to-r from-[#0c2340] via-[#103b60] to-[#0c2340] text-white py-8 px-4 sm:px-8 border-b border-gray-700">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-            <div className="lg:col-span-2 space-y-3">
-              <div className="inline-flex items-center gap-2 bg-orange-500/20 text-orange-300 border border-orange-400/30 text-xs font-bold px-3 py-1 rounded-full">
+      <div className="bg-gradient-to-r from-[#0c2340] via-[#103b60] to-[#0c2340] text-white py-4 px-4 sm:px-8 border-b border-gray-700">
+        <div className="max-w-7xl mx-auto space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-center">
+            <div className="lg:col-span-2 space-y-2">
+              <div className="inline-flex items-center gap-2 bg-orange-500/20 text-orange-300 border border-orange-400/30 text-[11px] font-bold px-3 py-0.5 rounded-full">
                 <span>✦ Official GeM National Training Curriculum</span>
                 <span>• GFR 2017 Aligned</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight leading-snug">
+              <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug">
                 Master Public Procurement on GeM: Free Self-Paced Courses & Certifications
               </h2>
-              <p className="text-xs sm:text-sm text-gray-300 leading-relaxed max-w-2xl">
-                Explore official SCORM-compliant interactive modules for Government Buyers, Central CPSE Officers, MSME Sellers, and Legal Scrutiny Teams. Earn accredited certificates upon passing knowledge checks.
+              <p className="text-xs text-gray-300 leading-relaxed max-w-2xl">
+                Explore official SCORM-compliant interactive modules for Government Buyers, Central CPSE Officers, MSME Sellers, and Legal Scrutiny Teams.
               </p>
             </div>
 
             {/* Quick Stats Grid */}
-            <div className="grid grid-cols-2 gap-3 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-xs">
-              <div className="p-3 bg-white/10 rounded-xl">
-                <p className="text-xl sm:text-2xl font-black text-yellow-400">45,000+</p>
-                <p className="text-[11px] text-gray-300">Certified Buyers & Officers</p>
+            <div className="grid grid-cols-2 gap-2 bg-white/5 p-3 rounded-2xl border border-white/10 backdrop-blur-xs text-xs">
+              <div className="p-2 bg-white/10 rounded-xl">
+                <p className="text-lg font-black text-yellow-400">45,000+</p>
+                <p className="text-[10px] text-gray-300">Certified Officers</p>
               </div>
-              <div className="p-3 bg-white/10 rounded-xl">
-                <p className="text-xl sm:text-2xl font-black text-emerald-400">100% Free</p>
-                <p className="text-[11px] text-gray-300">Govt Funded Training</p>
+              <div className="p-2 bg-white/10 rounded-xl">
+                <p className="text-lg font-black text-emerald-400">100% Free</p>
+                <p className="text-[10px] text-gray-300">Govt Funded</p>
               </div>
-              <div className="p-3 bg-white/10 rounded-xl">
-                <p className="text-xl sm:text-2xl font-black text-orange-400">12 Languages</p>
-                <p className="text-[11px] text-gray-300">Multilingual Access</p>
+              <div className="p-2 bg-white/10 rounded-xl">
+                <p className="text-lg font-black text-orange-400">12 Languages</p>
+                <p className="text-[10px] text-gray-300">Multilingual Access</p>
               </div>
-              <div className="p-3 bg-white/10 rounded-xl">
-                <p className="text-xl sm:text-2xl font-black text-blue-300">4 Levels</p>
-                <p className="text-[11px] text-gray-300">Buyer Certification Path</p>
+              <div className="p-2 bg-white/10 rounded-xl">
+                <p className="text-lg font-black text-blue-300">4 Levels</p>
+                <p className="text-[10px] text-gray-300">Buyer Pathway</p>
               </div>
             </div>
           </div>
 
           {/* Search & Language Bar */}
-          <div className="bg-white text-gray-800 p-3 sm:p-4 rounded-2xl shadow-xl flex flex-wrap items-center gap-3 border border-gray-200">
-            <div className="flex-1 min-w-[240px] flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-xl border border-gray-200">
+          <div className="bg-white text-gray-800 p-2.5 rounded-2xl shadow-lg flex flex-wrap items-center gap-3 border border-gray-200">
+            <div className="flex-1 min-w-[240px] flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-200">
               <span className="text-gray-400">🔍</span>
               <input
                 type="text"
@@ -167,7 +178,7 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
               <select
                 value={selectedLanguage}
                 onChange={(e) => setSelectedLanguage(e.target.value)}
-                className="text-xs border border-gray-300 rounded-xl px-2.5 py-2 bg-gray-50 font-medium focus:outline-none"
+                className="text-xs border border-gray-300 rounded-xl px-2.5 py-1.5 bg-gray-50 font-medium focus:outline-none"
               >
                 <option value="All">All Languages</option>
                 <option value="English">English</option>
@@ -182,8 +193,11 @@ export const GeMTrainingPortal: React.FC<GeMTrainingPortalProps> = ({
         </div>
       </div>
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8 w-full flex-1 space-y-6">
+      {/* Main Container - Auto-scrolled directly into view */}
+      <div
+        ref={trainingSectionRef}
+        className="max-w-7xl mx-auto px-4 sm:px-8 pt-4 pb-8 w-full flex-1 space-y-4 scroll-mt-14"
+      >
         {/* Navigation Tabs */}
         <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
           {[

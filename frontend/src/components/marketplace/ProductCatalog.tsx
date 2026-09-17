@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../../services/api';
 import type { Product } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -24,6 +24,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   const [miiOnly, setMiiOnly] = useState<boolean>(false);
   const [msmeOnly, setMsmeOnly] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const itemsContainerRef = useRef<HTMLDivElement>(null);
 
   const categories = [
     'All',
@@ -52,6 +53,16 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
     fetchProducts();
   }, [category]);
 
+  // Ensure items section opens directly on the screen without requiring manual scroll down
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (itemsContainerRef.current) {
+        itemsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
+    return () => clearTimeout(timer);
+  }, [category, initialCategory]);
+
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -68,6 +79,11 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     fetchProducts();
+    setTimeout(() => {
+      if (itemsContainerRef.current) {
+        itemsContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 50);
   };
 
   const safeProducts = Array.isArray(products) ? products : [];
@@ -80,59 +96,53 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
   return (
     <div className="flex-1 flex flex-col bg-[#f4f6f9] dark:bg-[#071324] text-slate-900 dark:text-slate-100 transition-colors">
-      {/* Top Banner with Breadcrumb */}
-      <div className="bg-[#082435] text-white py-6 px-4 sm:px-6 shadow-sm border-b-2 border-yellow-400">
-        <div className="max-w-7xl mx-auto space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center space-x-2 text-xs text-gray-300">
-              <button
-                onClick={onClose}
-                className="hover:text-yellow-400 font-bold transition flex items-center gap-1 cursor-pointer"
-                title="Return to GeM Home Portal"
-              >
-                <span>← GeM Portal</span>
-              </button>
-              <span>&gt;</span>
-              <span className="text-yellow-400 font-bold">Public Procurement Marketplace</span>
-              {category !== 'All' && (
-                <>
-                  <span>&gt;</span>
-                  <span className="text-white font-bold bg-white/10 px-2 py-0.5 rounded border border-white/20">{category}</span>
-                </>
-              )}
-            </div>
+      {/* Sleek Compact Header Strip */}
+      <div className="bg-[#082435] text-white py-3 px-4 sm:px-6 shadow-sm border-b-2 border-yellow-400">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+          {/* Breadcrumb & Title */}
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <button
+              onClick={onClose}
+              className="hover:text-yellow-400 font-bold transition flex items-center gap-1 cursor-pointer"
+              title="Return to GeM Home Portal"
+            >
+              <span>← GeM Portal</span>
+            </button>
+            <span className="text-gray-400">&gt;</span>
+            <span className="text-yellow-400 font-bold">Marketplace & Catalog</span>
+            {category !== 'All' && (
+              <>
+                <span className="text-gray-400">&gt;</span>
+                <span className="text-white font-extrabold bg-blue-600/70 px-2.5 py-0.5 rounded-full border border-blue-400/40 text-xs">
+                  {category}
+                </span>
+              </>
+            )}
+          </div>
 
+          {/* Right Badges & Back Button */}
+          <div className="flex items-center gap-2.5">
+            <span className="bg-yellow-400 text-blue-950 font-black text-[10px] px-2.5 py-1 rounded-full shadow-xs uppercase tracking-wide">
+              SIH26100 Statutory Compliant
+            </span>
             {onClose && (
               <button
                 onClick={onClose}
-                className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 transition flex items-center gap-1.5 cursor-pointer"
+                className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-lg border border-white/20 transition flex items-center gap-1 cursor-pointer"
               >
                 <span>✕</span>
                 <span>Back to Home</span>
               </button>
             )}
           </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-                GeM Product Marketplace & Catalog
-              </h1>
-              <p className="text-xs text-gray-300 mt-1">
-                Verified public procurement items with statutory Make in India (MII) certification and MSME preference.
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="bg-yellow-400 text-blue-950 font-black text-xs px-3 py-1.5 rounded-full shadow-xs">
-                SIH26100 Statutory Compliant
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-6">
+      {/* Main Container - Auto-scrolled into view so items appear on screen directly */}
+      <div
+        ref={itemsContainerRef}
+        className="max-w-7xl mx-auto px-4 sm:px-6 pt-3 pb-8 flex-1 w-full space-y-4 scroll-mt-14"
+      >
         {/* Search & Filter Controls Bar */}
         <div className="bg-white dark:bg-[#0c1e33] rounded-2xl p-4 sm:p-5 shadow-xs border border-gray-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4 transition-colors">
           {/* Search Input */}

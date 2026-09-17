@@ -48,7 +48,10 @@ export default function App() {
       setRegistrationRole(options.registrationRole);
     }
     setActivePage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Allow item-focused portals (products, services, bids, training) to manage their own focal scroll
+    if (!['products-page', 'services-page', 'bids-page', 'training-page'].includes(page)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleNavigateFromAI = (page: string, contextId?: string) => {
@@ -150,20 +153,16 @@ export default function App() {
                 onOpenProducts={(category) => {
                   if (category) setSelectedCategory(category);
                   setActivePage('products-page');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 onOpenBids={(tab) => {
                   if (tab) setBidsTab(tab as BidsPortalTab);
                   setActivePage('bids-page');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 onOpenServices={() => {
                   setActivePage('services-page');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 onOpenTraining={() => {
                   setActivePage('training-page');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 onOpenChat={() => setIsChatOpen(true)}
               />
